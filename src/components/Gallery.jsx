@@ -31,9 +31,9 @@ export default function Gallery() {
         
         {/* Section Header */}
         <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto 4rem auto' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.4)', padding: '0.5rem 1rem', borderRadius: '9999px', marginBottom: '1rem' }}>
+          <div className="section-badge-pill">
             <Sparkles style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--gold-primary)' }}>
+            <span className="section-badge-text">
               Proven Results &amp; Craftsmanship
             </span>
           </div>

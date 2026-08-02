@@ -45,21 +45,23 @@ export default function PriceCalculator({ onProceedToBooking }) {
 
   const chipStyle = (active, danger = false) => ({
     cursor: 'pointer', padding: '0.875rem', borderRadius: '1rem', textAlign: 'left',
-    transition: 'all 0.2s',
-    background: active ? (danger ? 'rgba(239,68,68,0.15)' : 'rgba(212,175,55,0.15)') : 'var(--card-bg)',
-    border: `1.5px solid ${active ? (danger ? '#ef4444' : 'var(--gold-primary)') : 'var(--card-border)'}`,
-    color: active ? 'var(--text-main)' : 'var(--text-muted)', fontWeight: active ? 800 : 500,
+    transition: 'all 0.2s ease',
+    background: active ? (danger ? 'rgba(239,68,68,0.18)' : 'rgba(234,179,8,0.22)') : 'var(--card-bg)',
+    border: `2px solid ${active ? (danger ? '#ef4444' : 'var(--gold-primary)') : 'var(--card-border)'}`,
+    color: active ? 'var(--text-main)' : 'var(--text-muted)',
+    fontWeight: active ? 900 : 500,
+    boxShadow: active ? '0 4px 14px rgba(212,175,55,0.2)' : 'none',
   });
 
   return (
-    <section id="calculator" style={{ padding: '6rem 0', background: 'var(--bg-page)', position: 'relative' }}>
+    <section id="calculator" style={{ padding: '6rem 0', background: 'var(--bg-page)', position: 'relative', borderTop: '1px solid var(--card-border)' }}>
       <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
         
         {/* Header */}
         <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto 4rem auto' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.4)', padding: '0.5rem 1rem', borderRadius: '9999px', marginBottom: '1rem' }}>
+          <div className="section-badge-pill">
             <Calculator style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--gold-primary)' }}>
+            <span className="section-badge-text">
               Interactive Price Estimator
             </span>
           </div>
@@ -158,7 +160,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--cyan-glow)' }}>Live Quote Summary</span>
                 <h3 className="gold-gradient-text" style={{ fontSize: '1.25rem', fontWeight: 900, marginTop: '0.25rem' }}>KTOWN ESTIMATE RECEIPT</h3>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 700, background: 'rgba(212,175,55,0.12)', padding: '0.25rem 0.625rem', borderRadius: '9999px', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 800, background: 'rgba(212,175,55,0.12)', padding: '0.25rem 0.625rem', borderRadius: '9999px', border: '1px solid rgba(212,175,55,0.3)' }}>
                 <Clock style={{ width: '0.875rem', height: '0.875rem' }} />
                 <span>{calculation.duration}</span>
               </div>
@@ -167,31 +169,32 @@ export default function PriceCalculator({ onProceedToBooking }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.75rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', padding: '0.25rem 0', borderBottom: '1px solid var(--card-border)' }}>
                 <span>Vehicle Class:</span>
-                <strong style={{ color: 'var(--text-main)' }}>{calculation.vehicleLabel}</strong>
+                <strong style={{ color: 'var(--text-main)', fontWeight: 800 }}>{calculation.vehicleLabel}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', padding: '0.25rem 0', borderBottom: '1px solid var(--card-border)' }}>
                 <span>Base Package ({calculation.pkgName}):</span>
-                <strong style={{ color: 'var(--gold-primary)', fontWeight: 800 }}>${calculation.base}</strong>
+                <strong style={{ color: 'var(--gold-primary)', fontWeight: 900 }}>${calculation.base}</strong>
               </div>
               {calculation.itemizedAddons.length > 0 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', paddingTop: '0.25rem' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.625rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}>Selected Add-ons:</span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.625rem', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>Selected Add-ons:</span>
                   {calculation.itemizedAddons.map((item, i) => (
                     <div key={i} style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', paddingLeft: '0.5rem', fontSize: '0.6875rem' }}>
                       <span>+ {item.name}</span>
-                      <span style={{ color: 'var(--cyan-glow)', fontWeight: 700 }}>+${item.price}</span>
+                      <span style={{ color: 'var(--cyan-glow)', fontWeight: 800 }}>+${item.price}</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div style={{ background: 'var(--input-bg)', padding: '1.25rem', borderRadius: '1rem', border: '1.5px solid rgba(212,175,55,0.4)', textAlign: 'center' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Estimated Total Price</span>
-              <div className="gold-gradient-text" style={{ fontSize: '2.25rem', fontWeight: 900, letterSpacing: '-0.025em' }}>
-                ${calculation.total} <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400 }}>CAD</span>
+            {/* High-Contrast Receipt Box */}
+            <div style={{ background: 'var(--receipt-bg)', padding: '1.25rem', borderRadius: '1rem', border: '2px solid var(--receipt-border)', textAlign: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
+              <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Estimated Total Price</span>
+              <div style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.025em', color: '#facc15', textShadow: '0 2px 10px rgba(250,204,21,0.3)' }}>
+                ${calculation.total} <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 400 }}>CAD</span>
               </div>
-              <span style={{ fontSize: '0.625rem', color: '#10b981', fontWeight: 700, display: 'block' }}>
+              <span style={{ fontSize: '0.6875rem', color: '#34d399', fontWeight: 700, display: 'block', marginTop: '0.25rem' }}>
                 ✓ No payment required now • Pay after spa completion
               </span>
             </div>
@@ -202,7 +205,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
             </button>
 
             <p style={{ fontSize: '0.6875rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Questions? Call <a href="tel:6479153530" style={{ color: 'var(--gold-primary)', textDecoration: 'underline', fontWeight: 700 }}>647-915-3530</a> or email <a href="mailto:ktownautomobilespa@gmail.com" style={{ color: 'var(--cyan-glow)', textDecoration: 'underline' }}>ktownautomobilespa@gmail.com</a>
+              Questions? Call <a href="tel:6479153530" style={{ color: 'var(--gold-primary)', textDecoration: 'underline', fontWeight: 800 }}>647-915-3530</a> or email <a href="mailto:ktownautomobilespa@gmail.com" style={{ color: 'var(--cyan-glow)', textDecoration: 'underline' }}>ktownautomobilespa@gmail.com</a>
             </p>
           </div>
 
