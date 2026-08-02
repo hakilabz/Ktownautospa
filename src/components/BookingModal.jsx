@@ -188,11 +188,13 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
 
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem', paddingTop: '0.5rem' }}>
               <a
-                href={`mailto:ktownautomobilespa@gmail.com?subject=Booking Confirmation - ${formData.name}&body=Name: ${formData.name}%0D%0APhone: ${formData.phone}%0D%0AVehicle: ${formData.vehicleModel}%0D%0APackage: ${pkgName}%0D%0ADate: ${formData.preferredDate}%0D%0ATotal: $${totalEstimate}`}
+                href={`mailto:ktownautomobilespa@gmail.com?subject=${encodeURIComponent(`New Spa Booking - ${formData.name}`)}&body=${encodeURIComponent(
+                  `CUSTOMER BOOKING DETAILS:\n------------------------\nName: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nVehicle: ${formData.vehicleModel}\nPackage: ${pkgName} (${vehicleLabel})\nPreferred Date: ${formData.preferredDate} (${formData.preferredTime})\nEstimated Total: $${totalEstimate} CAD\nNotes: ${formData.notes || 'None'}`
+                )}`}
                 className="gold-button" style={{ textDecoration: 'none' }}
               >
                 <Mail style={{ width: '1rem', height: '1rem', color: '#080a0f' }} />
-                <span>Open Direct Email</span>
+                <span>Open Direct Email Draft</span>
               </a>
 
               <a href="tel:6479153530" className="cyan-button" style={{ textDecoration: 'none' }}>
