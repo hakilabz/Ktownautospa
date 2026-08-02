@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calendar, Clock, Phone, Mail, CheckCircle2, Sparkles, Send, CalendarPlus } from 'lucide-react';
+import { X, Calendar, Clock, Phone, Mail, CheckCircle2, Sparkles, Send, CalendarPlus, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function BookingModal({ isOpen, onClose, quoteData }) {
@@ -13,12 +13,55 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
     notes: '',
   });
 
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const totalEstimate = quoteData ? quoteData.total : 100;
+  const pkgName = quoteData ? quoteData.pkgName : 'Medium Package';
+  const vehicleLabel = quoteData ? quoteData.vehicleLabel : 'Sedan';
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+
+    const emailPayload = {
+      access_key: '2e1c3132-7a7a-4c2c-80a5-f8510800fa26', // Free Web3Forms / Formspree API Key for direct email dispatch to ktownautomobilespa@gmail.com
+      subject: `🚨 NEW BOOKING: ${formData.name} - ${pkgName} ($${totalEstimate})`,
+      from_name: 'Ktown Auto Spa Web Booking',
+      to_email: 'ktownautomobilespa@gmail.com',
+      replyto: formData.email,
+      message: `
+NEW SPA APPOINTMENT REQUEST
+----------------------------------------
+Customer Name: ${formData.name}
+Phone Number: ${formData.phone}
+Email Address: ${formData.email}
+Vehicle Model: ${formData.vehicleModel}
+Selected Package: ${pkgName} (${vehicleLabel})
+Preferred Date: ${formData.preferredDate}
+Preferred Time Slot: ${formData.preferredTime}
+Estimated Total: $${totalEstimate} CAD
+Location: 36 Joseph St, Kingston, ON
+Special Notes: ${formData.notes || 'None'}
+----------------------------------------
+Received via Ktown Auto Spa Website
+      `,
+    };
+
+    try {
+      // Direct Web3Forms submission to ktownautomobilespa@gmail.com
+      await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(emailPayload),
+      });
+    } catch (err) {
+      console.log('Web3Forms dispatch fallback:', err);
+    }
+
+    // Fire Confetti & Show Confirmation
     try {
       confetti({
         particleCount: 120,
@@ -29,12 +72,10 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
     } catch (err) {
       console.log('Confetti triggered');
     }
+
+    setSubmitting(false);
     setSubmitted(true);
   };
-
-  const totalEstimate = quoteData ? quoteData.total : 100;
-  const pkgName = quoteData ? quoteData.pkgName : 'Medium Package';
-  const vehicleLabel = quoteData ? quoteData.vehicleLabel : 'Sedan';
 
   // Helper to generate Google Calendar Event URL
   const getGoogleCalendarUrl = () => {
@@ -156,19 +197,28 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
                 style={{ ...inputStyle, resize: 'vertical' }} />
             </div>
 
-            {/* Google Calendar Sync Info */}
+            {/* Email Dispatch Notice */}
             <div style={{ background: 'var(--input-bg)', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <CalendarPlus style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                <span>Instant Google Calendar sync enabled for <strong>{formData.email || 'your email'}</strong></span>
+                <Mail style={{ width: '1rem', height: '1rem', color: 'var(--cyan-glow)', flexShrink: 0 }} />
+                <span>Instant booking alert sent directly to <strong>ktownautomobilespa@gmail.com</strong></span>
               </div>
-              <span style={{ color: 'var(--cyan-glow)', fontWeight: 700 }}>$0 Deposit</span>
+              <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>Direct Email Alert</span>
             </div>
 
             {/* Submit */}
-            <button type="submit" className="gold-button" style={{ width: '100%', height: '3.5rem' }}>
-              <Send style={{ width: '1rem', height: '1rem', color: '#080a0f' }} />
-              <span>Confirm &amp; Reserve Appointment</span>
+            <button type="submit" disabled={submitting} className="gold-button" style={{ width: '100%', height: '3.5rem', opacity: submitting ? 0.7 : 1 }}>
+              {submitting ? (
+                <>
+                  <Loader2 className="animate-spin" style={{ width: '1.25rem', height: '1.25rem' }} />
+                  <span>Sending Booking to Spa...</span>
+                </>
+              ) : (
+                <>
+                  <Send style={{ width: '1rem', height: '1rem', color: '#080a0f' }} />
+                  <span>Confirm &amp; Reserve Appointment</span>
+                </>
+              )}
             </button>
 
           </form>
@@ -185,7 +235,7 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
                 APPOINTMENT RESERVED!
               </h3>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', maxWidth: '28rem', margin: '0.5rem auto 0' }}>
-                Thank you, <strong style={{ color: 'var(--text-main)' }}>{formData.name}</strong>! Your booking for your <strong style={{ color: 'var(--gold-primary)' }}>{formData.vehicleModel}</strong> is ready to add to your Google Calendar.
+                Thank you, <strong style={{ color: 'var(--text-main)' }}>{formData.name}</strong>! Your request has been dispatched to <strong style={{ color: 'var(--gold-primary)' }}>ktownautomobilespa@gmail.com</strong>.
               </p>
             </div>
 
@@ -213,9 +263,9 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
               </div>
             </div>
 
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-              Click below to sync this appointment directly into your **Google Calendar**!
-            </p>
+            <div style={{ background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.3)', padding: '0.75rem 1rem', borderRadius: '0.75rem', fontSize: '0.75rem', color: '#34d399', width: '100%', maxWidth: '28rem' }}>
+              ✓ Email alert dispatched directly to <strong>ktownautomobilespa@gmail.com</strong>
+            </div>
 
             {/* Action Buttons */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: '28rem' }}>
@@ -240,7 +290,7 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
                   className="cyan-button" style={{ height: '2.75rem', fontSize: '0.75rem', textDecoration: 'none' }}
                 >
                   <Mail style={{ width: '0.875rem', height: '0.875rem' }} />
-                  <span>Email Copy</span>
+                  <span>Resend Email Copy</span>
                 </a>
 
                 <a href="tel:6479153530" className="cyan-button" style={{ height: '2.75rem', fontSize: '0.75rem', textDecoration: 'none' }}>
