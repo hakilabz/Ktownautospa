@@ -10,7 +10,9 @@ import BookingModal from './components/BookingModal';
 export default function App() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [quoteData, setQuoteData] = useState(null);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('ktown_theme') || 'dark';
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
