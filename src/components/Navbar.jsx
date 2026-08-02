@@ -28,20 +28,22 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
       <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.5rem' }}>
           
-          {/* Logo */}
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: 'inherit', flexShrink: 0 }}>
-            <img src="/logo.png" alt="Ktown Auto Spa" style={{ height: '3.25rem', width: 'auto', objectFit: 'contain', filter: isLight ? 'none' : 'drop-shadow(0 2px 8px rgba(0,0,0,0.6))' }} />
-          </a>
+          {/* Left Group: Logo + Desktop Navigation Links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
+            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: 'inherit', flexShrink: 0 }}>
+              <img src="/logo.png" alt="Ktown Auto Spa" style={{ height: '3.25rem', width: 'auto', objectFit: 'contain', filter: isLight ? 'none' : 'drop-shadow(0 2px 8px rgba(0,0,0,0.6))' }} />
+            </a>
 
-          {/* Desktop Navigation Links */}
-          <nav style={{ display: 'none', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
-            <a href="#packages" style={{ color: 'var(--text-main)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em', textDecoration: 'none', whiteSpace: 'nowrap' }}>Packages</a>
-            <a href="#calculator" style={{ color: 'var(--text-main)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em', textDecoration: 'none', whiteSpace: 'nowrap' }}>Quote Builder &amp; Pricing</a>
-            <a href="#contact" style={{ color: 'var(--text-main)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em', textDecoration: 'none', whiteSpace: 'nowrap' }}>Contact</a>
-          </nav>
+            {/* Desktop Navigation Links */}
+            <nav style={{ display: 'none', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
+              <a href="#packages" style={{ color: 'var(--text-main)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em', textDecoration: 'none', whiteSpace: 'nowrap' }}>Packages</a>
+              <a href="#calculator" style={{ color: 'var(--text-main)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em', textDecoration: 'none', whiteSpace: 'nowrap' }}>Quote Builder &amp; Pricing</a>
+              <a href="#contact" style={{ color: 'var(--text-main)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em', textDecoration: 'none', whiteSpace: 'nowrap' }}>Contact</a>
+            </nav>
+          </div>
 
           {/* Desktop Phone, Theme Toggle & CTA */}
-          <div style={{ display: 'none', alignItems: 'center', gap: '0.875rem', flexShrink: 0 }} className="desktop-cta">
+          <div style={{ display: 'none', alignItems: 'center', gap: '0.875rem', flexShrink: 0, marginLeft: 'auto' }} className="desktop-cta">
             
             {/* Theme Switcher Button */}
             <button
