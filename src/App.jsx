@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -10,6 +10,18 @@ import BookingModal from './components/BookingModal';
 export default function App() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [quoteData, setQuoteData] = useState(null);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('ktown_theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ktown_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const handleOpenBooking = (customQuote = null) => {
     if (customQuote) setQuoteData(customQuote);
@@ -26,9 +38,14 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#080a0f', color: '#f1f5f9' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-page)', color: 'var(--text-main)', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
       
-      <Navbar onOpenBooking={() => handleOpenBooking()} />
+      <Navbar 
+        onOpenBooking={() => handleOpenBooking()} 
+        theme={theme} 
+        onToggleTheme={toggleTheme} 
+      />
+      
       <Hero onOpenBooking={() => handleOpenBooking()} />
       <Services onSelectPackage={handleSelectPackageFromServices} />
       <PriceCalculator onProceedToBooking={handleOpenBooking} />
