@@ -37,19 +37,19 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
   const vehicleLabel = quoteData ? quoteData.vehicleLabel : 'Sedan';
 
   const inputStyle = {
-    width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.08)',
-    color: 'white', borderRadius: '0.75rem', padding: '0.75rem', fontSize: '0.875rem',
+    width: '100%', background: 'var(--input-bg)', border: '1px solid var(--card-border)',
+    color: 'var(--text-main)', borderRadius: '0.75rem', padding: '0.75rem', fontSize: '0.875rem',
     outline: 'none', fontFamily: 'inherit',
   };
 
   const labelStyle = {
-    fontSize: '0.75rem', fontWeight: 600, color: '#cbd5e1', display: 'block', marginBottom: '0.375rem',
+    fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '0.375rem',
   };
 
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '1rem', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+      padding: '1rem', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
       overflowY: 'auto',
     }}>
       <div className="spa-card-gold" style={{ position: 'relative', width: '100%', maxWidth: '42rem', margin: '2rem auto' }}>
@@ -58,9 +58,9 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
         <button
           onClick={onClose}
           style={{
-            position: 'absolute', top: '1.25rem', right: '1.25rem', color: '#94a3b8',
-            padding: '0.5rem', borderRadius: '50%', background: 'rgba(15,23,42,0.8)',
-            border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer',
+            position: 'absolute', top: '1.25rem', right: '1.25rem', color: 'var(--text-muted)',
+            padding: '0.5rem', borderRadius: '50%', background: 'var(--card-bg)',
+            border: '1px solid var(--card-border)', cursor: 'pointer',
           }}
         >
           <X style={{ width: '1.25rem', height: '1.25rem' }} />
@@ -71,15 +71,15 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
             
             {/* Header */}
             <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700, color: '#fde047', marginBottom: '0.5rem' }}>
-                <Sparkles style={{ width: '0.875rem', height: '0.875rem', color: '#facc15' }} />
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.4)', padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, color: 'var(--gold-primary)', marginBottom: '0.5rem' }}>
+                <Sparkles style={{ width: '0.875rem', height: '0.875rem', color: 'var(--gold-primary)' }} />
                 <span>Ktown Auto Spa Appointment</span>
               </div>
               <h3 className="gold-gradient-text" style={{ fontSize: 'clamp(1.5rem, 3vw, 1.875rem)', fontWeight: 900 }}>
                 BOOK YOUR DETAILED SPA SESSION
               </h3>
-              <p style={{ fontSize: '0.75rem', color: '#cbd5e1', marginTop: '0.25rem' }}>
-                Selected: <strong style={{ color: '#facc15' }}>{pkgName}</strong> ({vehicleLabel}) — Estimated Total: <strong style={{ color: '#22d3ee' }}>${totalEstimate} CAD</strong>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                Selected: <strong style={{ color: 'var(--gold-primary)' }}>{pkgName}</strong> ({vehicleLabel}) — Estimated Total: <strong style={{ color: 'var(--cyan-glow)' }}>${totalEstimate} CAD</strong>
               </p>
             </div>
 
@@ -130,12 +130,12 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
             </div>
 
             {/* Email Reminder */}
-            <div style={{ background: '#020617', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b' }}>
+            <div style={{ background: 'var(--input-bg)', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Mail style={{ width: '1rem', height: '1rem', color: '#22d3ee', flexShrink: 0 }} />
+                <Mail style={{ width: '1rem', height: '1rem', color: 'var(--cyan-glow)', flexShrink: 0 }} />
                 <span>Confirmation sent to <strong>ktownautomobilespa@gmail.com</strong></span>
               </div>
-              <span style={{ color: '#facc15', fontWeight: 600 }}>$0 Deposit</span>
+              <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>$0 Deposit</span>
             </div>
 
             {/* Submit */}
@@ -149,7 +149,7 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
           /* Confirmation State */
           <div style={{ textAlign: 'center', padding: '2rem 0', display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center' }}>
             
-            <div style={{ width: '4rem', height: '4rem', background: 'rgba(234,179,8,0.2)', color: '#facc15', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(234,179,8,0.4)' }}>
+            <div style={{ width: '4rem', height: '4rem', background: 'rgba(212,175,55,0.18)', color: 'var(--gold-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(212,175,55,0.4)' }}>
               <CheckCircle2 style={{ width: '2.5rem', height: '2.5rem' }} />
             </div>
 
@@ -157,33 +157,33 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
               <h3 className="gold-gradient-text" style={{ fontSize: '1.875rem', fontWeight: 900 }}>
                 APPOINTMENT REQUESTED!
               </h3>
-              <p style={{ fontSize: '0.875rem', color: '#cbd5e1', maxWidth: '28rem', margin: '0.5rem auto 0' }}>
-                Thank you, <strong style={{ color: 'white' }}>{formData.name}</strong>! We have received your booking request for your <strong style={{ color: '#facc15' }}>{formData.vehicleModel}</strong>.
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', maxWidth: '28rem', margin: '0.5rem auto 0' }}>
+                Thank you, <strong style={{ color: 'var(--text-main)' }}>{formData.name}</strong>! We have received your booking request for your <strong style={{ color: 'var(--gold-primary)' }}>{formData.vehicleModel}</strong>.
               </p>
             </div>
 
             {/* Receipt */}
-            <div style={{ background: '#020617', padding: '1.25rem', borderRadius: '1rem', border: '1px solid rgba(234,179,8,0.3)', maxWidth: '28rem', width: '100%', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.75rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+            <div style={{ background: 'var(--input-bg)', padding: '1.25rem', borderRadius: '1rem', border: '1.5px solid rgba(212,175,55,0.4)', maxWidth: '28rem', width: '100%', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.75rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
                 <span>Selected Package:</span>
-                <strong style={{ color: 'white' }}>{pkgName}</strong>
+                <strong style={{ color: 'var(--text-main)' }}>{pkgName}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
                 <span>Vehicle Class:</span>
-                <strong style={{ color: 'white' }}>{vehicleLabel}</strong>
+                <strong style={{ color: 'var(--text-main)' }}>{vehicleLabel}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
                 <span>Preferred Date &amp; Time:</span>
-                <strong style={{ color: '#22d3ee' }}>{formData.preferredDate} ({formData.preferredTime})</strong>
+                <strong style={{ color: 'var(--cyan-glow)' }}>{formData.preferredDate} ({formData.preferredTime})</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#facc15', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '0.5rem', fontWeight: 700 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--gold-primary)', borderTop: '1px solid var(--card-border)', paddingTop: '0.5rem', fontWeight: 800 }}>
                 <span>Total Price Estimate:</span>
                 <span style={{ fontSize: '0.875rem' }}>${totalEstimate} CAD</span>
               </div>
             </div>
 
-            <p style={{ fontSize: '0.75rem', color: '#64748b' }}>
-              Our detailing specialist will call you shortly at <strong style={{ color: '#facc15' }}>{formData.phone}</strong> to confirm!
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              Our detailing specialist will call you shortly at <strong style={{ color: 'var(--gold-primary)' }}>{formData.phone}</strong> to confirm!
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem', paddingTop: '0.5rem' }}>
@@ -196,15 +196,15 @@ export default function BookingModal({ isOpen, onClose, quoteData }) {
               </a>
 
               <a href="tel:6479153530" className="cyan-button" style={{ textDecoration: 'none' }}>
-                <Phone style={{ width: '1rem', height: '1rem', color: '#00D2FF' }} />
+                <Phone style={{ width: '1rem', height: '1rem', color: 'var(--cyan-glow)' }} />
                 <span>Call 647-915-3530 Now</span>
               </a>
             </div>
 
-            <div style={{ paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--card-border)' }}>
               <button
                 onClick={() => { setSubmitted(false); onClose(); }}
-                style={{ fontSize: '0.75rem', color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+                style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
               >
                 Done / Close Window
               </button>
