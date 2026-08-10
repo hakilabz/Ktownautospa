@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ShieldCheck, CheckCircle2, ChevronRight, Phone, Mail, Droplets } from 'lucide-react';
+import { Sparkles, ShieldCheck, CheckCircle2, ChevronRight, Phone, Mail, Droplets, HeartHandshake, MapPin } from 'lucide-react';
 
 export default function Hero({ onOpenBooking }) {
   return (
@@ -27,14 +27,21 @@ export default function Hero({ onOpenBooking }) {
       <div style={{ position: 'absolute', bottom: '10%', right: '10%', width: '400px', height: '400px', background: 'rgba(0,210,255,0.08)', borderRadius: '50%', filter: 'blur(140px)', pointerEvents: 'none' }} />
 
       <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem', width: '100%', position: 'relative', zIndex: 10 }}>
-        <div style={{ maxWidth: '44rem', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+        <div style={{ maxWidth: '46rem', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
           
-          {/* Top Badge */}
-          <div>
-            <div className="pulse-glow" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--hero-card-bg)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1.5px solid var(--pill-border)', padding: '0.5rem 1rem', borderRadius: '9999px' }}>
-              <ShieldCheck style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--pill-text)' }}>
-                100% Hand Wash Only • No Pressure Washer Used
+          {/* Top Badges: Support Local & Insured/Certified */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.625rem', alignItems: 'center' }}>
+            <div className="pulse-glow" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--hero-card-bg)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1.5px solid var(--pill-border)', padding: '0.4rem 0.875rem', borderRadius: '9999px' }}>
+              <HeartHandshake style={{ width: '0.875rem', height: '0.875rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
+              <span style={{ fontSize: '0.6875rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--pill-text)' }}>
+                New Car Wash In Town • Support Local
+              </span>
+            </div>
+
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', background: 'var(--hero-card-bg)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1.5px solid var(--cyan-glow)', padding: '0.4rem 0.875rem', borderRadius: '9999px' }}>
+              <ShieldCheck style={{ width: '0.875rem', height: '0.875rem', color: 'var(--cyan-glow)', flexShrink: 0 }} />
+              <span style={{ fontSize: '0.6875rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--cyan-glow)' }}>
+                Insured &amp; Certified
               </span>
             </div>
           </div>
@@ -46,7 +53,8 @@ export default function Hero({ onOpenBooking }) {
               <span className="gold-gradient-text">SHINE YOU DESERVE</span>
             </h1>
             <p style={{ fontSize: 'clamp(0.9375rem, 1.6vw, 1.1875rem)', color: 'var(--hero-subtext-color)', fontWeight: 500, lineHeight: 1.7 }}>
-              Kingston's premier hand wash auto spa located at <strong style={{ color: 'var(--hero-bold-color)', fontWeight: 800 }}>36 Joseph St</strong>. Deep interior steam cleaning, paint correction, 
+              Kingston’s conscientious automotive appearance studio located at <strong style={{ color: 'var(--hero-bold-color)', fontWeight: 800 }}>36 Joseph St</strong>. 
+              Serving Kingston, Amherstview &amp; Loyalist Township with unhurried precision hand washes, restorative interior steam decontamination, 
               <strong style={{ color: 'var(--gold-primary)', fontWeight: 800 }}> Bug Removal ($5)</strong> &amp; 
               <strong style={{ color: 'var(--cyan-glow)', fontWeight: 800 }}> High-Gloss Tire Shine ($10)</strong>.
             </p>
@@ -55,9 +63,9 @@ export default function Hero({ onOpenBooking }) {
           {/* Feature Chips */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
             {[
-              { icon: 'var(--gold-primary)', text: 'Inside & Out Hand Clean' },
+              { icon: 'var(--gold-primary)', text: 'pH-Neutral Hand Clean' },
               { icon: 'var(--cyan-glow)', text: 'Steam Carpet Extraction' },
-              { icon: 'var(--gold-primary)', text: 'Starting at $100' },
+              { icon: 'var(--gold-primary)', text: 'Insured & Certified' },
             ].map((chip, i) => (
               <div 
                 key={i} 
@@ -178,7 +186,7 @@ export default function Hero({ onOpenBooking }) {
         zIndex: 10,
       }} className="photo-banner-tag">
         <Droplets style={{ width: '0.875rem', height: '0.875rem', color: 'var(--gold-primary)' }} />
-        <span>Ktown Auto Spa • Premium Supercar Detailing</span>
+        <span>Ktown Auto Spa • Insured &amp; Certified Detailing Studio</span>
       </div>
 
       <style>{`

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import AboutStory from './components/AboutStory';
 import Services from './components/Services';
 import PriceCalculator from './components/PriceCalculator';
 import Gallery from './components/Gallery';
@@ -47,6 +48,7 @@ export default function App() {
       />
       
       <Hero onOpenBooking={() => handleOpenBooking()} />
+      <AboutStory />
       <Services onSelectPackage={handleSelectPackageFromServices} />
       <PriceCalculator onProceedToBooking={handleOpenBooking} />
       <Gallery />
