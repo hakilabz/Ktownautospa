@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Calculator, Sparkles, Clock, ArrowRight, Bug, Disc } from 'lucide-react';
+import { Calculator, Sparkles, Clock, ArrowRight, Bug, Disc, Flame, ShieldCheck, Sun } from 'lucide-react';
 
 export default function PriceCalculator({ onProceedToBooking }) {
   const [vehicle, setVehicle] = useState('sedan');
   const [pkg, setPkg] = useState('medium');
-  const [addons, setAddons] = useState(['bug-removal', 'tire-shine']);
+  const [addons, setAddons] = useState(['tire-shine', 'bug-removal']);
 
   const toggleAddon = (id) => {
     setAddons(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -15,201 +15,234 @@ export default function PriceCalculator({ onProceedToBooking }) {
     let pkgName = 'Medium Package';
     let duration = 'Approx. 2 hrs';
 
-    if (pkg === 'external') {
-      base = 30; pkgName = 'External Wash Only'; duration = 'Approx. 45 mins';
+    if (pkg === 'wash') {
+      pkgName = 'Hand Car Wash'; duration = 'Approx. 45 mins';
+      if (vehicle === 'sedan') base = 30;
+      else if (vehicle === 'crossover') base = 40;
+      else if (vehicle === 'suv') base = 45;
+      else if (vehicle === 'van') base = 50;
     } else if (pkg === 'medium') {
       pkgName = 'Medium Package'; duration = 'Approx. 2 hrs';
       if (vehicle === 'sedan') base = 100;
-      else if (vehicle === 'suv-crossover') base = 120;
-      else if (vehicle === 'suv-van') base = 150;
+      else if (vehicle === 'crossover') base = 130;
+      else if (vehicle === 'suv') base = 150;
+      else if (vehicle === 'van') base = 160;
+    } else if (pkg === 'interior') {
+      pkgName = 'Interior Complete'; duration = 'Approx. 3 hrs';
+      if (vehicle === 'sedan') base = 175;
+      else if (vehicle === 'crossover') base = 199;
+      else if (vehicle === 'suv') base = 229;
+      else if (vehicle === 'van') base = 249;
     } else if (pkg === 'full') {
-      pkgName = 'Full Detail Package'; duration = 'Approx. 4 hrs';
+      pkgName = 'Full Detail'; duration = 'Approx. 4 hrs';
       if (vehicle === 'sedan') base = 200;
-      else if (vehicle === 'suv-crossover') base = 220;
-      else if (vehicle === 'suv-van') base = 250;
+      else if (vehicle === 'crossover') base = 230;
+      else if (vehicle === 'suv') base = 250;
+      else if (vehicle === 'van') base = 270;
     }
 
     let addonTotal = 0;
     const itemizedAddons = [];
-    if (addons.includes('bug-removal')) { addonTotal += 5; itemizedAddons.push({ name: 'Bug Removal', price: 5 }); }
     if (addons.includes('tire-shine')) { addonTotal += 10; itemizedAddons.push({ name: 'High-Gloss Tire Shine', price: 10 }); }
+    if (addons.includes('bug-removal')) { addonTotal += 5; itemizedAddons.push({ name: 'Bug & Tar Removal', price: 5 }); }
     if (addons.includes('summer-mats')) { addonTotal += 20; itemizedAddons.push({ name: 'Summer Mats Shampoo', price: 20 }); }
-    if (addons.includes('heavy-surcharge')) { addonTotal += 50; itemizedAddons.push({ name: 'Kids/Pets/Work Surcharge', price: 50 }); }
+    if (addons.includes('engine-bay')) { addonTotal += 40; itemizedAddons.push({ name: 'Engine Bay Cleaning', price: 40 }); }
+    if (addons.includes('odour')) { addonTotal += 50; itemizedAddons.push({ name: 'Thermal Odour Treatment', price: 50 }); }
+    if (addons.includes('headlights')) { addonTotal += 60; itemizedAddons.push({ name: 'Headlight Restoration', price: 60 }); }
+    if (addons.includes('clay-bar')) { addonTotal += 60; itemizedAddons.push({ name: 'Clay Bar Decon', price: 60 }); }
+    if (addons.includes('pet-hair')) { addonTotal += 50; itemizedAddons.push({ name: 'Pet Hair Surcharge', price: 50 }); }
 
     let vehicleLabel = 'Sedan';
-    if (vehicle === 'suv-crossover') vehicleLabel = 'SUV Crossover (5 Seats)';
-    if (vehicle === 'suv-van') vehicleLabel = 'SUV / Van (3rd Row)';
+    if (vehicle === 'crossover') vehicleLabel = 'Crossover (5 Seats)';
+    if (vehicle === 'suv') vehicleLabel = 'SUV (3rd Row)';
+    if (vehicle === 'van') vehicleLabel = 'Van';
 
     return { base, addonTotal, total: base + addonTotal, pkgName, duration, vehicleLabel, itemizedAddons };
   }, [vehicle, pkg, addons]);
 
   const chipStyle = (active, danger = false) => ({
-    cursor: 'pointer', padding: '0.875rem', borderRadius: '1rem', textAlign: 'left',
-    transition: 'all 0.2s ease',
-    background: active ? (danger ? 'rgba(239,68,68,0.18)' : 'rgba(234,179,8,0.22)') : 'var(--card-bg)',
-    border: `2px solid ${active ? (danger ? '#ef4444' : 'var(--gold-primary)') : 'var(--card-border)'}`,
-    color: active ? 'var(--text-main)' : 'var(--text-muted)',
-    fontWeight: active ? 900 : 500,
-    boxShadow: active ? '0 4px 14px rgba(212,175,55,0.2)' : 'none',
+    cursor: 'pointer', padding: '0.85rem', borderRadius: '12px', textAlign: 'left',
+    transition: 'all 0.18s ease',
+    background: active ? (danger ? 'rgba(239,68,68,0.18)' : 'linear-gradient(180deg, var(--gold-lt), var(--gold))') : 'var(--cream-2)',
+    border: `2px solid ${active ? (danger ? '#EF4444' : 'var(--gold-dk)') : 'var(--cream-3)'}`,
+    color: active ? 'var(--navy-deep)' : 'var(--slate)',
+    fontWeight: active ? 800 : 500,
   });
 
   return (
-    <section id="calculator" style={{ padding: '6rem 0', background: 'var(--bg-page)', position: 'relative', borderTop: '1px solid var(--card-border)' }}>
-      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
+    <section id="calculator" className="band">
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
         
         {/* Header */}
-        <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto 4rem auto' }}>
-          <div className="section-badge-pill">
-            <Calculator style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
-            <span className="section-badge-text">
-              Interactive Price Estimator
-            </span>
-          </div>
-          <h2 style={{ fontSize: 'clamp(1.875rem, 4vw, 3rem)', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.025em' }}>
-            CUSTOM <span className="gold-gradient-text">QUOTE BUILDER</span>
-          </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginTop: '1rem' }}>
-            Select your vehicle, service level, and add-ons to generate your instant estimated total.
+        <div className="section-head" style={{ marginBottom: '2.5rem' }}>
+          <p className="kicker">Interactive Price Estimator</p>
+          <h2>Custom Quote Builder</h2>
+          <p>
+            Select your vehicle size, detailing service level, and optional add-ons to calculate your instant estimated total with zero surprises.
           </p>
         </div>
 
-        <div className="calculator-grid-2col">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem', alignItems: 'start' }}>
           
-          {/* Builder Controls */}
-          <div className="spa-card">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          {/* Builder Controls Frame */}
+          <div className="frame">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
               
-              {/* Step 1 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <label style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--gold-primary)' }}>1. Select Vehicle Type</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.75rem' }}>
+              {/* Step 1: Vehicle Size */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-dk)' }}>
+                  1. Select Vehicle Size
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem' }}>
                   {[
                     { id: 'sedan', label: 'Sedan', icon: '🚗' },
-                    { id: 'suv-crossover', label: 'SUV Crossover (5-Seat)', icon: '🚙' },
-                    { id: 'suv-van', label: 'SUV / Van (3rd Row)', icon: '🚐' },
+                    { id: 'crossover', label: 'Crossover (5-Seat)', icon: '🚙' },
+                    { id: 'suv', label: 'SUV (3rd Row)', icon: '🚐' },
+                    { id: 'van', label: 'Passenger Van', icon: '🚐' },
                   ].map((v) => (
-                    <button key={v.id} onClick={() => setVehicle(v.id)} style={chipStyle(vehicle === v.id)}>
-                      <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{v.icon}</div>
-                      <div style={{ fontSize: '0.75rem', fontWeight: 700 }}>{v.label}</div>
+                    <button key={v.id} type="button" onClick={() => setVehicle(v.id)} style={chipStyle(vehicle === v.id)}>
+                      <div style={{ fontSize: '1.4rem', marginBottom: '0.2rem' }}>{v.icon}</div>
+                      <div style={{ fontSize: '0.85rem' }}>{v.label}</div>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Step 2 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <label style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--gold-primary)' }}>2. Select Detailing Package</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.75rem' }}>
+              {/* Step 2: Package Level */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-dk)' }}>
+                  2. Select Detailing Level
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem' }}>
                   {[
-                    { id: 'medium', label: 'Medium Package', price: vehicle === 'sedan' ? '$100' : vehicle === 'suv-crossover' ? '$120' : '$150' },
-                    { id: 'full', label: 'Full Detail', price: vehicle === 'sedan' ? '$200' : vehicle === 'suv-crossover' ? '$220' : '$250' },
-                    { id: 'external', label: 'External Only', price: '$30' },
+                    { id: 'wash', label: 'Hand Wash', price: vehicle === 'sedan' ? '$30' : vehicle === 'crossover' ? '$40' : vehicle === 'suv' ? '$45' : '$50' },
+                    { id: 'medium', label: 'Medium Package', price: vehicle === 'sedan' ? '$100' : vehicle === 'crossover' ? '$130' : vehicle === 'suv' ? '$150' : '$160' },
+                    { id: 'interior', label: 'Interior Complete', price: vehicle === 'sedan' ? '$175' : vehicle === 'crossover' ? '$199' : vehicle === 'suv' ? '$229' : '$249' },
+                    { id: 'full', label: 'Full Detail', price: vehicle === 'sedan' ? '$200' : vehicle === 'crossover' ? '$230' : vehicle === 'suv' ? '$250' : '$270' },
                   ].map((p) => (
-                    <button key={p.id} onClick={() => setPkg(p.id)} style={chipStyle(pkg === p.id)}>
-                      <div style={{ fontSize: '0.75rem', fontWeight: 700 }}>{p.label}</div>
-                      <div style={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--gold-primary)', marginTop: '0.25rem' }}>{p.price}</div>
+                    <button key={p.id} type="button" onClick={() => setPkg(p.id)} style={chipStyle(pkg === p.id)}>
+                      <div style={{ fontSize: '0.82rem' }}>{p.label}</div>
+                      <div style={{ fontFamily: 'var(--display)', fontSize: '1.25rem', fontWeight: 800, marginTop: '0.2rem' }}>{p.price}</div>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Step 3 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <label style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--gold-primary)' }}>3. Choose Optional Add-ons</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
-                  <div onClick={() => toggleAddon('bug-removal')} style={{ ...chipStyle(addons.includes('bug-removal')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                      <Bug style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
-                      <div>
-                        <span style={{ fontSize: '0.75rem', fontWeight: 700, display: 'block' }}>Bug Removal ⭐</span>
-                        <span style={{ fontSize: '0.625rem', color: 'var(--text-muted)' }}>Front bumper dissolve</span>
-                      </div>
+              {/* Step 3: Add-ons */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-dk)' }}>
+                  3. Select Optional Treatments &amp; Add-ons
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.6rem' }}>
+                  <div onClick={() => toggleAddon('tire-shine')} style={{ ...chipStyle(addons.includes('tire-shine')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Disc style={{ width: '1rem', height: '1rem', color: 'var(--water)' }} />
+                      <span style={{ fontSize: '0.82rem' }}>Tire Shine ⭐</span>
                     </div>
-                    <span style={{ fontSize: '0.875rem', fontWeight: 900, color: 'var(--gold-primary)' }}>$5</span>
+                    <b style={{ fontSize: '0.95rem' }}>$10</b>
                   </div>
 
-                  <div onClick={() => toggleAddon('tire-shine')} style={{ ...chipStyle(addons.includes('tire-shine')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                      <Disc style={{ width: '1rem', height: '1rem', color: 'var(--cyan-glow)' }} />
-                      <div>
-                        <span style={{ fontSize: '0.75rem', fontWeight: 700, display: 'block' }}>Tire Shine ⭐</span>
-                        <span style={{ fontSize: '0.625rem', color: 'var(--text-muted)' }}>High-gloss silicone coat</span>
-                      </div>
+                  <div onClick={() => toggleAddon('bug-removal')} style={{ ...chipStyle(addons.includes('bug-removal')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Bug style={{ width: '1rem', height: '1rem', color: 'var(--gold-dk)' }} />
+                      <span style={{ fontSize: '0.82rem' }}>Bug Removal ⭐</span>
                     </div>
-                    <span style={{ fontSize: '0.875rem', fontWeight: 900, color: 'var(--cyan-glow)' }}>$10</span>
+                    <b style={{ fontSize: '0.95rem' }}>$5</b>
                   </div>
 
                   <div onClick={() => toggleAddon('summer-mats')} style={{ ...chipStyle(addons.includes('summer-mats')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '0.75rem' }}>Summer Mats Shampoo</span>
-                    <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--gold-primary)' }}>$20</span>
+                    <span style={{ fontSize: '0.82rem' }}>Summer Mats Shampoo</span>
+                    <b style={{ fontSize: '0.95rem' }}>$20</b>
                   </div>
 
-                  <div onClick={() => toggleAddon('heavy-surcharge')} style={{ ...chipStyle(addons.includes('heavy-surcharge'), true), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '0.75rem' }}>Kids/Pets/Work Surcharge</span>
-                    <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#ef4444' }}>+$50</span>
+                  <div onClick={() => toggleAddon('engine-bay')} style={{ ...chipStyle(addons.includes('engine-bay')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '0.82rem' }}>Engine Bay Cleaning</span>
+                    <b style={{ fontSize: '0.95rem' }}>$40</b>
+                  </div>
+
+                  <div onClick={() => toggleAddon('odour')} style={{ ...chipStyle(addons.includes('odour')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '0.82rem' }}>Thermal Odour Treatment</span>
+                    <b style={{ fontSize: '0.95rem' }}>$50</b>
+                  </div>
+
+                  <div onClick={() => toggleAddon('pet-hair')} style={{ ...chipStyle(addons.includes('pet-hair'), true), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '0.82rem' }}>Pet Hair / Heavy Work</span>
+                    <b style={{ fontSize: '0.95rem', color: '#EF4444' }}>+$50</b>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
 
-          {/* Receipt Card */}
-          <div className="spa-card-gold" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <div style={{ borderBottom: '1px solid rgba(212,175,55,0.3)', paddingBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {/* Live Receipt Card */}
+          <div className="frame frame--navy" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div style={{ borderBottom: '1px solid rgba(240,213,144,0.3)', paddingBottom: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--cyan-glow)' }}>Live Quote Summary</span>
-                <h3 className="gold-gradient-text" style={{ fontSize: '1.25rem', fontWeight: 900, marginTop: '0.25rem' }}>KTOWN ESTIMATE RECEIPT</h3>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: '0.74rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#7FC4EE' }}>
+                  Live Quote Summary
+                </span>
+                <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.45rem', fontWeight: 800, margin: '0.2rem 0 0', color: 'var(--gold-lt)' }}>
+                  ESTIMATE RECEIPT
+                </h3>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 800, background: 'rgba(212,175,55,0.12)', padding: '0.25rem 0.625rem', borderRadius: '9999px', border: '1px solid rgba(212,175,55,0.3)' }}>
-                <Clock style={{ width: '0.875rem', height: '0.875rem' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.76rem', color: 'var(--gold-lt)', background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.7rem', borderRadius: '999px', border: '1px solid rgba(240,213,144,0.3)' }}>
+                <Clock style={{ width: '0.85rem', height: '0.85rem' }} />
                 <span>{calculation.duration}</span>
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.75rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', padding: '0.25rem 0', borderBottom: '1px solid var(--card-border)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.88rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#C6D8EC', paddingBottom: '0.4rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                 <span>Vehicle Class:</span>
-                <strong style={{ color: 'var(--text-main)', fontWeight: 800 }}>{calculation.vehicleLabel}</strong>
+                <strong style={{ color: '#FFFFFF' }}>{calculation.vehicleLabel}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', padding: '0.25rem 0', borderBottom: '1px solid var(--card-border)' }}>
-                <span>Base Package ({calculation.pkgName}):</span>
-                <strong style={{ color: 'var(--gold-primary)', fontWeight: 900 }}>${calculation.base}</strong>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#C6D8EC', paddingBottom: '0.4rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                <span>Base ({calculation.pkgName}):</span>
+                <strong style={{ color: 'var(--gold-lt)' }}>${calculation.base}</strong>
               </div>
               {calculation.itemizedAddons.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', paddingTop: '0.25rem' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.625rem', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>Selected Add-ons:</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', paddingTop: '0.2rem' }}>
+                  <span style={{ color: '#7FC4EE', fontFamily: 'var(--mono)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Selected Add-ons:</span>
                   {calculation.itemizedAddons.map((item, i) => (
-                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', paddingLeft: '0.5rem', fontSize: '0.6875rem' }}>
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', color: '#E4EDF7', paddingLeft: '0.5rem', fontSize: '0.82rem' }}>
                       <span>+ {item.name}</span>
-                      <span style={{ color: 'var(--cyan-glow)', fontWeight: 800 }}>+${item.price}</span>
+                      <span style={{ color: '#7FC4EE', fontWeight: 700 }}>+${item.price}</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* High-Contrast Receipt Box */}
-            <div style={{ background: 'var(--receipt-bg)', padding: '1.25rem', borderRadius: '1rem', border: '2px solid var(--receipt-border)', textAlign: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Estimated Total Price</span>
-              <div style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.025em', color: '#facc15', textShadow: '0 2px 10px rgba(250,204,21,0.3)' }}>
-                ${calculation.total} <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 400 }}>CAD</span>
+            {/* Total Estimated Cost Box */}
+            <div style={{ background: '#051124', padding: '1.4rem 1rem', borderRadius: '12px', border: '2px solid var(--gold)', textAlign: 'center' }}>
+              <span style={{ fontFamily: 'var(--mono)', fontSize: '0.75rem', color: '#A9C4E2', letterSpacing: '0.12em', textTransform: 'uppercase', display: 'block', marginBottom: '0.3rem' }}>
+                Estimated Total Price
+              </span>
+              <div style={{ fontFamily: 'var(--display)', fontSize: '3rem', fontWeight: 800, color: 'var(--gold-lt)', lineHeight: 1 }}>
+                ${calculation.total} <span style={{ fontSize: '0.9rem', color: '#A9C4E2', fontWeight: 400 }}>CAD</span>
               </div>
-              <span style={{ fontSize: '0.6875rem', color: '#34d399', fontWeight: 700, display: 'block', marginTop: '0.25rem' }}>
-                ✓ No payment required now • Pay after spa completion
+              <span style={{ fontSize: '0.78rem', color: '#34D399', fontWeight: 600, display: 'block', marginTop: '0.5rem' }}>
+                ✓ No payment required now • Pay after vehicle inspection
               </span>
             </div>
 
-            <button onClick={() => onProceedToBooking(calculation)} className="gold-button" style={{ width: '100%' }}>
+            <button 
+              onClick={() => onProceedToBooking(calculation)} 
+              className="btn btn--gold" 
+              style={{ width: '100%', minHeight: '56px' }}
+            >
               <span>Book Appointment For ${calculation.total}</span>
-              <ArrowRight style={{ width: '1rem', height: '1rem', color: '#080a0f' }} />
+              <ArrowRight style={{ width: '1.1rem', height: '1.1rem' }} />
             </button>
 
-            <p style={{ fontSize: '0.6875rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Questions? Call <a href="tel:6479153530" style={{ color: 'var(--gold-primary)', textDecoration: 'underline', fontWeight: 800 }}>647-915-3530</a> or email <a href="mailto:ktownautomobilespa@gmail.com" style={{ color: 'var(--cyan-glow)', textDecoration: 'underline' }}>ktownautomobilespa@gmail.com</a>
+            <p style={{ fontSize: '0.78rem', textAlign: 'center', color: '#A9C4E2', margin: 0 }}>
+              Questions? Call <a href="tel:6479153530" style={{ color: 'var(--gold-lt)', textDecoration: 'underline', fontWeight: 700 }}>647-915-3530</a> or email <a href="mailto:ktownautomobilespa@gmail.com" style={{ color: '#7FC4EE', textDecoration: 'underline' }}>ktownautomobilespa@gmail.com</a>
             </p>
           </div>
 
         </div>
+
       </div>
     </section>
   );

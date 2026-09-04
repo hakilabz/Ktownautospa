@@ -1,146 +1,163 @@
 import React, { useState } from 'react';
-import { Sparkles, ArrowLeftRight, Disc, Bug, Flame } from 'lucide-react';
+import { Sparkles, ArrowLeftRight, Disc, Bug, Flame, Check } from 'lucide-react';
 
 export default function Gallery() {
   const [sliderPos, setSliderPos] = useState(50);
 
-  const galleryItems = [
+  const workCards = [
     {
       title: 'High-Gloss Tire & Rim Shine',
-      desc: 'Brake dust removal & $10 deep silicone shine coat restoration.',
+      desc: 'Brake dust removal & $10 deep silicone shine barrier restoration.',
       tag: 'Tire Shine - $10',
-      icon: <Disc style={{ width: '1.25rem', height: '1.25rem', color: 'var(--cyan-glow)' }} />,
+      icon: <Disc style={{ width: '1.25rem', height: '1.25rem', color: 'var(--water)' }} />,
     },
     {
-      title: 'Front Bumper Bug & Tar Removal',
-      desc: 'Enzyme solvent dissolves highway bugs without paint swirl scratches.',
+      title: 'Front Bumper Bug & Tar Decon',
+      desc: 'Specialty enzyme solvent dissolves baked-on bugs without swirl scratches.',
       tag: 'Bug Removal - $5',
-      icon: <Bug style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)' }} />,
+      icon: <Bug style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)' }} />,
     },
     {
-      title: 'Deep Carpet & Seat Steam Clean',
-      desc: 'Hot thermal steam extraction removes salt, mud, pet hair & food stains.',
+      title: 'Thermal Carpet & Seat Steam Extraction',
+      desc: 'Deep steam extraction pulls salt, winter brine, pet hair and coffee stains.',
       tag: 'Full Detail Feature',
-      icon: <Flame style={{ width: '1.25rem', height: '1.25rem', color: '#f59e0b' }} />,
+      icon: <Flame style={{ width: '1.25rem', height: '1.25rem', color: '#E65100' }} />,
     },
   ];
 
   return (
-    <section style={{ padding: '6rem 0', background: 'var(--section-alt-bg)', position: 'relative' }}>
-      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
+    <section className="band" id="work">
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
         
         {/* Section Header */}
-        <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto 4rem auto' }}>
-          <div className="section-badge-pill">
-            <Sparkles style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
-            <span className="section-badge-text">
-              Proven Results &amp; Craftsmanship
-            </span>
-          </div>
-          <h2 style={{ fontSize: 'clamp(1.875rem, 4vw, 3rem)', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.025em' }}>
-            BEFORE &amp; AFTER <span className="gold-gradient-text">TRANSFORMATIONS</span>
-          </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginTop: '1rem' }}>
-            Drag the slider below to witness the mirror-finish shine produced by Ktown Auto Spa.
+        <div className="section-head" style={{ marginBottom: '2.5rem' }}>
+          <p className="kicker">Our work</p>
+          <h2>Same car. Drag the slider.</h2>
+          <p>
+            This is what true multi-stage paint correction actually accomplishes. Swirl marks and oxidation are polished out of the clear coat, and the true optical depth and mirror gloss come back.
           </p>
         </div>
 
-        {/* Interactive Before / After Photo Slider */}
-        <div className="spa-card-gold" style={{ maxWidth: '64rem', margin: '0 auto 3rem auto', overflow: 'hidden', padding: '1rem' }}>
-          <div style={{ position: 'relative', height: '420px', borderRadius: '1rem', overflow: 'hidden', userSelect: 'none', background: '#020617', border: '1px solid var(--card-border)' }}>
-            
-            {/* AFTER: Clean Car Photo (Full Container) */}
-            <div style={{ position: 'absolute', inset: 0 }}>
-              <img 
-                src="/car-after.jpg" 
-                alt="After Detailing - Clean Glossy Car"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
-              <div style={{
-                position: 'absolute', bottom: '1.25rem', right: '1.25rem',
-                background: 'rgba(8,10,15,0.88)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                padding: '0.5rem 1rem', borderRadius: '9999px', border: '1px solid rgba(212,175,55,0.5)',
-                fontSize: '0.75rem', fontWeight: 900, color: '#fde047', textTransform: 'uppercase',
-                display: 'flex', alignItems: 'center', gap: '0.5rem',
-              }}>
-                <Sparkles style={{ width: '0.875rem', height: '0.875rem', color: '#facc15' }} />
-                <span>AFTER: KTOWN AUTO SPA SHINE ✨</span>
-              </div>
-            </div>
+        {/* Interactive Comparison Slider */}
+        <div 
+          style={{
+            position: 'relative',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            border: '2px solid var(--gold-dk)',
+            boxShadow: '0 16px 40px rgba(12, 34, 71, 0.2)',
+            aspectRatio: '16/9',
+            maxHeight: '560px',
+            userSelect: 'none',
+          }}
+        >
+          {/* AFTER (Full background) */}
+          <div 
+            style={{
+              position: 'absolute', inset: 0,
+              backgroundImage: `url('/car-after.jpg')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
 
-            {/* BEFORE: Dirty Car Photo (Clipped by sliderPos %) */}
-            <div style={{
-              position: 'absolute', top: 0, bottom: 0, left: 0,
-              width: `${sliderPos}%`, overflow: 'hidden', borderRight: '3px solid #facc15',
-            }}>
-              <img 
-                src="/car-before.jpg" 
-                alt="Before Detailing - Muddy Dirty Car"
-                style={{
-                  width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-                  minWidth: '64rem',
-                }}
-              />
-              <div style={{
-                position: 'absolute', bottom: '1.25rem', left: '1.25rem',
-                background: 'rgba(8,10,15,0.88)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                padding: '0.5rem 1rem', borderRadius: '9999px', border: '1px solid rgba(239,68,68,0.5)',
-                fontSize: '0.75rem', fontWeight: 900, color: '#fca5a5', textTransform: 'uppercase',
-                whiteSpace: 'nowrap',
-              }}>
-                <span>BEFORE: MUD, BUGS &amp; ROAD DIRT 🚗💦</span>
-              </div>
-            </div>
+          {/* BEFORE (Clipped left side) */}
+          <div 
+            style={{
+              position: 'absolute', inset: 0,
+              backgroundImage: `url('/car-before.jpg')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              clipPath: `inset(0 ${100 - sliderPos}% 0 0)`,
+            }}
+          />
 
-            {/* Slider Handle */}
-            <div style={{
-              position: 'absolute', top: 0, bottom: 0, left: `${sliderPos}%`,
-              width: '4px', background: '#facc15', cursor: 'ew-resize',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transform: 'translateX(-50%)', zIndex: 10,
-              boxShadow: '0 0 12px rgba(250,204,21,0.8)',
-            }}>
-              <div style={{
-                width: '2.5rem', height: '2.5rem', background: '#facc15', color: '#080a0f',
-                borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.6)', border: '2px solid #080a0f',
-              }}>
-                <ArrowLeftRight style={{ width: '1.125rem', height: '1.125rem' }} />
-              </div>
-            </div>
-
-            {/* Range Slider Overlay */}
-            <input
-              type="range"
-              min="2"
-              max="98"
-              value={sliderPos}
-              onChange={(e) => setSliderPos(e.target.value)}
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'ew-resize', zIndex: 20 }}
-            />
+          {/* Tags */}
+          <div style={{
+            position: 'absolute', bottom: '1rem', left: '1rem', zIndex: 10,
+            fontFamily: 'var(--mono)', fontSize: '0.8rem', letterSpacing: '0.12em',
+            textTransform: 'uppercase', padding: '0.42rem 0.9rem', borderRadius: '999px',
+            background: 'rgba(10, 30, 66, 0.92)', color: '#FFFFFF',
+          }}>
+            Before: Mud &amp; Swirls
           </div>
 
-          <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            <span>← Slide left to reveal BEFORE muddy condition</span>
-            <span style={{ color: 'var(--gold-primary)', fontWeight: 800 }}>Slide Position: {sliderPos}%</span>
-            <span>Slide right to reveal AFTER spa mirror shine →</span>
+          <div style={{
+            position: 'absolute', bottom: '1rem', right: '1rem', zIndex: 10,
+            fontFamily: 'var(--mono)', fontSize: '0.8rem', letterSpacing: '0.12em',
+            textTransform: 'uppercase', padding: '0.42rem 0.9rem', borderRadius: '999px',
+            background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
+            color: 'var(--navy-deep)', fontWeight: 800,
+          }}>
+            After: Ktown Spa Mirror Shine
           </div>
+
+          {/* Divider Line */}
+          <div 
+            style={{
+              position: 'absolute', top: 0, bottom: 0,
+              left: `${sliderPos}%`, width: '3px',
+              background: 'var(--gold-lt)',
+              transform: 'translateX(-50%)',
+              pointerEvents: 'none', zIndex: 15,
+            }}
+          />
+
+          {/* Drag Knob Handle */}
+          <div 
+            style={{
+              position: 'absolute', top: '50%',
+              left: `${sliderPos}%`,
+              transform: 'translate(-50%, -50%)',
+              width: '56px', height: '56px', borderRadius: '50%',
+              background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
+              border: '3px solid var(--navy-deep)',
+              pointerEvents: 'none', zIndex: 20,
+              display: 'grid', placeItems: 'center',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+              color: 'var(--navy-deep)',
+            }}
+          >
+            <ArrowLeftRight style={{ width: '1.4rem', height: '1.4rem' }} />
+          </div>
+
+          {/* Range Slider Overlay */}
+          <input
+            type="range"
+            min="5"
+            max="95"
+            value={sliderPos}
+            onChange={(e) => setSliderPos(Number(e.target.value))}
+            style={{
+              position: 'absolute', inset: 0, width: '100%', height: '100%',
+              margin: 0, opacity: 0, cursor: 'ew-resize', zIndex: 25,
+            }}
+            aria-label="Drag slider left or right to compare before and after"
+          />
         </div>
 
-        {/* Feature Cards */}
-        <div className="matrix-grid-3col">
-          {galleryItems.map((item, idx) => (
-            <div key={idx} className="spa-card" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        {/* Feature Highlights Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginTop: '2.5rem' }}>
+          {workCards.map((item, idx) => (
+            <div key={idx} className="frame" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ padding: '0.625rem', background: 'var(--input-bg)', borderRadius: '0.75rem', border: '1px solid var(--card-border)' }}>
+                <div style={{ padding: '0.5rem', background: 'var(--cream-2)', borderRadius: '8px', border: '1px solid var(--cream-3)' }}>
                   {item.icon}
                 </div>
-                <span style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold-primary)', border: '1px solid rgba(212,175,55,0.4)', fontSize: '0.625rem', fontWeight: 800, padding: '0.25rem 0.625rem', borderRadius: '9999px', textTransform: 'uppercase' }}>
+                <span style={{
+                  background: 'var(--navy-deep)', color: 'var(--gold-lt)',
+                  fontFamily: 'var(--mono)', fontSize: '0.74rem', fontWeight: 700,
+                  padding: '0.25rem 0.65rem', borderRadius: '999px', textTransform: 'uppercase',
+                }}>
                   {item.tag}
                 </span>
               </div>
-              <h4 style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--text-main)' }}>{item.title}</h4>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>{item.desc}</p>
+              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--navy-deep)', margin: 0 }}>
+                {item.title}
+              </h4>
+              <p style={{ fontSize: '0.88rem', color: 'var(--slate)', margin: 0, lineHeight: 1.55 }}>
+                {item.desc}
+              </p>
             </div>
           ))}
         </div>
