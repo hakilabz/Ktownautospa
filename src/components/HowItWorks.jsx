@@ -38,18 +38,18 @@ export default function HowItWorks() {
               <div style={{
                 display: 'grid', placeItems: 'center', width: '50px', height: '50px',
                 borderRadius: '50%', background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
-                border: '2px solid var(--navy-deep)', color: 'var(--navy-deep)',
+                border: '2px solid #0A1E42', color: '#0A1E42',
                 fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem',
                 marginBottom: '0.6rem',
               }}>
                 {s.num}
               </div>
 
-              <h3 style={{ fontSize: '1.3rem', margin: 0, fontWeight: 800, color: 'var(--navy-deep)' }}>
+              <h3 style={{ fontSize: '1.3rem', margin: 0, fontWeight: 800, color: 'var(--heading-color)' }}>
                 {s.title}
               </h3>
 
-              <p style={{ margin: 0, color: 'var(--slate)', fontSize: '0.96rem', lineHeight: 1.6 }}>
+              <p style={{ margin: 0, color: 'var(--muted-color)', fontSize: '0.96rem', lineHeight: 1.6 }}>
                 {s.desc}
               </p>
             </div>

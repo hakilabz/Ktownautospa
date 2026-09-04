@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, ArrowLeftRight, Disc, Bug, Flame, Check } from 'lucide-react';
+import { ArrowLeftRight, Disc, Bug, Flame } from 'lucide-react';
 
 export default function Gallery() {
   const [sliderPos, setSliderPos] = useState(50);
@@ -15,7 +15,7 @@ export default function Gallery() {
       title: 'Front Bumper Bug & Tar Decon',
       desc: 'Specialty enzyme solvent dissolves baked-on bugs without swirl scratches.',
       tag: 'Bug Removal - $5',
-      icon: <Bug style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)' }} />,
+      icon: <Bug style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)' }} />,
     },
     {
       title: 'Thermal Carpet & Seat Steam Extraction',
@@ -44,7 +44,7 @@ export default function Gallery() {
             position: 'relative',
             borderRadius: '12px',
             overflow: 'hidden',
-            border: '2px solid var(--gold-dk)',
+            border: '2px solid var(--surface-border-gold)',
             boxShadow: '0 16px 40px rgba(12, 34, 71, 0.2)',
             aspectRatio: '16/9',
             maxHeight: '560px',
@@ -87,7 +87,7 @@ export default function Gallery() {
             fontFamily: 'var(--mono)', fontSize: '0.8rem', letterSpacing: '0.12em',
             textTransform: 'uppercase', padding: '0.42rem 0.9rem', borderRadius: '999px',
             background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
-            color: 'var(--navy-deep)', fontWeight: 800,
+            color: '#0A1E42', fontWeight: 800,
           }}>
             After: Ktown Spa Mirror Shine
           </div>
@@ -111,11 +111,11 @@ export default function Gallery() {
               transform: 'translate(-50%, -50%)',
               width: '56px', height: '56px', borderRadius: '50%',
               background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
-              border: '3px solid var(--navy-deep)',
+              border: '3px solid #0A1E42',
               pointerEvents: 'none', zIndex: 20,
               display: 'grid', placeItems: 'center',
               boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-              color: 'var(--navy-deep)',
+              color: '#0A1E42',
             }}
           >
             <ArrowLeftRight style={{ width: '1.4rem', height: '1.4rem' }} />
@@ -141,7 +141,7 @@ export default function Gallery() {
           {workCards.map((item, idx) => (
             <div key={idx} className="frame" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ padding: '0.5rem', background: 'var(--cream-2)', borderRadius: '8px', border: '1px solid var(--cream-3)' }}>
+                <div style={{ padding: '0.5rem', background: 'var(--chip-inactive-bg)', borderRadius: '8px', border: '1px solid var(--surface-border)' }}>
                   {item.icon}
                 </div>
                 <span style={{
@@ -152,10 +152,10 @@ export default function Gallery() {
                   {item.tag}
                 </span>
               </div>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--navy-deep)', margin: 0 }}>
+              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--heading-color)', margin: 0 }}>
                 {item.title}
               </h4>
-              <p style={{ fontSize: '0.88rem', color: 'var(--slate)', margin: 0, lineHeight: 1.55 }}>
+              <p style={{ fontSize: '0.88rem', color: 'var(--muted-color)', margin: 0, lineHeight: 1.55 }}>
                 {item.desc}
               </p>
             </div>

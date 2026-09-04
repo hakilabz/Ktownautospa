@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Phone, Mail, ShieldCheck, Truck } from 'lucide-react';
+import { Check, Phone, Mail } from 'lucide-react';
 
 export default function FleetsSection({ onOpenBooking }) {
   const fleetFeatures = [
@@ -49,14 +49,14 @@ export default function FleetsSection({ onOpenBooking }) {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '1.2rem' }}>
               {fleetFeatures.map((item, idx) => (
                 <li key={idx} style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                  <div style={{ marginTop: '2px', background: 'var(--cream-2)', border: '1px solid var(--gold-dk)', borderRadius: '50%', padding: '3px', display: 'flex' }}>
-                    <Check style={{ width: '1.1rem', height: '1.1rem', color: 'var(--gold-dk)' }} />
+                  <div style={{ marginTop: '2px', background: 'var(--chip-inactive-bg)', border: '1px solid var(--surface-border-gold)', borderRadius: '50%', padding: '3px', display: 'flex' }}>
+                    <Check style={{ width: '1.1rem', height: '1.1rem', color: 'var(--gold-primary)' }} />
                   </div>
                   <div>
-                    <strong style={{ color: 'var(--navy-deep)', display: 'block', fontSize: '1.05rem', marginBottom: '0.2rem' }}>
+                    <strong style={{ color: 'var(--heading-color)', display: 'block', fontSize: '1.05rem', marginBottom: '0.2rem' }}>
                       {item.title}
                     </strong>
-                    <span style={{ color: 'var(--slate)', fontSize: '0.94rem', lineHeight: 1.55 }}>
+                    <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
                       {item.desc}
                     </span>
                   </div>

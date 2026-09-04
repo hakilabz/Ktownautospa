@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, Clock, ShieldCheck, Sparkles, AlertCircle, FileText, ArrowRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 export default function RateCard({ onOpenBooking, onSelectPackage }) {
   const [activeTab, setActiveTab] = useState('wash');
@@ -33,7 +33,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
           </p>
         </div>
 
-        {/* Vehicle Picker Switcher for Desktop / Mobile */}
+        {/* Vehicle Picker Switcher */}
         <div className="vpick" role="group" aria-label="Show prices for vehicle type">
           <span className="vpick__lbl">Show vehicle:</span>
           <div className="vpick__btns">
@@ -70,7 +70,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
         {/* Tab 1: Wash & Detail */}
         {activeTab === 'wash' && (
           <div role="tabpanel" id="panel-wash" aria-labelledby="tab-wash">
-            <p className="tcap">Wash &amp; detail</p>
+            <p className="kicker">Wash &amp; detail</p>
             
             <div className="pricewrap">
               <table className="prices">
@@ -138,37 +138,37 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                     <span className="capsule">Medium Package</span>
                   </div>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.85rem' }}>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--navy-ink)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
+                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                       <div>Inside &amp; outside cleaning</div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--navy-ink)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
+                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                       <div>
                         Full interior detail
-                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--slate)', fontSize: '0.92rem' }}>Glass wipe down and thorough vacuum</span>
+                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>Glass wipe down and thorough vacuum</span>
                       </div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--navy-ink)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
+                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                       <div>Rubber mats shampoo washed</div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--navy-ink)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
+                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                       <div>All doors &amp; jambs wiped &amp; degreased</div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--navy-ink)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
+                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                       <div>
                         Exterior body &amp; tire hand wash
-                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--slate)', fontSize: '0.92rem' }}>No pressure washers — 100% paint safe hand washing</span>
+                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>No pressure washers — 100% paint safe hand washing</span>
                       </div>
                     </li>
                   </ul>
                 </div>
 
-                <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--cream-3)', textAlign: 'center' }}>
-                  <p style={{ fontFamily: 'var(--mono)', fontSize: '0.92rem', color: 'var(--gold-dk)', fontWeight: 700, margin: '0 0 1rem' }}>
+                <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', textAlign: 'center' }}>
+                  <p style={{ fontFamily: 'var(--mono)', fontSize: '0.92rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 1rem' }}>
                     Approx. 2 hours · from $100
                   </p>
                   <button 
@@ -187,36 +187,36 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   <div style={{ textAlign: 'center', marginTop: '-2.8rem', marginBottom: '1.4rem' }}>
                     <span className="capsule">Full Detail</span>
                   </div>
-                  <p style={{ fontWeight: 800, color: 'var(--navy-ink)', fontSize: '1.05rem', marginBottom: '1rem' }}>
+                  <p style={{ fontWeight: 800, color: 'var(--heading-color)', fontSize: '1.05rem', marginBottom: '1rem' }}>
                     Includes all features from Medium Package, plus:
                   </p>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.85rem' }}>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--navy-ink)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
+                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                       <div>
                         Summer mats shampoo washed &amp; steamed
-                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--slate)', fontSize: '0.92rem' }}>Hot thermal extraction of salt, mud, spills &amp; stains</span>
+                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>Hot thermal extraction of salt, mud, spills &amp; stains</span>
                       </div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--navy-ink)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
+                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                       <div>
                         Non-removable carpets &amp; seats
-                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--slate)', fontSize: '0.92rem' }}>Deep scrubbed and hot steam sanitized for an ultra-fresh cabin</span>
+                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>Deep scrubbed and hot steam sanitized for an ultra-fresh cabin</span>
                       </div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--navy-ink)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
+                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                       <div>
                         Cabin sanitize &amp; deodorize
-                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--slate)', fontSize: '0.92rem' }}>Hypoallergenic clean, zero chemical perfume residue</span>
+                        <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>Hypoallergenic clean, zero chemical perfume residue</span>
                       </div>
                     </li>
                   </ul>
                 </div>
 
-                <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--cream-3)', textAlign: 'center' }}>
-                  <p style={{ fontFamily: 'var(--mono)', fontSize: '0.92rem', color: 'var(--gold-dk)', fontWeight: 700, margin: '0 0 1rem' }}>
+                <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', textAlign: 'center' }}>
+                  <p style={{ fontFamily: 'var(--mono)', fontSize: '0.92rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 1rem' }}>
                     Approx. 4 hours · from $200
                   </p>
                   <button 
@@ -236,7 +236,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
         {/* Tab 2: Polish & Protect */}
         {activeTab === 'polish' && (
           <div role="tabpanel" id="panel-polish" aria-labelledby="tab-polish">
-            <p className="tcap">Polish &amp; protect</p>
+            <p className="kicker">Polish &amp; protect</p>
             
             <div className="pricewrap">
               <table className="prices">
@@ -294,29 +294,29 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
               </table>
             </div>
 
-            <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--slate)', margin: '1rem 0 0', lineHeight: 1.5 }}>
+            <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--muted-color)', margin: '1rem 0 0', lineHeight: 1.5 }}>
               * Deep scratches that catch a fingernail cannot be fully compounded out without repainting. We measure paint thickness with digital gauges before any machine correction begins.
             </p>
           </div>
         )}
 
-        {/* Tab 3: Ceramic Coating (Includes System X vs Nano-Brite comparison) */}
+        {/* Tab 3: Ceramic Coating */}
         {activeTab === 'coat' && (
           <div role="tabpanel" id="panel-coat" aria-labelledby="tab-coat">
             
             {/* System X Comparison Callout Box */}
-            <div style={{ background: '#FFFFFF', border: '2px solid var(--gold-dk)', borderRadius: '12px', padding: '1.6rem 1.5rem', marginBottom: '2.2rem', boxShadow: '0 8px 24px rgba(12,34,71,.08)' }}>
+            <div style={{ background: 'var(--surface-card)', border: '2px solid var(--surface-border-gold)', borderRadius: '12px', padding: '1.6rem 1.5rem', marginBottom: '2.2rem', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
               <div style={{ display: 'flex', gap: '1.4rem', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', marginBottom: '1.2rem' }}>
                 <div>
                   <p className="kicker">Before you compare prices</p>
-                  <h3 style={{ fontFamily: 'var(--display)', fontWeight: 800, textTransform: 'uppercase', fontSize: 'clamp(1.5rem, 3.6vw, 2rem)', margin: '0.3rem 0 0.5rem', color: 'var(--navy-deep)' }}>
+                  <h3 style={{ fontFamily: 'var(--display)', fontWeight: 800, textTransform: 'uppercase', fontSize: 'clamp(1.5rem, 3.6vw, 2rem)', margin: '0.3rem 0 0.5rem', color: 'var(--heading-color)' }}>
                     Why System X costs more than Nano-Brite
                   </h3>
-                  <p style={{ margin: 0, color: 'var(--slate)', maxWidth: '52ch', fontSize: '0.95rem' }}>
+                  <p style={{ margin: 0, color: 'var(--muted-color)', maxWidth: '52ch', fontSize: '0.95rem' }}>
                     Both are real ceramic coatings and both receive proper multi-stage paint correction first. The gap in price is what happens <strong>after</strong> we hand your keys back.
                   </p>
                 </div>
-                <div style={{ padding: '0.5rem 0.75rem', border: '1px solid var(--cream-3)', borderRadius: '8px', background: '#111827', color: '#FFFFFF', textAlign: 'center' }}>
+                <div style={{ padding: '0.5rem 0.75rem', border: '1px solid var(--surface-border)', borderRadius: '8px', background: '#111827', color: '#FFFFFF', textAlign: 'center' }}>
                   <span style={{ fontWeight: 900, fontSize: '1.1rem', letterSpacing: '0.05em', display: 'block' }}>CARFAX</span>
                   <span style={{ color: '#60A5FA', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Canada Verified</span>
                 </div>
@@ -362,7 +362,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
               </div>
             </div>
 
-            <p className="tcap">Ceramic coating packages — includes wash, iron decon, clay bar, correction and coating</p>
+            <p className="kicker">Ceramic coating packages — includes wash, iron decon, clay bar, correction and coating</p>
             
             <div className="pricewrap">
               <table className="prices">
@@ -378,7 +378,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                 <tbody>
                   <tr>
                     <th scope="row">
-                      Nano-Brite Rejuvenate <span style={{ color: 'var(--gold-dk)', fontWeight: 700 }}>1 year</span>
+                      Nano-Brite Rejuvenate <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>1 year</span>
                       <small>Decon + 1-step correction + 1 layer · approx 5 hrs</small>
                     </th>
                     <td>$449</td>
@@ -388,7 +388,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                   <tr>
                     <th scope="row">
-                      Nano-Brite Ultra <span style={{ color: 'var(--gold-dk)', fontWeight: 700 }}>3 year</span>
+                      Nano-Brite Ultra <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>3 year</span>
                       <small>Decon + 1-step correction + 1 layer · approx 6 hrs</small>
                     </th>
                     <td>$649</td>
@@ -398,7 +398,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                   <tr>
                     <th scope="row">
-                      Nano-Brite EVO Graphene <span style={{ color: 'var(--gold-dk)', fontWeight: 700 }}>7 year</span>
+                      Nano-Brite EVO Graphene <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>7 year</span>
                       <small>Graphene coating. Decon + 2-step correction + top coat · approx 10 hrs</small>
                     </th>
                     <td>$1199</td>
@@ -406,9 +406,9 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                     <td>$1399</td>
                     <td>$1499</td>
                   </tr>
-                  <tr style={{ background: 'rgba(214, 236, 250, 0.4)' }}>
+                  <tr style={{ background: 'rgba(62, 155, 218, 0.12)' }}>
                     <th scope="row">
-                      System X Crystal+ <span style={{ color: 'var(--navy-deep)', fontWeight: 800 }}>2 year</span> <span className="cf-pill">CARFAX</span>
+                      System X Crystal+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>2 year</span> <span className="cf-pill">CARFAX</span>
                       <small>1-step correction + paint and glass coating · approx 8 hrs</small>
                     </th>
                     <td>$949</td>
@@ -416,9 +416,9 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                     <td>$1149</td>
                     <td>$1249</td>
                   </tr>
-                  <tr style={{ background: 'rgba(214, 236, 250, 0.4)' }}>
+                  <tr style={{ background: 'rgba(62, 155, 218, 0.12)' }}>
                     <th scope="row">
-                      System X Pro+ <span style={{ color: 'var(--navy-deep)', fontWeight: 800 }}>6 year</span> <span className="cf-pill">CARFAX</span>
+                      System X Pro+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>6 year</span> <span className="cf-pill">CARFAX</span>
                       <small>2-step correction + paint, glass and wheel coatings · approx 11 hrs</small>
                     </th>
                     <td>$1299</td>
@@ -426,9 +426,9 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                     <td>$1599</td>
                     <td>$1749</td>
                   </tr>
-                  <tr style={{ background: 'rgba(214, 236, 250, 0.4)' }}>
+                  <tr style={{ background: 'rgba(62, 155, 218, 0.12)' }}>
                     <th scope="row">
-                      System X Max G+ <span style={{ color: 'var(--navy-deep)', fontWeight: 800 }}>10 year</span> <span className="cf-pill">CARFAX</span>
+                      System X Max G+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>10 year</span> <span className="cf-pill">CARFAX</span>
                       <small>Graphene. 2-step correction + paint, glass and wheel coatings · approx 12 hrs</small>
                     </th>
                     <td>$1699</td>
@@ -436,9 +436,9 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                     <td>$1999</td>
                     <td>$2149</td>
                   </tr>
-                  <tr style={{ background: 'rgba(214, 236, 250, 0.4)' }}>
+                  <tr style={{ background: 'rgba(62, 155, 218, 0.12)' }}>
                     <th scope="row">
-                      System X Diamond SS <span style={{ color: 'var(--gold-dk)', fontWeight: 900 }}>Lifetime</span> <span className="cf-pill">CARFAX</span>
+                      System X Diamond SS <span style={{ color: 'var(--gold-primary)', fontWeight: 900 }}>Lifetime</span> <span className="cf-pill">CARFAX</span>
                       <small>2-step correction + paint, glass and wheel coatings · approx 13 hrs</small>
                     </th>
                     <td>$1799</td>
@@ -470,7 +470,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
               </table>
             </div>
 
-            <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--slate)', margin: '1rem 0 0' }}>
+            <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--muted-color)', margin: '1rem 0 0' }}>
               * Additional coating layer: $150. Every System X installation includes warranty registration on CARFAX Canada.
             </p>
           </div>
@@ -479,7 +479,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
         {/* Tab 4: Interior & Glass Coatings */}
         {activeTab === 'int' && (
           <div role="tabpanel" id="panel-int" aria-labelledby="tab-int">
-            <p className="tcap">Interior, glass, wheel &amp; trim coatings</p>
+            <p className="kicker">Interior, glass, wheel &amp; trim coatings</p>
             
             <div className="pricewrap">
               <table className="prices">
@@ -493,7 +493,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                 <tbody>
                   <tr>
                     <th scope="row">
-                      System X LVP <span style={{ color: 'var(--gold-dk)' }}>Leather, vinyl &amp; plastic</span>
+                      System X LVP <span style={{ color: 'var(--gold-primary)' }}>Leather, vinyl &amp; plastic</span>
                       <small>3-year warranty against spills and UV cracking. CARFAX registered</small>
                     </th>
                     <td>$229</td>
@@ -501,7 +501,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                   <tr>
                     <th scope="row">
-                      System X Textile <span style={{ color: 'var(--gold-dk)' }}>Fabric &amp; carpet</span>
+                      System X Textile <span style={{ color: 'var(--gold-primary)' }}>Fabric &amp; carpet</span>
                       <small>2-year hydrophobic stain protection. CARFAX registered</small>
                     </th>
                     <td>$149</td>
@@ -509,7 +509,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                   <tr>
                     <th scope="row">
-                      System X LVP + Textile <span style={{ color: 'var(--gold-dk)', fontWeight: 800 }}>Complete Interior</span>
+                      System X LVP + Textile <span style={{ color: 'var(--gold-primary)', fontWeight: 800 }}>Complete Interior</span>
                       <small>Full cabin coated, warranted and CARFAX registered</small>
                     </th>
                     <td>$325</td>
@@ -533,7 +533,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                   <tr>
                     <th scope="row">
-                      Nano-Brite Leather + Fabric <span style={{ color: 'var(--gold-dk)' }}>Complete Interior</span>
+                      Nano-Brite Leather + Fabric <span style={{ color: 'var(--gold-primary)' }}>Complete Interior</span>
                       <small>8–12 month protection. Our best-value interior package</small>
                     </th>
                     <td>$175</td>
@@ -557,7 +557,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                   <tr>
                     <th scope="row">
-                      System X Revive <span style={{ color: 'var(--gold-dk)' }}>Trim restoration</span>
+                      System X Revive <span style={{ color: 'var(--gold-primary)' }}>Trim restoration</span>
                       <small>Restores faded oxidized exterior plastic &amp; rubber moldings</small>
                     </th>
                     <td>$89</td>
@@ -567,7 +567,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
               </table>
             </div>
 
-            <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--slate)', margin: '1rem 0 0' }}>
+            <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--muted-color)', margin: '1rem 0 0' }}>
               * "With a detail" pricing applies when booked alongside any package. Standalone pricing includes the deep interior prep work required before application.
             </p>
           </div>
@@ -579,7 +579,7 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', marginTop: '1.5rem' }}>
               
               {/* Add-ons list */}
-              <div className="frame frame--water">
+              <div className="frame">
                 <div style={{ marginTop: '-2.6rem', marginBottom: '1.2rem' }}>
                   <span className="capsule capsule--sm">Add-ons</span>
                 </div>
@@ -593,8 +593,8 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   { name: 'Thermal Odour / Smoke Treatment', price: '$50' },
                   { name: 'Pet Hair Extraction', price: '$50–$100' },
                 ].map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0.85rem 0', borderBottom: idx < 6 ? '1px dashed var(--cream-3)' : 'none' }}>
-                    <strong style={{ fontSize: '1.05rem', color: 'var(--navy-ink)' }}>{item.name}</strong>
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0.85rem 0', borderBottom: idx < 6 ? '1px dashed var(--surface-border)' : 'none' }}>
+                    <strong style={{ fontSize: '1.05rem', color: 'var(--heading-color)' }}>{item.name}</strong>
                     <b style={{ fontFamily: 'var(--display)', fontSize: '1.75rem', color: 'var(--water-dk)' }}>{item.price}</b>
                   </div>
                 ))}

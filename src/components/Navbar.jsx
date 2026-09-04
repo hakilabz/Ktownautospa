@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Calendar, Menu, X, Mail, Sun, Moon, MapPin } from 'lucide-react';
+import { Phone, Calendar, Menu, X, Moon, Sun } from 'lucide-react';
 
 export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
   const [scrolled, setScrolled] = useState(false);
@@ -34,8 +34,9 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
   return (
     <header style={{
       position: 'sticky', top: 0, left: 0, right: 0, zIndex: 60,
-      background: 'var(--cream)', borderBottom: '1px solid var(--cream-3)',
+      background: 'var(--header-bg)', borderBottom: '1px solid var(--header-border)',
       boxShadow: '0 2px 14px rgba(12,34,71,.08)',
+      transition: 'background-color 0.3s ease, border-color 0.3s ease',
     }}>
       {/* Top Header Bar */}
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0.55rem 1rem' }}>
@@ -47,9 +48,9 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
           </a>
 
           {/* Topbar Meta (Desktop) */}
-          <div style={{ display: 'none', flexDirection: 'column', fontFamily: 'var(--mono)', fontSize: '0.82rem', color: 'var(--slate)', lineHeight: 1.5, textAlign: 'right', marginLeft: 'auto', marginRight: '1.25rem' }} className="desktop-meta">
-            <span>36 Joseph St, Kingston ON</span>
-            <a href="mailto:ktownautomobilespa@gmail.com" style={{ color: 'var(--slate)', textDecoration: 'none' }}>ktownautomobilespa@gmail.com</a>
+          <div style={{ display: 'none', flexDirection: 'column', fontFamily: 'var(--mono)', fontSize: '0.82rem', color: 'var(--muted-color)', lineHeight: 1.5, textAlign: 'right', marginLeft: 'auto', marginRight: '1.25rem' }} className="desktop-meta">
+            <span style={{ color: 'var(--text-main)' }}>36 Joseph St, Kingston ON</span>
+            <a href="mailto:ktownautomobilespa@gmail.com" style={{ color: 'var(--muted-color)', textDecoration: 'none' }}>ktownautomobilespa@gmail.com</a>
             <span>ktownautospa.ca</span>
           </div>
 
@@ -63,11 +64,11 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 width: '2.5rem', height: '2.5rem', borderRadius: '50%',
-                background: 'var(--cream-2)', border: '1.5px solid var(--gold)',
-                color: 'var(--gold-dk)', cursor: 'pointer', transition: 'all 0.2s',
+                background: 'var(--chip-inactive-bg)', border: '1.5px solid var(--gold)',
+                color: 'var(--gold-primary)', cursor: 'pointer', transition: 'all 0.2s',
               }}
             >
-              {isLight ? <Moon style={{ width: '1.1rem', height: '1.1rem' }} /> : <Sun style={{ width: '1.1rem', height: '1.1rem', color: '#F0D590' }} />}
+              {isLight ? <Moon style={{ width: '1.1rem', height: '1.1rem', color: 'var(--navy-deep)' }} /> : <Sun style={{ width: '1.1rem', height: '1.1rem', color: '#F0D590' }} />}
             </button>
 
             {/* Direct Phone CTA */}
@@ -93,7 +94,7 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
             {/* Mobile Drawer Hamburger */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              style={{ color: 'var(--navy-deep)', padding: '0.35rem', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
+              style={{ color: 'var(--header-text)', padding: '0.35rem', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
               className="mobile-hamburger"
               aria-label="Toggle navigation menu"
             >
@@ -141,7 +142,7 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div style={{ background: 'var(--cream)', borderBottom: '2px solid var(--gold)', padding: '1.25rem 1.5rem', boxShadow: '0 10px 30px rgba(0,0,0,0.15)' }}>
+        <div style={{ background: 'var(--surface-card)', borderBottom: '2px solid var(--gold)', padding: '1.25rem 1.5rem', boxShadow: '0 10px 30px rgba(0,0,0,0.25)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
             {navLinks.map((link) => (
               <a
@@ -149,9 +150,9 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
-                  color: 'var(--navy-deep)', textDecoration: 'none',
+                  color: 'var(--heading-color)', textDecoration: 'none',
                   fontSize: '0.92rem', fontWeight: 700, padding: '0.4rem 0',
-                  borderBottom: '1px dashed var(--cream-3)',
+                  borderBottom: '1px dashed var(--surface-border)',
                 }}
               >
                 {link.label}
@@ -159,7 +160,7 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
             ))}
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', borderTop: '1px solid var(--cream-3)', paddingTop: '0.9rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', borderTop: '1px solid var(--surface-border)', paddingTop: '0.9rem' }}>
             <a href="tel:+16479153530" className="btn btn--gold" style={{ width: '100%', minHeight: '48px' }}>
               <Phone style={{ width: '1rem', height: '1rem' }} />
               <span>Call 647-915-3530</span>

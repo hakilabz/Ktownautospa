@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Calculator, Sparkles, Clock, ArrowRight, Bug, Disc, Flame, ShieldCheck, Sun } from 'lucide-react';
+import { Clock, ArrowRight, Bug, Disc } from 'lucide-react';
 
 export default function PriceCalculator({ onProceedToBooking }) {
   const [vehicle, setVehicle] = useState('sedan');
@@ -63,9 +63,9 @@ export default function PriceCalculator({ onProceedToBooking }) {
   const chipStyle = (active, danger = false) => ({
     cursor: 'pointer', padding: '0.85rem', borderRadius: '12px', textAlign: 'left',
     transition: 'all 0.18s ease',
-    background: active ? (danger ? 'rgba(239,68,68,0.18)' : 'linear-gradient(180deg, var(--gold-lt), var(--gold))') : 'var(--cream-2)',
-    border: `2px solid ${active ? (danger ? '#EF4444' : 'var(--gold-dk)') : 'var(--cream-3)'}`,
-    color: active ? 'var(--navy-deep)' : 'var(--slate)',
+    background: active ? (danger ? 'rgba(239,68,68,0.18)' : 'linear-gradient(180deg, var(--gold-lt), var(--gold))') : 'var(--chip-inactive-bg)',
+    border: `2px solid ${active ? (danger ? '#EF4444' : 'var(--gold-dk)') : 'var(--chip-inactive-border)'}`,
+    color: active ? (danger ? '#EF4444' : '#0A1E42') : 'var(--chip-inactive-text)',
     fontWeight: active ? 800 : 500,
   });
 
@@ -90,7 +90,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
               
               {/* Step 1: Vehicle Size */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-dk)' }}>
+                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)' }}>
                   1. Select Vehicle Size
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem' }}>
@@ -110,7 +110,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
 
               {/* Step 2: Package Level */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-dk)' }}>
+                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)' }}>
                   2. Select Detailing Level
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem' }}>
@@ -130,7 +130,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
 
               {/* Step 3: Add-ons */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-dk)' }}>
+                <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)' }}>
                   3. Select Optional Treatments &amp; Add-ons
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.6rem' }}>
@@ -144,7 +144,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
 
                   <div onClick={() => toggleAddon('bug-removal')} style={{ ...chipStyle(addons.includes('bug-removal')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Bug style={{ width: '1rem', height: '1rem', color: 'var(--gold-dk)' }} />
+                      <Bug style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
                       <span style={{ fontSize: '0.82rem' }}>Bug Removal ⭐</span>
                     </div>
                     <b style={{ fontSize: '0.95rem' }}>$5</b>

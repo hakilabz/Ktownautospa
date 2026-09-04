@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, MessageCircle, Mail, MapPin, Clock, Calendar, ShieldCheck } from 'lucide-react';
+import { Phone, MessageCircle, Mail, MapPin, Calendar, ShieldCheck } from 'lucide-react';
 
 export default function LocationHours({ onOpenBooking }) {
   return (
@@ -73,19 +73,17 @@ export default function LocationHours({ onOpenBooking }) {
             </div>
           </div>
 
-          {/* Right Column: Online Booking & Interactive Dispatch */}
+          {/* Right Column: Online Booking Card */}
           <div>
-            <div style={{
-              background: 'var(--cream)', color: 'var(--ink)',
-              borderRadius: '14px', padding: '2.2rem 1.8rem',
-              border: '2px solid var(--gold)',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+            <div className="frame" style={{
+              background: 'var(--surface-card)', color: 'var(--heading-color)',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.35)',
             }}>
               <p className="kicker" style={{ marginBottom: '0.5rem' }}>Instant online booking</p>
-              <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.85rem', fontWeight: 800, color: 'var(--navy-deep)', textTransform: 'uppercase', margin: '0 0 0.8rem' }}>
+              <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.85rem', fontWeight: 800, color: 'var(--heading-color)', textTransform: 'uppercase', margin: '0 0 0.8rem' }}>
                 Reserve your appointment
               </h3>
-              <p style={{ margin: '0 0 1.5rem', color: 'var(--slate)', fontSize: '0.96rem', lineHeight: 1.6 }}>
+              <p style={{ margin: '0 0 1.5rem', color: 'var(--muted-color)', fontSize: '0.96rem', lineHeight: 1.6 }}>
                 Select your package, date, and vehicle details online. Includes automatic Google Calendar sync, zero deposit required upfront, and direct notification dispatch to our shop team.
               </p>
 
@@ -107,8 +105,8 @@ export default function LocationHours({ onOpenBooking }) {
                 <span>Email: ktownautomobilespa@gmail.com</span>
               </a>
 
-              <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px dashed var(--cream-3)', display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: 'var(--slate)' }}>
-                <ShieldCheck style={{ width: '1.1rem', height: '1.1rem', color: 'var(--gold-dk)', flexShrink: 0 }} />
+              <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: 'var(--muted-color)' }}>
+                <ShieldCheck style={{ width: '1.1rem', height: '1.1rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
                 <span>No payment required now · Pay after your car is inspected and finished</span>
               </div>
             </div>

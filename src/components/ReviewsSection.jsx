@@ -101,16 +101,16 @@ export default function ReviewsSection() {
         {/* Tally Stats */}
         <div style={{ display: 'flex', gap: '2.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-            <span style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '2.8rem', lineHeight: 1, color: 'var(--navy-deep)' }}>16</span>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: '0.82rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gold-dk)' }}>Handwritten Reviews</span>
+            <span style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '2.8rem', lineHeight: 1, color: 'var(--heading-color)' }}>16</span>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: '0.82rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gold-primary)' }}>Handwritten Reviews</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-            <span style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '2.8rem', lineHeight: 1, color: 'var(--navy-deep)' }}>15</span>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: '0.82rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gold-dk)' }}>Gave Five Stars</span>
+            <span style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '2.8rem', lineHeight: 1, color: 'var(--heading-color)' }}>15</span>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: '0.82rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gold-primary)' }}>Gave Five Stars</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-            <span style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '2.8rem', lineHeight: 1, color: 'var(--navy-deep)' }}>4.9</span>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: '0.82rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gold-dk)' }}>Average Out of 5</span>
+            <span style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '2.8rem', lineHeight: 1, color: 'var(--heading-color)' }}>4.9</span>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: '0.82rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gold-primary)' }}>Average Out of 5</span>
           </div>
         </div>
 
@@ -139,19 +139,19 @@ export default function ReviewsSection() {
                     />
                   ))}
                 </div>
-                <blockquote style={{ margin: '0 0 0.8rem', fontSize: '0.98rem', color: 'var(--slate)', lineHeight: 1.5, fontStyle: 'italic' }}>
+                <blockquote style={{ margin: '0 0 0.8rem', fontSize: '0.98rem', color: 'var(--muted-color)', lineHeight: 1.5, fontStyle: 'italic' }}>
                   "{r.quote}"
                 </blockquote>
               </div>
 
-              <div style={{ fontFamily: 'var(--mono)', fontSize: '0.8rem', color: 'var(--gold-dk)', paddingTop: '0.5rem', borderTop: '1px dashed var(--cream-3)' }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: '0.8rem', color: 'var(--gold-primary)', paddingTop: '0.5rem', borderTop: '1px dashed var(--surface-border)' }}>
                 {r.author}
               </div>
             </div>
           ))}
         </div>
 
-        <p style={{ fontFamily: 'var(--mono)', fontSize: '0.8rem', color: 'var(--slate)', marginTop: '1.5rem' }}>
+        <p style={{ fontFamily: 'var(--mono)', fontSize: '0.8rem', color: 'var(--muted-color)', marginTop: '1.5rem' }}>
           * Vehicle make &amp; model recorded instead of full client name, exactly as logged in our shop clipboard.
         </p>
 
