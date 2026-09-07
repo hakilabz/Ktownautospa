@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, FileText, ArrowRight } from 'lucide-react';
 
 export default function RateCard({ onOpenBooking, onSelectPackage }) {
   const [activeTab, setActiveTab] = useState('wash');
@@ -616,9 +616,21 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                 </p>
               </div>
 
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+        {/* View or print rate card link from reference */}
+        <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <a href="/rates.html" className="btn btn--outline" target="_blank" rel="noopener noreferrer">
+            <FileText style={{ width: '1.1rem', height: '1.1rem' }} />
+            <span>View or print the full rate card</span>
+          </a>
+          <button onClick={() => onOpenBooking()} className="btn btn--gold">
+            <span>Book an appointment</span>
+            <ArrowRight style={{ width: '1.1rem', height: '1.1rem' }} />
+          </button>
+        </div>
 
       </div>
     </section>
