@@ -70,6 +70,20 @@ export default function LocationHours({ onOpenBooking }) {
               <p style={{ margin: 0, fontSize: '0.94rem' }}>
                 Just off Montreal Street in the north end. Free customer parking right at the door.
               </p>
+
+              {/* Real Building Exterior Photo */}
+              <figure className="frame" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(240,213,144,0.35)', padding: '0.65rem', marginTop: '1.25rem', marginInline: 0 }}>
+                <div style={{ borderRadius: '6px', overflow: 'hidden', border: '1px solid rgba(240,213,144,0.3)', aspectRatio: '16/10', background: '#000' }}>
+                  <img 
+                    src="/images/shop_building_exterior.webp" 
+                    alt="Ktown Auto Spa on Joseph Street: brick building with a white garage door and parking right out front" 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+                </div>
+                <figcaption style={{ marginTop: '0.5rem', fontSize: '0.82rem', color: '#CFDDEE', textAlign: 'center' }}>
+                  This is the building. White garage door, free parking right out front.
+                </figcaption>
+              </figure>
             </div>
           </div>
 

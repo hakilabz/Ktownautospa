@@ -30,17 +30,23 @@ export default function Credentials() {
       brand: 'AUTO-BRITE',
       label: 'Certified Detailer',
       tag: 'Professional Detailing Supplies',
+      logo: '/images/autobrite_logo.webp',
+      alt: 'Auto-Brite Detailing Supplies',
     },
     {
       brand: 'NANO-BRITE',
       label: 'Certified Installer',
       tag: 'Ceramic Coating System',
+      logo: '/images/nanobrite_logo.webp',
+      alt: 'Nano-Brite Ceramic Coating',
       dark: true,
     },
     {
       brand: 'SYSTEM X',
       label: 'Accredited Center',
       tag: 'Ceramic Protection · USA',
+      logo: '/images/systemx_4.webp',
+      alt: 'System X Ceramic Protection',
       dark: true,
       gold: true,
     },
@@ -48,6 +54,8 @@ export default function Credentials() {
       brand: 'CARFAX Canada',
       label: 'Coatings Registered',
       tag: 'Vehicle History Reports',
+      logo: '/images/carfax_2.webp',
+      alt: 'CARFAX Canada',
     },
   ];
 
@@ -80,25 +88,35 @@ export default function Credentials() {
             ))}
           </div>
 
-          {/* 4 Brand Tiles */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+          {/* 4 Brand Tiles with Official Partner Badges */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
             {brandTiles.map((tile, idx) => (
               <div 
                 key={idx}
                 style={{
                   borderRadius: '12px',
                   border: '2px solid var(--surface-border-gold)',
-                  padding: '1.6rem 1.2rem',
+                  padding: '1.4rem 1.2rem',
                   display: 'flex', flexDirection: 'column',
                   alignItems: 'center', justifyContent: 'center',
-                  textAlign: 'center', minHeight: '150px',
+                  textAlign: 'center', minHeight: '160px',
                   background: tile.dark ? (tile.gold ? '#1A1A1C' : 'linear-gradient(180deg, #16386C, #0A1E42)') : 'var(--surface-card)',
                   color: tile.dark ? (tile.gold ? '#F0D590' : '#FFFFFF') : 'var(--heading-color)',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                  transition: 'transform 0.2s ease',
                 }}
               >
-                <div style={{ fontFamily: 'var(--display)', fontSize: '1.8rem', fontWeight: 900, letterSpacing: '0.04em', lineHeight: 1, marginBottom: '0.4rem' }}>
-                  {tile.brand}
+                <div style={{ width: '100%', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                  <img 
+                    src={tile.logo} 
+                    alt={tile.alt} 
+                    style={{ 
+                      maxHeight: '48px', 
+                      maxWidth: '180px', 
+                      objectFit: 'contain',
+                      filter: tile.dark && !tile.gold ? 'brightness(1.1)' : 'none',
+                    }} 
+                  />
                 </div>
                 <b style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: tile.dark ? 'var(--gold-lt)' : 'var(--gold-primary)', display: 'block', marginBottom: '0.2rem' }}>
                   {tile.label}

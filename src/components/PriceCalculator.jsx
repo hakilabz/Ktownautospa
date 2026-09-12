@@ -21,6 +21,12 @@ export default function PriceCalculator({ onProceedToBooking }) {
       else if (vehicle === 'crossover') base = 40;
       else if (vehicle === 'suv') base = 45;
       else if (vehicle === 'van') base = 50;
+    } else if (pkg === 'refresh') {
+      pkgName = 'Interior Refresh'; duration = 'Approx. 1 hr';
+      if (vehicle === 'sedan') base = 70;
+      else if (vehicle === 'crossover') base = 85;
+      else if (vehicle === 'suv') base = 95;
+      else if (vehicle === 'van') base = 105;
     } else if (pkg === 'medium') {
       pkgName = 'Medium Package'; duration = 'Approx. 2 hrs';
       if (vehicle === 'sedan') base = 100;
@@ -116,6 +122,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem' }}>
                   {[
                     { id: 'wash', label: 'Hand Wash', price: vehicle === 'sedan' ? '$30' : vehicle === 'crossover' ? '$40' : vehicle === 'suv' ? '$45' : '$50' },
+                    { id: 'refresh', label: 'Interior Refresh', price: vehicle === 'sedan' ? '$70' : vehicle === 'crossover' ? '$85' : vehicle === 'suv' ? '$95' : '$105' },
                     { id: 'medium', label: 'Medium Package', price: vehicle === 'sedan' ? '$100' : vehicle === 'crossover' ? '$130' : vehicle === 'suv' ? '$150' : '$160' },
                     { id: 'interior', label: 'Interior Complete', price: vehicle === 'sedan' ? '$175' : vehicle === 'crossover' ? '$199' : vehicle === 'suv' ? '$229' : '$249' },
                     { id: 'full', label: 'Full Detail', price: vehicle === 'sedan' ? '$200' : vehicle === 'crossover' ? '$230' : vehicle === 'suv' ? '$250' : '$270' },

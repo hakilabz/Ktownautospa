@@ -84,6 +84,48 @@ export default function BoatsSection() {
 
         </div>
 
+        {/* Real Marina Detailing Photographic Proof */}
+        <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid rgba(240,213,144,0.2)' }}>
+          <p className="kicker" style={{ color: 'var(--gold-lt)', marginBottom: '0.5rem' }}>Slip-side results</p>
+          <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.8rem', fontWeight: 800, textTransform: 'uppercase', color: '#FFFFFF', margin: '0 0 1.2rem' }}>
+            Cruiser Foredeck Scrub &amp; Gel-Coat Restoration
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+            <figure className="frame" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(240,213,144,0.3)', padding: '0.85rem', margin: 0 }}>
+              <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(240,213,144,0.3)', aspectRatio: '16/10', background: '#000' }}>
+                <img 
+                  src="/images/boat_foredeck_midwash.webp" 
+                  alt="Foredeck of a cruiser mid-wash at a Kingston marina, brush and bucket on the deck" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+              <figcaption style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#CFDDEE', lineHeight: 1.45 }}>
+                <strong style={{ color: '#FFFFFF', display: 'block', marginBottom: '0.2rem' }}>
+                  Step 1: Deep Foam Decontamination
+                </strong>
+                Mid-wash scrub at Kingston marina dock — removing persistent lake scum, bird lime, and marine oxidation.
+              </figcaption>
+            </figure>
+
+            <figure className="frame" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(240,213,144,0.3)', padding: '0.85rem', margin: 0 }}>
+              <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(240,213,144,0.3)', aspectRatio: '16/10', background: '#000' }}>
+                <img 
+                  src="/images/boat_foredeck_finished.webp" 
+                  alt="The same foredeck finished, gel-coat clean and glossy" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+              <figcaption style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#CFDDEE', lineHeight: 1.45 }}>
+                <strong style={{ color: 'var(--gold-lt)', display: 'block', marginBottom: '0.2rem' }}>
+                  Step 2: Finished Gel-Coat Gloss
+                </strong>
+                Clean, slick, and protected with hydrophobic marine barrier that repels water stains and sun chalking.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
       </div>
     </section>
   );

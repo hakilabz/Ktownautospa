@@ -5,10 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2026 Rate Card | Ktown Auto Spa &mdash; Kingston, Ontario</title>
 <meta name="description" content="Full 2026 price list for Ktown Auto Spa, Kingston: hand wash from $30, full detail from $200, ceramic coating from $449.">
-<link rel="icon" type="image/png" href="/logo.png">
+<link rel="icon" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Public+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- =====================================================================
+     PRICES APPEAR IN TWO FILES. If you change a price here, change it in
+     index.html as well (the section with id="packages"). They are meant
+     to be identical, and a customer will hold you to whichever is lower.
+     ===================================================================== -->
 
 <style>
 :root{
@@ -34,7 +40,7 @@ img{max-width:100%;display:block}
 .sheet::before{content:"";position:absolute;inset:9px;border:1px solid rgba(154,117,36,.5);border-radius:6px;pointer-events:none}
 
 .rc-head{text-align:center;margin-bottom:2rem}
-.rc-head img{width:min(280px,62%);margin:0 auto 1.1rem;height:auto}
+.rc-head img{width:min(300px,62%);margin:0 auto 1.1rem}
 .rc-head h1{font-family:var(--display);font-weight:800;text-transform:uppercase;
   font-size:clamp(2rem,5.5vw,3rem);line-height:1;margin:0 0 .5rem;color:var(--navy-deep)}
 .rc-head p{margin:0;font-family:var(--mono);font-size:.86rem;color:var(--slate);letter-spacing:.04em}
@@ -101,6 +107,7 @@ img{max-width:100%;display:block}
 .btn--navy{background:var(--navy);color:#fff;border-color:var(--navy-deep)}
 .btn--out{background:transparent;color:var(--navy);border-color:var(--gold-dk)}
 
+/* ---- printing: this is the version that goes on the shop wall ---- */
 @media print{
   @page{size:A4 portrait;margin:10mm}
   body{background:#fff;font-size:10.5pt}
@@ -129,252 +136,23 @@ img{max-width:100%;display:block}
     <p>All prices in CAD, plus HST &middot; Appointment only &middot; Prices may vary with vehicle condition</p>
   </header>
 
-  <p class="tcap">Wash &amp; detail</p>
-  <div class="pricewrap">
-    <table class="prices">
-      <caption class="vh">Wash &amp; detail</caption>
-      <thead>
-        <tr>
-          <th scope="col">Service</th>
-          <th scope="col" class="c-sedan">Sedan</th>
-          <th scope="col" class="c-cross">Crossover<small>5 seat</small></th>
-          <th scope="col" class="c-suv">SUV<small>3rd row</small></th>
-          <th scope="col" class="c-van">Van</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">Hand Car Wash<small>Wash &amp; wax soap, windows, blown dry</small></th>
-          <td class="c-sedan">$30</td>
-          <td class="c-cross">$40</td>
-          <td class="c-suv">$45</td>
-          <td class="c-van">$50</td>
-        </tr>
-        <tr>
-          <th scope="row">Medium Package<small>Interior vacuum &amp; glass, mats, jambs, hand wash &middot; approx 2 hrs</small></th>
-          <td class="c-sedan">$100</td>
-          <td class="c-cross">$130</td>
-          <td class="c-suv">$150</td>
-          <td class="c-van">$160</td>
-        </tr>
-        <tr>
-          <th scope="row">Interior Complete<small>Full steam &amp; shampoo, seats, carpets, shine or matte finish &middot; approx 3 hrs</small></th>
-          <td class="c-sedan">$175</td>
-          <td class="c-cross">$199</td>
-          <td class="c-suv">$229</td>
-          <td class="c-van">$249</td>
-        </tr>
-        <tr>
-          <th scope="row">Full Detail<small>Medium Package plus summer mats steamed, carpets &amp; seats scrubbed &middot; approx 4 hrs</small></th>
-          <td class="c-sedan">$200</td>
-          <td class="c-cross">$230</td>
-          <td class="c-suv">$250</td>
-          <td class="c-van">$270</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p class="tcap">Polish &amp; protect</p>
-  <div class="pricewrap">
-    <table class="prices">
-      <caption class="vh">Polish &amp; protect</caption>
-      <thead>
-        <tr>
-          <th scope="col">Service</th>
-          <th scope="col" class="c-sedan">Sedan</th>
-          <th scope="col" class="c-cross">Crossover<small>5 seat</small></th>
-          <th scope="col" class="c-suv">SUV<small>3rd row</small></th>
-          <th scope="col" class="c-van">Van</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">Wash &amp; Machine Wax<small>No abrasives. Gloss and protection for around 6 months &middot; approx 2 hrs</small></th>
-          <td class="c-sedan">$120</td>
-          <td class="c-cross">$140</td>
-          <td class="c-suv">$160</td>
-          <td class="c-van">$180</td>
-        </tr>
-        <tr>
-          <th scope="row">Gloss Enhancement<small>Clay plus one-step all-in-one polish. Reduces light swirls &middot; approx 3 hrs</small></th>
-          <td class="c-sedan">$200</td>
-          <td class="c-cross">$230</td>
-          <td class="c-suv">$260</td>
-          <td class="c-van">$290</td>
-        </tr>
-        <tr>
-          <th scope="row">1-Step Paint Correction<small>Machine polish and sealant. Removes 50&ndash;70% of defects &middot; approx 6 hrs</small></th>
-          <td class="c-sedan">$350</td>
-          <td class="c-cross">$400</td>
-          <td class="c-suv">$450</td>
-          <td class="c-van">$500</td>
-        </tr>
-        <tr>
-          <th scope="row">2-Step Paint Correction<small>Compound and polish. Removes 80&ndash;90% of defects &middot; approx 11 hrs</small></th>
-          <td class="c-sedan">$650</td>
-          <td class="c-cross">$750</td>
-          <td class="c-suv">$850</td>
-          <td class="c-van">$950</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="tnote">Deep scratches that catch a fingernail cannot be fully removed. We measure paint depth before any correction begins.</p>
-
-  <p class="tcap">Ceramic coating packages</p>
-  <div class="pricewrap">
-    <table class="prices">
-      <caption class="vh">Ceramic coating packages</caption>
-      <thead>
-        <tr>
-          <th scope="col">Service</th>
-          <th scope="col" class="c-sedan">Sedan</th>
-          <th scope="col" class="c-cross">Crossover<small>5 seat</small></th>
-          <th scope="col" class="c-suv">SUV<small>3rd row</small></th>
-          <th scope="col" class="c-van">Van</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">Nano-Brite Rejuvenate <b>1 year</b><small>Decon + 1-step correction + 1 layer &middot; approx 5 hrs</small></th>
-          <td class="c-sedan">$449</td>
-          <td class="c-cross">$499</td>
-          <td class="c-suv">$549</td>
-          <td class="c-van">$599</td>
-        </tr>
-        <tr>
-          <th scope="row">Nano-Brite Ultra <b>3 year</b><small>Decon + 1-step correction + 1 layer &middot; approx 6 hrs</small></th>
-          <td class="c-sedan">$649</td>
-          <td class="c-cross">$749</td>
-          <td class="c-suv">$849</td>
-          <td class="c-van">$899</td>
-        </tr>
-        <tr>
-          <th scope="row">Nano-Brite EVO Graphene <b>7 year</b><small>Graphene coating. Decon + 2-step correction + top coat &middot; approx 10 hrs</small></th>
-          <td class="c-sedan">$1199</td>
-          <td class="c-cross">$1299</td>
-          <td class="c-suv">$1399</td>
-          <td class="c-van">$1499</td>
-        </tr>
-        <tr>
-          <th scope="row">System X Crystal+ <b>2 year</b><small>1-step correction + paint and glass coating &middot; approx 8 hrs</small></th>
-          <td class="c-sedan">$949</td>
-          <td class="c-cross">$1049</td>
-          <td class="c-suv">$1149</td>
-          <td class="c-van">$1249</td>
-        </tr>
-        <tr>
-          <th scope="row">System X Pro+ <b>6 year</b><small>2-step correction + paint, glass and wheel coatings &middot; approx 11 hrs</small></th>
-          <td class="c-sedan">$1299</td>
-          <td class="c-cross">$1449</td>
-          <td class="c-suv">$1599</td>
-          <td class="c-van">$1749</td>
-        </tr>
-        <tr>
-          <th scope="row">System X Max G+ <b>10 year</b><small>Graphene. 2-step correction + paint, glass and wheel coatings &middot; approx 12 hrs</small></th>
-          <td class="c-sedan">$1699</td>
-          <td class="c-cross">$1849</td>
-          <td class="c-suv">$1999</td>
-          <td class="c-van">$2149</td>
-        </tr>
-        <tr>
-          <th scope="row">System X Diamond SS <b>Lifetime</b><small>2-step correction + paint, glass and wheel coatings &middot; approx 13 hrs</small></th>
-          <td class="c-sedan">$1799</td>
-          <td class="c-cross">$1949</td>
-          <td class="c-suv">$2099</td>
-          <td class="c-van">$2249</td>
-        </tr>
-        <tr>
-          <th scope="row">Ceramic Maintenance Wash<small>Single visit. Recommended every 6&ndash;8 weeks</small></th>
-          <td class="c-sedan">$55</td>
-          <td class="c-cross">$65</td>
-          <td class="c-suv">$75</td>
-          <td class="c-van">$85</td>
-        </tr>
-        <tr>
-          <th scope="row">Maintenance Plan <b>billed monthly</b><small>One wash every month. Cancel anytime. Priority booking</small></th>
-          <td class="c-sedan">$45</td>
-          <td class="c-cross">$55</td>
-          <td class="c-suv">$65</td>
-          <td class="c-van">$75</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="tnote">Includes wash, iron decon, clay bar, correction and coating. Additional coating layer $150. Every System X coating is registered with CARFAX and appears on the vehicle history report.</p>
+  <p class="tcap">Wash &amp; detail</p><div class="pricewrap"><table class="prices"><caption class="vh">Wash &amp; detail</caption><thead><tr><th scope="col">Service</th><th scope="col" class="c-sedan">Sedan</th><th scope="col" class="c-cross">Crossover<small>5 seat</small></th><th scope="col" class="c-suv">SUV<small>3rd row</small></th><th scope="col" class="c-van">Van</th></tr></thead><tbody><tr><th scope="row">Hand Car Wash<small>Wash &amp; wax soap, windows, blown dry</small></th><td class="c-sedan">$30</td><td class="c-cross">$40</td><td class="c-suv">$45</td><td class="c-van">$50</td></tr><tr><th scope="row">Interior Refresh<small>Doors, jambs, panels and dashboard wiped down, full blow-out and vacuum, rubber mats washed or carpet mats dry-cleaned. No steam, no scrubbing &mdash; the quick tidy-up &middot; approx 1 hr</small></th><td class="c-sedan">$70</td><td class="c-cross">$85</td><td class="c-suv">$95</td><td class="c-van">$105</td></tr><tr><th scope="row">Medium Package<small>Interior vacuum &amp; glass, mats, jambs, hand wash &middot; approx 2 hrs</small></th><td class="c-sedan">$100</td><td class="c-cross">$130</td><td class="c-suv">$150</td><td class="c-van">$160</td></tr><tr><th scope="row">Interior Complete <small style="display:inline;font-weight:400">(interior only)</small><small>Everything we do inside &mdash; 305&deg;F steam extraction through the whole car, seats and carpets shampooed, vinyl and trim cleaned and dressed. The only thing it leaves out is the exterior wash &mdash; add a hand wash for $30 &middot; approx 3 hrs</small></th><td class="c-sedan">$175</td><td class="c-cross">$199</td><td class="c-suv">$229</td><td class="c-van">$249</td></tr><tr><th scope="row">Full Detail<small>Medium Package plus summer mats steamed, carpets &amp; seats scrubbed &middot; approx 4 hrs</small></th><td class="c-sedan">$200</td><td class="c-cross">$230</td><td class="c-suv">$250</td><td class="c-van">$270</td></tr></tbody></table></div>
+  <p class="tcap">Polish &amp; protect</p><div class="pricewrap"><table class="prices"><caption class="vh">Polish &amp; protect</caption><thead><tr><th scope="col">Service</th><th scope="col" class="c-sedan">Sedan</th><th scope="col" class="c-cross">Crossover<small>5 seat</small></th><th scope="col" class="c-suv">SUV<small>3rd row</small></th><th scope="col" class="c-van">Van</th></tr></thead><tbody><tr><th scope="row">Wash &amp; Machine Wax<small>No abrasives. Gloss and protection for around 6 months &middot; approx 2 hrs</small></th><td class="c-sedan">$120</td><td class="c-cross">$140</td><td class="c-suv">$160</td><td class="c-van">$180</td></tr><tr><th scope="row">Gloss Enhancement<small>Clay plus one-step all-in-one polish. Reduces light swirls &middot; approx 3 hrs</small></th><td class="c-sedan">$200</td><td class="c-cross">$230</td><td class="c-suv">$260</td><td class="c-van">$290</td></tr><tr><th scope="row">1-Step Paint Correction<small>Machine polish and sealant. Removes 50&ndash;70% of defects &middot; approx 6 hrs</small></th><td class="c-sedan">$350</td><td class="c-cross">$400</td><td class="c-suv">$450</td><td class="c-van">$500</td></tr><tr><th scope="row">2-Step Paint Correction<small>Compound and polish. Removes 80&ndash;90% of defects &middot; approx 11 hrs</small></th><td class="c-sedan">$650</td><td class="c-cross">$750</td><td class="c-suv">$850</td><td class="c-van">$950</td></tr></tbody></table></div><p class="tnote">Deep scratches that catch a fingernail cannot be fully removed. We measure paint depth before any correction begins.</p>
+  <p class="tcap">Ceramic coating packages</p><div class="pricewrap"><table class="prices"><caption class="vh">Ceramic coating packages</caption><thead><tr><th scope="col">Service</th><th scope="col" class="c-sedan">Sedan</th><th scope="col" class="c-cross">Crossover<small>5 seat</small></th><th scope="col" class="c-suv">SUV<small>3rd row</small></th><th scope="col" class="c-van">Van</th></tr></thead><tbody><tr><th scope="row">Nano-Brite Rejuvenate <b>1 year</b><small>Decon + 1-step correction + 1 layer &middot; approx 5 hrs</small></th><td class="c-sedan">$449</td><td class="c-cross">$499</td><td class="c-suv">$549</td><td class="c-van">$599</td></tr><tr><th scope="row">Nano-Brite Ultra <b>3 year</b><small>Decon + 1-step correction + 1 layer &middot; approx 6 hrs</small></th><td class="c-sedan">$649</td><td class="c-cross">$749</td><td class="c-suv">$849</td><td class="c-van">$899</td></tr><tr><th scope="row">Nano-Brite EVO Graphene <b>7 year</b><small>Graphene coating. Decon + 2-step correction + top coat &middot; approx 10 hrs</small></th><td class="c-sedan">$1199</td><td class="c-cross">$1299</td><td class="c-suv">$1399</td><td class="c-van">$1499</td></tr><tr><th scope="row">System X Crystal+ <b>2 year</b><small>1-step correction + paint and glass coating &middot; approx 8 hrs</small></th><td class="c-sedan">$949</td><td class="c-cross">$1049</td><td class="c-suv">$1149</td><td class="c-van">$1249</td></tr><tr><th scope="row">System X Pro+ <b>6 year</b><small>2-step correction + paint, glass and wheel coatings &middot; approx 11 hrs</small></th><td class="c-sedan">$1299</td><td class="c-cross">$1449</td><td class="c-suv">$1599</td><td class="c-van">$1749</td></tr><tr><th scope="row">System X Max G+ <b>10 year</b><small>Graphene. 2-step correction + paint, glass and wheel coatings &middot; approx 12 hrs</small></th><td class="c-sedan">$1699</td><td class="c-cross">$1849</td><td class="c-suv">$1999</td><td class="c-van">$2149</td></tr><tr><th scope="row">System X Diamond SS <b>Lifetime</b><small>2-step correction + paint, glass and wheel coatings &middot; approx 13 hrs</small></th><td class="c-sedan">$1799</td><td class="c-cross">$1949</td><td class="c-suv">$2099</td><td class="c-van">$2249</td></tr><tr><th scope="row">Ceramic Maintenance Wash<small>Single visit. Recommended every 6&ndash;8 weeks</small></th><td class="c-sedan">$55</td><td class="c-cross">$65</td><td class="c-suv">$75</td><td class="c-van">$85</td></tr><tr><th scope="row">Maintenance Plan <b>billed monthly</b><small>One wash every month. Cancel anytime. Priority booking</small></th><td class="c-sedan">$45</td><td class="c-cross">$55</td><td class="c-suv">$65</td><td class="c-van">$75</td></tr></tbody></table></div><p class="tnote">Includes wash, iron decon, clay bar, correction and coating. Additional coating layer $150. Every System X coating is registered with CARFAX and appears on the vehicle history report.</p>
 
   <p class="tcap">Interior, glass, wheel &amp; trim</p>
-  <div class="pricewrap">
-    <table class="prices">
-      <caption class="vh">Interior, glass, wheel and trim coatings</caption>
-      <thead><tr><th scope="col">Service</th><th scope="col">With a detail</th><th scope="col">Standalone</th></tr></thead>
-      <tbody>
-        <tr>
-          <th scope="row">System X LVP <b>Leather, vinyl &amp; plastic</b><small>3-year warranty against spills and stains. CARFAX registered</small></th>
-          <td>$229</td>
-          <td>$389</td>
-        </tr>
-        <tr>
-          <th scope="row">System X Textile <b>Fabric &amp; carpet</b><small>2-year stain protection. CARFAX registered</small></th>
-          <td>$149</td>
-          <td>$259</td>
-        </tr>
-        <tr>
-          <th scope="row">System X LVP + Textile <b>Complete interior</b><small>Full interior coated, warranted and CARFAX registered</small></th>
-          <td>$325</td>
-          <td>$499</td>
-        </tr>
-        <tr>
-          <th scope="row">Nano-Brite Leather Guard<small>8&ndash;12 month protection. No warranty registration</small></th>
-          <td>$99</td>
-          <td>$170</td>
-        </tr>
-        <tr>
-          <th scope="row">Nano-Brite Fabric Guard<small>8&ndash;12 month protection. No warranty registration</small></th>
-          <td>$89</td>
-          <td>$150</td>
-        </tr>
-        <tr>
-          <th scope="row">Nano-Brite Leather + Fabric <b>Complete interior</b><small>8&ndash;12 month protection. Our best-value interior package</small></th>
-          <td>$175</td>
-          <td>$279</td>
-        </tr>
-        <tr>
-          <th scope="row">System X Glass+ <b>Windshield &amp; windows</b><small>Up to 2 years. Improves wet-weather visibility</small></th>
-          <td>$125</td>
-          <td>$165</td>
-        </tr>
-        <tr>
-          <th scope="row">System X Wheel+ <b>Wheel coating</b><small>Brake dust resistant. Wheels removed for full coverage</small></th>
-          <td>$249</td>
-          <td>$329</td>
-        </tr>
-        <tr>
-          <th scope="row">System X Revive <b>Trim restoration</b><small>Restores faded exterior plastic and trim</small></th>
-          <td>$89</td>
-          <td>$129</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <div class="pricewrap"><table class="prices">
+    <caption class="vh">Interior, glass, wheel and trim coatings</caption>
+    <thead><tr><th scope="col">Service</th><th scope="col">With a detail</th><th scope="col">Standalone</th></tr></thead>
+    <tbody><tr><th scope="row">System X LVP <b>Leather, vinyl &amp; plastic</b><small>3-year warranty against spills and stains. CARFAX registered</small></th><td>$229</td><td>$389</td></tr><tr><th scope="row">System X Textile <b>Fabric &amp; carpet</b><small>2-year stain protection. CARFAX registered</small></th><td>$149</td><td>$259</td></tr><tr><th scope="row">System X LVP + Textile <b>Complete interior</b><small>Full interior coated, warranted and CARFAX registered</small></th><td>$325</td><td>$499</td></tr><tr><th scope="row">Nano-Brite Leather Guard<small>8&ndash;12 month protection. No warranty registration</small></th><td>$99</td><td>$170</td></tr><tr><th scope="row">Nano-Brite Fabric Guard<small>8&ndash;12 month protection. No warranty registration</small></th><td>$89</td><td>$150</td></tr><tr><th scope="row">Nano-Brite Leather + Fabric <b>Complete interior</b><small>8&ndash;12 month protection. Our best-value interior package</small></th><td>$175</td><td>$279</td></tr><tr><th scope="row">System X Glass+ <b>Windshield &amp; windows</b><small>Up to 2 years. Improves wet-weather visibility</small></th><td>$125</td><td>$165</td></tr><tr><th scope="row">System X Wheel+ <b>Wheel coating</b><small>Brake dust resistant. Wheels removed for full coverage</small></th><td>$249</td><td>$329</td></tr><tr><th scope="row">System X Revive <b>Trim restoration</b><small>Restores faded exterior plastic and trim</small></th><td>$89</td><td>$129</td></tr></tbody>
+  </table></div>
   <p class="tnote">&ldquo;With a detail&rdquo; pricing applies when booked alongside any detail or ceramic package. Standalone pricing includes the interior preparation that has to happen first.</p>
 
   <p class="tcap">Add-ons &amp; surcharges</p>
   <div class="cols">
     <div class="panel">
       <h3>Add-ons</h3>
-      <table>
-        <tbody>
-          <tr><th scope="row">Engine Bay Cleaning</th><td>$40</td></tr>
-          <tr><th scope="row">Tire Shine</th><td>$10</td></tr>
-          <tr><th scope="row">Summer Mats Shampoo Wash</th><td>$20</td></tr>
-          <tr><th scope="row">Headlight Restoration (pair)</th><td>$60</td></tr>
-          <tr><th scope="row">Clay Bar Decontamination</th><td>$60</td></tr>
-          <tr><th scope="row">Odour Treatment</th><td>$50</td></tr>
-          <tr><th scope="row">Pet Hair Removal</th><td>$50&ndash;$100</td></tr>
-        </tbody>
-      </table>
+      <table><tbody><tr><th scope="row">Engine Bay Cleaning</th><td>$40</td></tr><tr><th scope="row">Tire Shine</th><td>$10</td></tr><tr><th scope="row">Summer Mats Shampoo Wash</th><td>$20</td></tr><tr><th scope="row">Headlight Restoration (pair)</th><td>$60</td></tr><tr><th scope="row">Clay Bar Decontamination</th><td>$60</td></tr><tr><th scope="row">Odour Treatment</th><td>$50</td></tr><tr><th scope="row">Pet Hair Removal</th><td>$50&ndash;$100</td></tr></tbody></table>
     </div>
     <div class="panel panel--navy">
       <h3>If it&rsquo;s extra dirty</h3>
@@ -384,17 +162,11 @@ img{max-width:100%;display:block}
   </div>
 
   <p class="tcap">Why a shop, not a driveway</p>
-  <ul class="why">
-    <li><strong>Dust-controlled indoor bay</strong><span>Coatings cure without wind, pollen or dew landing in wet product.</span></li>
-    <li><strong>Professional inspection lighting</strong><span>Swirls you cannot see cannot be corrected.</span></li>
-    <li><strong>Paint depth measured first</strong><span>No compounding through thin or previously repainted clear coat.</span></li>
-    <li><strong>Open Saturdays, heated year-round</strong><span>Salt season is exactly when your paint needs us most.</span></li>
-    <li><strong>Free pickup and delivery</strong><span>On every ceramic coating package from $949. We collect your car and bring it back.</span></li>
-  </ul>
+  <ul class="why"><li><strong>Hospital-grade steam cleaner</strong><span>Italian-made, 305&deg;F dry steam with vacuum extraction. It sanitizes seats, carpets and vents without soaking them or leaving chemical residue &mdash; the class of machine Canadian hospitals use for disinfection. We don&rsquo;t know of another detailer in Kingston running one.</span></li><li><strong>Dust-controlled indoor bay</strong><span>Coatings cure without wind, pollen or dew landing in wet product.</span></li><li><strong>Professional inspection lighting</strong><span>Swirls you cannot see cannot be corrected.</span></li><li><strong>Paint depth measured first</strong><span>No compounding through thin or previously repainted clear coat.</span></li><li><strong>Open Saturdays, heated year-round</strong><span>Salt season is exactly when your paint needs us most.</span></li><li><strong>Free pickup and delivery</strong><span>On every ceramic coating package from $949. We collect your car and bring it back.</span></li></ul>
 
   <div class="rc-foot">
     <h2>Book your appointment</h2>
-    <p><a href="tel:+16479153530">647-915-3530</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/16479153530" target="_blank" rel="noopener">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="mailto:ktownautomobilespa@gmail.com">ktownautomobilespa@gmail.com</a></p>
+    <p><a href="tel:+16479153530">647-915-3530</a> &nbsp;&middot;&nbsp; <a href="https://wa.me/16479153530">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="mailto:ktownautomobilespa@gmail.com">ktownautomobilespa@gmail.com</a></p>
     <p>36 Joseph Street, Kingston, ON K7K 2H5 &nbsp;&middot;&nbsp; ktownautospa.ca</p>
     <p>Open Saturdays &middot; We answer messages evenings and weekends too</p>
   </div>

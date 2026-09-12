@@ -96,8 +96,18 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                   <tr>
                     <th scope="row">
+                      Interior Refresh
+                      <small>Doors, jambs, panels and dashboard wiped down, full blow-out and vacuum, rubber mats washed or carpet mats dry-cleaned. No steam, no scrubbing &mdash; the quick tidy-up &middot; approx 1 hr</small>
+                    </th>
+                    <td style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$70</td>
+                    <td style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$85</td>
+                    <td style={{ display: vehicleType === 'c-suv' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$95</td>
+                    <td style={{ display: vehicleType === 'c-van' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$105</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">
                       Medium Package
-                      <small>Interior vacuum &amp; glass, mats, jambs, hand wash · approx 2 hrs</small>
+                      <small>Interior vacuum &amp; glass, mats, jambs, hand wash &middot; approx 2 hrs</small>
                     </th>
                     <td style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$100</td>
                     <td style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$130</td>
@@ -106,8 +116,8 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                   <tr>
                     <th scope="row">
-                      Interior Complete
-                      <small>Full steam &amp; shampoo, seats, carpets, shine or matte finish · approx 3 hrs</small>
+                      Interior Complete <small style={{ display: 'inline', fontWeight: 400 }}>(interior only)</small>
+                      <small>Everything we do inside &mdash; 305&deg;F steam extraction through the whole car, seats and carpets shampooed, vinyl and trim cleaned and dressed. The only thing it leaves out is the exterior wash &mdash; add a hand wash for $30 &middot; approx 3 hrs</small>
                     </th>
                     <td style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$175</td>
                     <td style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$199</td>

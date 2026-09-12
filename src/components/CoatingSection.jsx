@@ -23,13 +23,20 @@ export default function CoatingSection({ onOpenBooking }) {
             <div>
               <div style={{
                 background: '#0C0C0E', border: '2px solid var(--surface-border-gold)', borderRadius: '10px',
-                padding: '1.25rem', marginBottom: '1.2rem', textAlign: 'center', color: '#FFFFFF',
+                padding: '0.85rem 1rem', marginBottom: '1.2rem', textAlign: 'center', color: '#FFFFFF',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
               }}>
-                <Sparkles style={{ width: '2rem', height: '2rem', color: 'var(--gold-lt)', margin: '0 auto 0.4rem' }} />
+                <div style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.4rem' }}>
+                  <img 
+                    src="/images/systemx_correct_bottles.webp" 
+                    alt="System X Correct polishing compounds" 
+                    style={{ maxHeight: '64px', maxWidth: '100%', objectFit: 'contain' }}
+                  />
+                </div>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', letterSpacing: '0.12em', color: 'var(--gold-lt)', textTransform: 'uppercase', display: 'block' }}>
-                  System X Correct System
+                  System X Correct Suite
                 </span>
-                <span style={{ fontSize: '0.75rem', color: '#A9C4E2' }}>Heavy Cut · One-Step · Fine Polish</span>
+                <span style={{ fontSize: '0.75rem', color: '#A9C4E2' }}>Heavy Cut &middot; One-Step &middot; Fine Polish</span>
               </div>
 
               <h3 style={{ fontFamily: 'var(--display)', fontWeight: 800, textTransform: 'uppercase', fontSize: '1.75rem', lineHeight: 1, margin: '0 0 0.65rem', color: 'var(--heading-color)' }}>
@@ -61,9 +68,16 @@ export default function CoatingSection({ onOpenBooking }) {
             <div>
               <div style={{
                 background: 'linear-gradient(180deg, #16386C, #0A1E42)', border: '2px solid var(--gold)', borderRadius: '10px',
-                padding: '1.25rem', marginBottom: '1.2rem', textAlign: 'center', color: '#FFFFFF',
+                padding: '0.85rem 1rem', marginBottom: '1.2rem', textAlign: 'center', color: '#FFFFFF',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
               }}>
-                <ShieldCheck style={{ width: '2rem', height: '2rem', color: '#3E9BDA', margin: '0 auto 0.4rem' }} />
+                <div style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.4rem' }}>
+                  <img 
+                    src="/images/nanobrite_logo.webp" 
+                    alt="Nano-Brite Ceramic Coating" 
+                    style={{ maxHeight: '58px', maxWidth: '100%', objectFit: 'contain' }}
+                  />
+                </div>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', letterSpacing: '0.12em', color: 'var(--gold-lt)', textTransform: 'uppercase', display: 'block' }}>
                   Nano-Brite Ceramic
                 </span>
@@ -113,9 +127,16 @@ export default function CoatingSection({ onOpenBooking }) {
             <div>
               <div style={{
                 background: '#1A1A1C', border: '2px solid var(--gold)', borderRadius: '10px',
-                padding: '1.25rem', marginBottom: '1.2rem', marginTop: '0.5rem', textAlign: 'center', color: '#FFFFFF',
+                padding: '0.85rem 1rem', marginBottom: '1.2rem', marginTop: '0.5rem', textAlign: 'center', color: '#FFFFFF',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
               }}>
-                <ShieldCheck style={{ width: '2rem', height: '2rem', color: 'var(--gold-lt)', margin: '0 auto 0.4rem' }} />
+                <div style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.4rem' }}>
+                  <img 
+                    src="/images/systemx_4.webp" 
+                    alt="System X Ceramic Protection" 
+                    style={{ maxHeight: '58px', maxWidth: '100%', objectFit: 'contain' }}
+                  />
+                </div>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', letterSpacing: '0.12em', color: 'var(--gold-lt)', textTransform: 'uppercase', display: 'block' }}>
                   System X Premium Ceramic
                 </span>

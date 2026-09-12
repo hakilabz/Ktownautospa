@@ -4,6 +4,10 @@ import { Check } from 'lucide-react';
 export default function WhyShop() {
   const reasons = [
     {
+      title: 'Hospital-grade steam cleaner',
+      desc: 'Italian-made, 305°F dry steam with vacuum extraction. It sanitizes seats, carpets and vents without soaking them or leaving chemical residue — the class of machine Canadian hospitals use for disinfection. We don’t know of another detailer in Kingston running one.',
+    },
+    {
       title: 'Dust-controlled indoor bay',
       desc: 'Coatings cure without wind, pollen, airborne dirt or evening dew landing in wet product.',
     },

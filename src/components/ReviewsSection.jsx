@@ -114,6 +114,57 @@ export default function ReviewsSection() {
           </div>
         </div>
 
+        {/* Physical Clipboard Sheets Gallery */}
+        <div style={{ marginBottom: '2.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+            <span className="capsule capsule--sm">Physical Customer Log Sheets</span>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', color: 'var(--muted-color)' }}>
+              Actual signed feedback logged at vehicle pickup
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
+            {[
+              {
+                src: '/images/review_sheet_18.webp',
+                alt: 'Handwritten customer review sheet: six vehicles rated, five with five stars and one with four',
+                title: 'Log Sheet #1 — Fleet & Passenger Vehicles',
+                note: '6 vehicles logged · 5 five-star ratings',
+              },
+              {
+                src: '/images/review_sheet_19.webp',
+                alt: 'Handwritten customer review sheet: three vehicles, all rated five stars',
+                title: 'Log Sheet #2 — Commercial Deliveries',
+                note: '3 vehicles logged · 100% 5-star feedback',
+              },
+              {
+                src: '/images/review_sheet_20.webp',
+                alt: 'Handwritten customer review sheet: seven vehicles rated five stars',
+                title: 'Log Sheet #3 — Local Kingston Motorists',
+                note: '7 vehicles logged · 100% 5-star feedback',
+              },
+            ].map((sheet, idx) => (
+              <figure key={idx} className="frame" style={{ padding: '0.75rem', margin: 0 }}>
+                <div style={{ borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--surface-border)', background: '#F8F6F0', aspectRatio: '4/3' }}>
+                  <img 
+                    src={sheet.src} 
+                    alt={sheet.alt} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+                </div>
+                <figcaption style={{ marginTop: '0.65rem' }}>
+                  <strong style={{ display: 'block', fontSize: '0.9rem', color: 'var(--heading-color)', marginBottom: '0.15rem' }}>
+                    {sheet.title}
+                  </strong>
+                  <span style={{ display: 'block', fontFamily: 'var(--mono)', fontSize: '0.78rem', color: 'var(--gold-primary)' }}>
+                    {sheet.note}
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+
         {/* Reviews Quote Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
           {reviews.map((r, idx) => (

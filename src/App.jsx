@@ -43,6 +43,7 @@ export default function App() {
     let total = 100;
     if (pkgName === 'Full Detail') total = 200;
     else if (pkgName === 'Hand Car Wash') total = 30;
+    else if (pkgName === 'Interior Refresh') total = 70;
     else if (pkgName === 'Interior Complete') total = 175;
 
     setQuoteData({
