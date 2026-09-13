@@ -88,7 +88,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2.5rem', alignItems: 'start' }}>
           
           {/* Builder Controls Frame */}
           <div className="frame">
@@ -108,7 +108,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
                   ].map((v) => (
                     <button key={v.id} type="button" onClick={() => setVehicle(v.id)} style={chipStyle(vehicle === v.id)}>
                       <div style={{ fontSize: '1.4rem', marginBottom: '0.2rem' }}>{v.icon}</div>
-                      <div style={{ fontSize: '0.85rem' }}>{v.label}</div>
+                      <div style={{ fontSize: '0.78rem' }}>{v.label}</div>
                     </button>
                   ))}
                 </div>
@@ -140,7 +140,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
                 <label style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)' }}>
                   3. Select Optional Treatments &amp; Add-ons
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.6rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '0.6rem' }}>
                   <div onClick={() => toggleAddon('tire-shine')} style={{ ...chipStyle(addons.includes('tire-shine')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <Disc style={{ width: '1rem', height: '1rem', color: 'var(--water)' }} />

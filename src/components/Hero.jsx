@@ -101,6 +101,7 @@ export default function Hero({ onOpenBooking }) {
             border: '2px solid var(--gold)', borderRadius: '12px',
             padding: '1rem 1.25rem', marginTop: '0.75rem',
             boxShadow: '0 12px 34px rgba(0,0,0,0.35)',
+            flexWrap: 'wrap',
           }} className="carfax-card">
             <div style={{ flexShrink: 0, width: '140px', background: '#111827', padding: '0.5rem 0.75rem', borderRadius: '8px', textAlign: 'center' }}>
               <span style={{ color: '#FFFFFF', fontWeight: 900, fontSize: '1.15rem', letterSpacing: '0.05em', display: 'block' }}>CARFAX</span>

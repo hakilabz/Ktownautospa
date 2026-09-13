@@ -43,8 +43,8 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
           
           {/* Brand Logo */}
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-            <img src="/logo.png" alt="Ktown Auto Spa" style={{ height: '3.4rem', width: 'auto', objectFit: 'contain' }} />
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', flexShrink: 0 }}>
+            <img src="/logo.png" alt="Ktown Auto Spa" style={{ height: 'clamp(2.3rem, 5vw, 3.4rem)', width: 'auto', objectFit: 'contain' }} />
           </a>
 
           {/* Topbar Meta (Desktop) */}
@@ -55,7 +55,7 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
           </div>
 
           {/* Header Action Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
             
             {/* Theme Toggle Button */}
             <button
@@ -63,9 +63,10 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
               title={`Switch to ${isLight ? 'Dark' : 'Light'} Mode`}
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                width: '2.5rem', height: '2.5rem', borderRadius: '50%',
+                width: '2.4rem', height: '2.4rem', borderRadius: '50%',
                 background: 'var(--chip-inactive-bg)', border: '1.5px solid var(--gold)',
                 color: 'var(--gold-primary)', cursor: 'pointer', transition: 'all 0.2s',
+                flexShrink: 0,
               }}
             >
               {isLight ? <Moon style={{ width: '1.1rem', height: '1.1rem', color: 'var(--navy-deep)' }} /> : <Sun style={{ width: '1.1rem', height: '1.1rem', color: '#F0D590' }} />}
@@ -74,27 +75,27 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
             {/* Direct Phone CTA */}
             <a 
               href="tel:+16479153530" 
-              className="btn btn--gold"
-              style={{ minHeight: '46px', padding: '0 1.2rem', fontSize: '0.95rem' }}
+              className="btn btn--gold nav-phone-btn"
+              style={{ minHeight: '42px', padding: '0 1.1rem', fontSize: '0.9rem' }}
             >
-              <Phone style={{ width: '1rem', height: '1rem' }} />
+              <Phone style={{ width: '0.95rem', height: '0.95rem' }} />
               <span>647-915-3530</span>
             </a>
 
             {/* Book Online CTA */}
             <button 
               onClick={onOpenBooking} 
-              className="btn btn--navy"
-              style={{ minHeight: '46px', padding: '0 1.2rem', fontSize: '0.95rem' }}
+              className="btn btn--navy nav-book-btn"
+              style={{ minHeight: '42px', padding: '0 1.1rem', fontSize: '0.9rem' }}
             >
-              <Calendar style={{ width: '1rem', height: '1rem' }} />
+              <Calendar style={{ width: '0.95rem', height: '0.95rem' }} />
               <span>Book Online</span>
             </button>
 
             {/* Mobile Drawer Hamburger */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              style={{ color: 'var(--header-text)', padding: '0.35rem', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
+              style={{ color: 'var(--header-text)', padding: '0.35rem', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexShrink: 0 }}
               className="mobile-hamburger"
               aria-label="Toggle navigation menu"
             >
@@ -107,9 +108,9 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
       </div>
 
       {/* Secondary Main Navigation Ribbon */}
-      <nav style={{ background: 'var(--navy-deep)', borderBottom: '3px solid var(--gold)', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }} aria-label="Main Navigation">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 0.5rem' }}>
-          <ul style={{ display: 'flex', gap: '0.2rem', listStyle: 'none', margin: 0, padding: 0, whiteSpace: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+      <nav style={{ background: 'var(--navy-deep)', borderBottom: '3px solid var(--gold)', width: '100%', maxWidth: '100vw', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }} aria-label="Main Navigation">
+        <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '0 0.5rem', overflowX: 'auto' }}>
+          <ul style={{ display: 'flex', gap: '0.2rem', listStyle: 'none', margin: 0, padding: 0, whiteSpace: 'nowrap', minWidth: 'max-content' }}>
             {navLinks.map((link) => (
               <li key={link.href}>
                 <a 
@@ -174,11 +175,17 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
       )}
 
       <style>{`
-        @media (min-width: 1080px) {
-          .desktop-meta { display: flex !important; }
+        @media (max-width: 900px) {
+          .nav-phone-btn { display: none !important; }
+        }
+        @media (max-width: 640px) {
+          .nav-book-btn { display: none !important; }
         }
         @media (min-width: 900px) {
           .mobile-hamburger { display: none !important; }
+        }
+        @media (min-width: 1080px) {
+          .desktop-meta { display: flex !important; }
         }
       `}</style>
     </header>

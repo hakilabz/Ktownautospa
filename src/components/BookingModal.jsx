@@ -151,7 +151,7 @@ Received via Ktown Auto Spa Website
             </div>
 
             {/* Form Inputs Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.9rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '0.9rem' }}>
               <div>
                 <label style={labelStyle}>Your Full Name *</label>
                 <input type="text" required placeholder="e.g. Alex Mercer" value={formData.name}

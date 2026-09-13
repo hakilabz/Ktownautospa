@@ -65,7 +65,7 @@ export default function Credentials() {
         
         <div className="frame">
           {/* Credentials 4-Col Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
             {certs.map((c, idx) => (
               <div key={idx} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
                 <div style={{
@@ -89,7 +89,7 @@ export default function Credentials() {
           </div>
 
           {/* 4 Brand Tiles with Official Partner Badges */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '1.25rem' }}>
             {brandTiles.map((tile, idx) => (
               <div 
                 key={idx}

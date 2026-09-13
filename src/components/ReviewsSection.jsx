@@ -123,7 +123,7 @@ export default function ReviewsSection() {
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.25rem' }}>
             {[
               {
                 src: '/images/review_sheet_18.webp',
@@ -166,7 +166,7 @@ export default function ReviewsSection() {
         </div>
 
         {/* Reviews Quote Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: '1.25rem' }}>
           {reviews.map((r, idx) => (
             <div 
               key={idx} 
