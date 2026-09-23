@@ -19,37 +19,37 @@
   --slate: #4C5B72;
 
   /* Theme adaptive semantic tokens */
-  --bg-page: var(--cream);
-  --text-main: var(--ink);
-  --text-muted: var(--slate);
+  --bg-page: #F9F7F2;
+  --text-main: #121E36;
+  --text-muted: #50617B;
   --heading-color: #0A1E42;
-  --subheading-color: #12305F;
-  --body-color: #14213D;
-  --muted-color: #4C5B72;
+  --subheading-color: #142C54;
+  --body-color: #1A2B47;
+  --muted-color: #50617B;
 
   --surface-card: #FFFFFF;
-  --surface-card-subtle: #F6F0E1;
-  --surface-border: #E3D7BA;
-  --surface-border-gold: #9A7524;
+  --surface-card-subtle: #F3EFE6;
+  --surface-border: #E5DCC9;
+  --surface-border-gold: #B88D2F;
 
-  --header-bg: #F6F0E1;
-  --header-border: #E3D7BA;
+  --header-bg: rgba(249, 247, 242, 0.96);
+  --header-border: #E5DCC9;
   --header-text: #0A1E42;
 
-  --chip-inactive-bg: #EDE4CE;
-  --chip-inactive-border: #E3D7BA;
+  --chip-inactive-bg: #EDE6D6;
+  --chip-inactive-border: #E0D5C0;
   --chip-inactive-text: #0A1E42;
 
   --card-bg: #FFFFFF;
-  --card-gold-bg: var(--cream);
-  --card-border: var(--cream-3);
+  --card-gold-bg: #F9F7F2;
+  --card-border: #E5DCC9;
   --card-gold-border: var(--gold-dk);
-  --section-alt-bg: var(--cream-2);
+  --section-alt-bg: #F3EFE6;
   --input-bg: #FFFFFF;
-  --gold-primary: var(--gold-dk);
+  --gold-primary: #9A7524;
   --gold-gradient: linear-gradient(180deg, var(--gold-lt) 0%, var(--gold) 50%, var(--gold-lt) 100%);
   --cyan-glow: var(--water-dk);
-  --pill-bg: var(--cream-2);
+  --pill-bg: #EDE6D6;
   --pill-border: var(--gold);
   --pill-text: var(--navy-deep);
   --receipt-bg: var(--navy-deep);
@@ -63,32 +63,32 @@
 }
 
 :root[data-theme="dark"] {
-  --bg-page: #080A0F;
+  --bg-page: #070B14;
   --text-main: #F8FAFC;
-  --text-muted: #94A3B8;
+  --text-muted: #9FB2C8;
   --heading-color: #FFFFFF;
   --subheading-color: #F0D590;
-  --body-color: #E4EDF7;
-  --muted-color: #94A3B8;
+  --body-color: #E2ECF7;
+  --muted-color: #9FB2C8;
 
-  --surface-card: #0E1626;
-  --surface-card-subtle: #0A101C;
-  --surface-border: rgba(255, 255, 255, 0.12);
-  --surface-border-gold: #C9A03C;
+  --surface-card: #0D1524;
+  --surface-card-subtle: #09101C;
+  --surface-border: rgba(255, 255, 255, 0.10);
+  --surface-border-gold: rgba(201, 160, 60, 0.45);
 
-  --header-bg: #0A1E42;
-  --header-border: rgba(201, 160, 60, 0.35);
+  --header-bg: rgba(10, 22, 44, 0.94);
+  --header-border: rgba(201, 160, 60, 0.3);
   --header-text: #FFFFFF;
 
-  --chip-inactive-bg: rgba(255, 255, 255, 0.08);
-  --chip-inactive-border: rgba(255, 255, 255, 0.15);
-  --chip-inactive-text: #E4EDF7;
+  --chip-inactive-bg: rgba(255, 255, 255, 0.07);
+  --chip-inactive-border: rgba(255, 255, 255, 0.14);
+  --chip-inactive-text: #E2ECF7;
 
-  --card-bg: #0E1626;
-  --card-gold-bg: #0F1A2D;
-  --card-border: rgba(255, 255, 255, 0.12);
-  --card-gold-border: rgba(201, 160, 60, 0.6);
-  --section-alt-bg: #0B1220;
+  --card-bg: #0D1524;
+  --card-gold-bg: #101A2D;
+  --card-border: rgba(255, 255, 255, 0.10);
+  --card-gold-border: rgba(201, 160, 60, 0.65);
+  --section-alt-bg: #09101C;
   --input-bg: #0A1220;
   --gold-primary: #F0D590;
   --gold-gradient: linear-gradient(180deg, #F0D590 0%, #C9A03C 50%, #9A7524 100%);
@@ -225,6 +225,12 @@ nav::-webkit-scrollbar,
 .btn--cream:hover {
   background: var(--cream-2);
   border-color: var(--gold);
+}
+
+:root[data-theme="dark"] .btn--cream:hover {
+  background: rgba(201, 160, 60, 0.18);
+  border-color: var(--gold-lt);
+  color: #FFFFFF !important;
 }
 
 .btn--outline {
@@ -535,42 +541,70 @@ nav::-webkit-scrollbar,
 
 /* Interactive Price Cell in Unified Rate Card */
 .prices tbody td {
-  padding: 0.4rem 0.35rem;
+  padding: 0.35rem 0.25rem;
   text-align: center;
   border-right: 1px solid var(--surface-border);
   border-bottom: 1px solid var(--surface-border);
-  font-family: var(--display);
-  font-weight: 800;
-  font-size: 1.7rem;
-  color: var(--water-dk);
-  line-height: 1;
 }
 
 .price-cell-btn {
   background: transparent;
-  border: 1px solid transparent;
+  border: 1.5px solid transparent;
   border-radius: 8px;
-  color: inherit;
-  font-family: inherit;
-  font-weight: inherit;
-  font-size: inherit;
-  line-height: inherit;
   cursor: pointer;
-  padding: 0.55rem 0.4rem;
+  padding: 0.45rem 0.3rem;
   width: 100%;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
 }
 
+.price-cell-btn .price-val {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.65rem;
+  color: var(--water-dk);
+  line-height: 1;
+  transition: color 0.18s ease;
+}
+
+:root[data-theme="dark"] .price-cell-btn .price-val {
+  color: #7FC4EE;
+}
+
+.price-cell-btn .price-add-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-color);
+  opacity: 0.8;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
 .price-cell-btn:hover {
-  background: rgba(201, 160, 60, 0.16);
+  background: rgba(201, 160, 60, 0.15);
   border-color: var(--gold-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(201, 160, 60, 0.18);
+  box-shadow: 0 4px 14px rgba(201, 160, 60, 0.2);
+}
+
+.price-cell-btn:hover .price-val {
+  color: var(--heading-color);
+}
+
+.price-cell-btn:hover .price-add-tag {
+  background: var(--gold-dk);
+  color: #FFFFFF;
+  opacity: 1;
 }
 
 .price-cell-btn:active {
@@ -578,9 +612,19 @@ nav::-webkit-scrollbar,
 }
 
 :root[data-theme="dark"] .price-cell-btn:hover {
-  background: rgba(201, 160, 60, 0.25);
-  border-color: var(--gold-lt);
-  color: var(--gold-lt);
+  background: rgba(201, 160, 60, 0.22);
+  border-color: #F0D590;
+  box-shadow: 0 4px 16px rgba(240, 213, 144, 0.25);
+}
+
+:root[data-theme="dark"] .price-cell-btn:hover .price-val {
+  color: #FFFFFF;
+}
+
+:root[data-theme="dark"] .price-cell-btn:hover .price-add-tag {
+  background: #F0D590;
+  color: #0A1E42;
+  opacity: 1;
 }
 
 /* CARFAX Table Pill Badge */

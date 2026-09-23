@@ -23,7 +23,7 @@ import CheckoutModal from './components/CheckoutModal';
 function MainApp() {
   const { cart, addToCart, proceedToCheckout, setIsCartOpen } = useCart();
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('ktown_theme') || 'light';
+    return localStorage.getItem('ktown_theme') || 'dark';
   });
 
   useEffect(() => {

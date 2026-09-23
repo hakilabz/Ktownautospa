@@ -95,7 +95,7 @@ export default function LocationHours({ onOpenBooking }) {
             }}>
               <p className="kicker" style={{ marginBottom: '0.5rem' }}>Instant online booking</p>
               <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.85rem', fontWeight: 800, color: 'var(--heading-color)', textTransform: 'uppercase', margin: '0 0 0.8rem' }}>
-                Reserve your appointment
+                Book your appointment
               </h3>
               <p style={{ margin: '0 0 1.5rem', color: 'var(--muted-color)', fontSize: '0.96rem', lineHeight: 1.6 }}>
                 Select your package, date, and vehicle details online. Includes automatic Google Calendar sync, zero deposit required upfront, and direct notification dispatch to our shop team.

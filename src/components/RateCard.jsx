@@ -7,18 +7,10 @@ function RateTableRow({ title, titleExtra, subtitle, prices, onAdd, isCarfax }) 
   return (
     <tr style={isCarfax ? { background: 'rgba(62, 155, 218, 0.12)' } : undefined}>
       <th scope="row">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <div>
           <span>
             {title} {titleExtra} {isCarfax && <span className="cf-pill">CARFAX</span>}
           </span>
-          <button
-            type="button"
-            onClick={() => onAdd(title, 'c-sedan', prices['c-sedan'], subtitle)}
-            className="btn-add-table"
-            title={`Quick Reserve ${title} (Sedan from $${prices['c-sedan']})`}
-          >
-            + Reserve
-          </button>
         </div>
         <small>{subtitle}</small>
       </th>
@@ -27,9 +19,10 @@ function RateTableRow({ title, titleExtra, subtitle, prices, onAdd, isCarfax }) 
           type="button"
           onClick={() => onAdd(title, 'c-sedan', prices['c-sedan'], subtitle)}
           className="price-cell-btn"
-          title={`Reserve ${title} for Sedan ($${prices['c-sedan']})`}
+          title={`Add ${title} for Sedan ($${prices['c-sedan']}) to cart`}
         >
-          ${prices['c-sedan']}
+          <span className="price-val">${prices['c-sedan']}</span>
+          <span className="price-add-tag">+ Add</span>
         </button>
       </td>
       <td className="col-cross">
@@ -37,9 +30,10 @@ function RateTableRow({ title, titleExtra, subtitle, prices, onAdd, isCarfax }) 
           type="button"
           onClick={() => onAdd(title, 'c-cross', prices['c-cross'], subtitle)}
           className="price-cell-btn"
-          title={`Reserve ${title} for Crossover ($${prices['c-cross']})`}
+          title={`Add ${title} for Crossover ($${prices['c-cross']}) to cart`}
         >
-          ${prices['c-cross']}
+          <span className="price-val">${prices['c-cross']}</span>
+          <span className="price-add-tag">+ Add</span>
         </button>
       </td>
       <td className="col-suv">
@@ -47,9 +41,10 @@ function RateTableRow({ title, titleExtra, subtitle, prices, onAdd, isCarfax }) 
           type="button"
           onClick={() => onAdd(title, 'c-suv', prices['c-suv'], subtitle)}
           className="price-cell-btn"
-          title={`Reserve ${title} for SUV ($${prices['c-suv']})`}
+          title={`Add ${title} for SUV ($${prices['c-suv']}) to cart`}
         >
-          ${prices['c-suv']}
+          <span className="price-val">${prices['c-suv']}</span>
+          <span className="price-add-tag">+ Add</span>
         </button>
       </td>
       <td className="col-van">
@@ -57,9 +52,10 @@ function RateTableRow({ title, titleExtra, subtitle, prices, onAdd, isCarfax }) 
           type="button"
           onClick={() => onAdd(title, 'c-van', prices['c-van'], subtitle)}
           className="price-cell-btn"
-          title={`Reserve ${title} for Van ($${prices['c-van']})`}
+          title={`Add ${title} for Van ($${prices['c-van']}) to cart`}
         >
-          ${prices['c-van']}
+          <span className="price-val">${prices['c-van']}</span>
+          <span className="price-add-tag">+ Add</span>
         </button>
       </td>
     </tr>
@@ -277,7 +273,7 @@ export default function RateCard({ onOpenBooking }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <p className="kicker" style={{ margin: 0 }}>Wash &amp; detail</p>
               <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', color: 'var(--muted-color)' }}>
-                Tap any price to reserve for your vehicle &middot; Horizontal scroll on smaller screens
+                Tap your vehicle's price to add to cart &middot; Horizontal scroll on smaller screens
               </span>
             </div>
             
@@ -361,7 +357,7 @@ export default function RateCard({ onOpenBooking }) {
 
                 <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', textAlign: 'center' }}>
                   <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 0.75rem' }}>
-                    Approx. 2 hours · Select vehicle to reserve:
+                    Approx. 2 hours · Select your vehicle:
                   </p>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.25rem' }}>
                     {[
@@ -375,7 +371,7 @@ export default function RateCard({ onOpenBooking }) {
                         type="button"
                         onClick={() => handleAddTierService('Medium Package', tier.id, tier.price, 'Interior vacuum & glass, mats, jambs, hand wash')}
                         className="rate-tier-tile"
-                        title={`Reserve Medium Package for ${tier.name} ($${tier.price})`}
+                        title={`Add Medium Package for ${tier.name} ($${tier.price}) to cart`}
                       >
                         <span className="rate-tier-label">{tier.name}</span>
                         <strong className="rate-tier-price">${tier.price}</strong>
@@ -430,7 +426,7 @@ export default function RateCard({ onOpenBooking }) {
 
                 <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', textAlign: 'center' }}>
                   <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 0.75rem' }}>
-                    Approx. 4 hours · Select vehicle to reserve:
+                    Approx. 4 hours · Select your vehicle:
                   </p>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.25rem' }}>
                     {[
@@ -444,7 +440,7 @@ export default function RateCard({ onOpenBooking }) {
                         type="button"
                         onClick={() => handleAddTierService('Full Detail', tier.id, tier.price, 'Medium Package plus summer mats steamed, carpets & seats scrubbed')}
                         className="rate-tier-tile rate-tier-tile--gold"
-                        title={`Reserve Full Detail for ${tier.name} ($${tier.price})`}
+                        title={`Add Full Detail for ${tier.name} ($${tier.price}) to cart`}
                       >
                         <span className="rate-tier-label">{tier.name}</span>
                         <strong className="rate-tier-price">${tier.price}</strong>
@@ -464,7 +460,7 @@ export default function RateCard({ onOpenBooking }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <p className="kicker" style={{ margin: 0 }}>Polish &amp; protect</p>
               <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', color: 'var(--muted-color)' }}>
-                Tap any price to reserve for your vehicle &middot; Horizontal scroll on smaller screens
+                Tap your vehicle's price to add to cart &middot; Horizontal scroll on smaller screens
               </span>
             </div>
             
@@ -513,7 +509,7 @@ export default function RateCard({ onOpenBooking }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <p className="kicker" style={{ margin: 0 }}>Ceramic coating packages &mdash; includes wash, iron decon, clay bar, correction and coating</p>
               <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', color: 'var(--muted-color)' }}>
-                Tap any price to reserve for your vehicle &middot; Horizontal scroll on smaller screens
+                Tap your vehicle's price to add to cart &middot; Horizontal scroll on smaller screens
               </span>
             </div>
             
@@ -734,7 +730,7 @@ export default function RateCard({ onOpenBooking }) {
                     className="btn btn--gold"
                     style={{ width: '100%', minHeight: '44px', fontSize: '0.92rem' }}
                   >
-                    + Add Soil Surcharge to Reservation ($50)
+                    + Add Soil Surcharge to Cart ($50)
                   </button>
                 </div>
               </div>

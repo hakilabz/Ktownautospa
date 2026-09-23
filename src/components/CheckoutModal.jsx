@@ -119,7 +119,7 @@ export default function CheckoutModal() {
 
     if (formData.paymentMethod === 'card_stripe') {
       if (!formData.cardNumber || !formData.cardExp || !formData.cardCvc) {
-        setErrorMsg('Please fill in your card details to reserve with card.');
+        setErrorMsg('Please fill in your card details to complete payment with card.');
         return;
       }
     }
@@ -623,14 +623,14 @@ END:VCALENDAR`;
                     {submitting ? (
                       <>
                         <Loader2 style={{ width: '1.2rem', height: '1.2rem', animation: 'spin 1s linear infinite' }} />
-                        <span>Confirming Reservation...</span>
+                        <span>Confirming Appointment...</span>
                       </>
                     ) : (
                       <>
                         <span>
                           {formData.paymentMethod === 'card_stripe'
-                            ? `Pay $${grandTotal.toFixed(2)} CAD & Reserve`
-                            : `Reserve Appointment ($${grandTotal.toFixed(2)} CAD)`}
+                            ? `Pay $${grandTotal.toFixed(2)} CAD & Confirm Booking`
+                            : `Confirm Appointment ($${grandTotal.toFixed(2)} CAD)`}
                         </span>
                         <ArrowRight style={{ width: '1.1rem', height: '1.1rem', flexShrink: 0 }} />
                       </>

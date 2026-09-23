@@ -75,7 +75,7 @@ export default function CoatingSection() {
                 className="btn btn--outline" 
                 style={{ minHeight: '40px', padding: '0 1rem', fontSize: '0.85rem' }}
               >
-                Inquire / Reserve
+                + Add to Cart
               </button>
             </div>
           </article>
@@ -134,7 +134,7 @@ export default function CoatingSection() {
                 className="btn btn--outline" 
                 style={{ minHeight: '40px', padding: '0 1rem', fontSize: '0.85rem' }}
               >
-                Inquire / Reserve
+                + Add to Cart
               </button>
             </div>
           </article>
@@ -202,7 +202,7 @@ export default function CoatingSection() {
                 className="btn btn--gold" 
                 style={{ minHeight: '40px', padding: '0 1.2rem', fontSize: '0.85rem' }}
               >
-                Reserve
+                + Add to Cart
               </button>
             </div>
           </article>
