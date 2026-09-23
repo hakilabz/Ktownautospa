@@ -461,6 +461,28 @@ body {
   background: rgba(255, 255, 255, 0.03);
 }
 
+/* Responsive Vehicle Column Filtering & Highlight */
+@media (max-width: 860px) {
+  .prices .col-sedan,
+  .prices .col-cross,
+  .prices .col-suv,
+  .prices .col-van {
+    display: none !important;
+  }
+  .prices[data-vehicle="c-sedan"] .col-sedan,
+  .prices[data-vehicle="c-cross"] .col-cross,
+  .prices[data-vehicle="c-suv"] .col-suv,
+  .prices[data-vehicle="c-van"] .col-van {
+    display: table-cell !important;
+  }
+}
+.prices[data-vehicle="c-sedan"] td.col-sedan,
+.prices[data-vehicle="c-cross"] td.col-cross,
+.prices[data-vehicle="c-suv"] td.col-suv,
+.prices[data-vehicle="c-van"] td.col-van {
+  background: rgba(201, 160, 60, 0.12);
+}
+
 /* CARFAX Table Pill Badge */
 .cf-pill {
   display: inline-block;
@@ -768,3 +790,42 @@ body {
   background: rgba(255, 255, 255, 0.15);
   border-color: var(--gold);
 }
+
+/* Rate Card Table Add Buttons */
+.btn-add-table {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: var(--gold-pale);
+  border: 1.5px solid var(--gold);
+  color: var(--navy-deep);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.btn-add-table:hover {
+  background: var(--gold);
+  color: #0A1E42;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(201, 160, 60, 0.3);
+}
+
+:root[data-theme="dark"] .btn-add-table {
+  background: rgba(201, 160, 60, 0.15);
+  border-color: var(--gold);
+  color: var(--gold-lt);
+}
+
+:root[data-theme="dark"] .btn-add-table:hover {
+  background: var(--gold);
+  color: #0A1E42;
+}
+

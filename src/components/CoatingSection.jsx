@@ -1,7 +1,10 @@
 import React from 'react';
 import { ShieldCheck, Check, Sparkles } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 export default function CoatingSection({ onOpenBooking }) {
+  const { addToCart } = useCart();
+
   return (
     <section className="band band--tint" id="coating">
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
@@ -57,8 +60,17 @@ export default function CoatingSection({ onOpenBooking }) {
                   1-step
                 </span>
               </div>
-              <button onClick={onOpenBooking} className="btn btn--outline" style={{ minHeight: '40px', padding: '0 1rem', fontSize: '0.85rem' }}>
-                Inquire
+              <button 
+                onClick={() => addToCart({
+                  title: 'Paint Correction (1-Step)',
+                  vehicleType: 'c-sedan',
+                  basePrice: 350,
+                  subtitle: 'Machine polish & paint depth measurement · approx 6 hrs',
+                }, true)} 
+                className="btn btn--outline" 
+                style={{ minHeight: '40px', padding: '0 1rem', fontSize: '0.85rem' }}
+              >
+                Inquire / Reserve
               </button>
             </div>
           </article>
@@ -102,8 +114,17 @@ export default function CoatingSection({ onOpenBooking }) {
                   1, 3 or 7 yr
                 </span>
               </div>
-              <button onClick={onOpenBooking} className="btn btn--outline" style={{ minHeight: '40px', padding: '0 1rem', fontSize: '0.85rem' }}>
-                Inquire
+              <button 
+                onClick={() => addToCart({
+                  title: 'Nano-Brite Rejuvenate (1 Year)',
+                  vehicleType: 'c-sedan',
+                  basePrice: 449,
+                  subtitle: 'Decon + 1-step correction + 1 layer ceramic · approx 5 hrs',
+                }, true)} 
+                className="btn btn--outline" 
+                style={{ minHeight: '40px', padding: '0 1rem', fontSize: '0.85rem' }}
+              >
+                Inquire / Reserve
               </button>
             </div>
           </article>
@@ -164,7 +185,16 @@ export default function CoatingSection({ onOpenBooking }) {
                   includes CARFAX
                 </span>
               </div>
-              <button onClick={onOpenBooking} className="btn btn--gold" style={{ minHeight: '40px', padding: '0 1.2rem', fontSize: '0.85rem' }}>
+              <button 
+                onClick={() => addToCart({
+                  title: 'System X Crystal+ (2 Year CARFAX)',
+                  vehicleType: 'c-sedan',
+                  basePrice: 949,
+                  subtitle: '1-step correction + paint & glass + CARFAX Canada registration · approx 8 hrs',
+                }, true)} 
+                className="btn btn--gold" 
+                style={{ minHeight: '40px', padding: '0 1.2rem', fontSize: '0.85rem' }}
+              >
                 Reserve
               </button>
             </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { CartProvider, useCart } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import RateCard from './components/RateCard';
@@ -16,11 +17,11 @@ import ReviewsSection from './components/ReviewsSection';
 import LocationHours from './components/LocationHours';
 import Footer from './components/Footer';
 import WhatsAppChat from './components/WhatsAppChat';
-import BookingModal from './components/BookingModal';
+import CartDrawer from './components/CartDrawer';
+import CheckoutModal from './components/CheckoutModal';
 
-export default function App() {
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [quoteData, setQuoteData] = useState(null);
+function MainApp() {
+  const { cart, addToCart, proceedToCheckout, setIsCartOpen } = useCart();
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('ktown_theme') || 'light';
   });
@@ -35,23 +36,44 @@ export default function App() {
   };
 
   const handleOpenBooking = (customQuote = null) => {
-    if (customQuote) setQuoteData(customQuote);
-    setIsBookingOpen(true);
+    if (customQuote) {
+      // Came from custom price estimator
+      const vType = customQuote.vehicle === 'crossover' ? 'c-cross' : 
+                    customQuote.vehicle === 'suv' ? 'c-suv' : 
+                    customQuote.vehicle === 'van' ? 'c-van' : 'c-sedan';
+      addToCart({
+        title: customQuote.pkgName || 'Detailing Package',
+        vehicleType: vType,
+        basePrice: customQuote.base,
+        subtitle: customQuote.duration,
+        addons: (customQuote.itemizedAddons || []).map(a => ({
+          id: a.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+          title: a.name,
+          price: a.price,
+        })),
+      }, false);
+      proceedToCheckout();
+    } else if (cart.length > 0) {
+      proceedToCheckout();
+    } else {
+      setIsCartOpen(true);
+    }
   };
 
-  const handleSelectPackage = (pkgName) => {
-    let total = 100;
-    if (pkgName === 'Full Detail') total = 200;
-    else if (pkgName === 'Hand Car Wash') total = 30;
-    else if (pkgName === 'Interior Refresh') total = 70;
-    else if (pkgName === 'Interior Complete') total = 175;
-
-    setQuoteData({
-      pkgName,
-      vehicleLabel: 'Sedan',
-      total,
-    });
-    setIsBookingOpen(true);
+  const handleSelectPackage = (pkgName, vehicleType = 'c-sedan', price = null) => {
+    let basePrice = price;
+    if (!basePrice) {
+      if (pkgName === 'Full Detail') basePrice = 200;
+      else if (pkgName === 'Hand Car Wash') basePrice = 30;
+      else if (pkgName === 'Interior Refresh') basePrice = 70;
+      else if (pkgName === 'Interior Complete') basePrice = 175;
+      else basePrice = 100;
+    }
+    addToCart({
+      title: pkgName,
+      vehicleType,
+      basePrice,
+    }, true);
   };
 
   return (
@@ -65,7 +87,7 @@ export default function App() {
       />
       
       <main id="main">
-        {/* Hero with CARFAX Canada Callout & WhatsApp quick photo note */}
+        {/* Hero with CARFAX Canada Callout & Booking CTAs */}
         <Hero onOpenBooking={() => handleOpenBooking()} />
 
         {/* 2026 Complete Rate Card with Tabs & Vehicle Picker */}
@@ -117,13 +139,20 @@ export default function App() {
       {/* Floating Interactive WhatsApp Chat Widget */}
       <WhatsAppChat />
 
-      {/* Interactive Booking Modal with Google Calendar Sync & Email Dispatch */}
-      <BookingModal 
-        isOpen={isBookingOpen} 
-        onClose={() => setIsBookingOpen(false)} 
-        quoteData={quoteData}
-      />
+      {/* Slide-over Shopping Cart Drawer */}
+      <CartDrawer />
+
+      {/* Complete Reservation & Payment Modal (Stripe + Pay at Drop-off) */}
+      <CheckoutModal />
 
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <CartProvider>
+      <MainApp />
+    </CartProvider>
   );
 }

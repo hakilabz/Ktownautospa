@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Clock, ArrowRight, Bug, Disc } from 'lucide-react';
+import { Clock, ArrowRight, Disc, Sparkles, ShieldAlert, AlertTriangle } from 'lucide-react';
 
 export default function PriceCalculator({ onProceedToBooking }) {
   const [vehicle, setVehicle] = useState('sedan');
   const [pkg, setPkg] = useState('medium');
-  const [addons, setAddons] = useState(['tire-shine', 'bug-removal']);
+  const [addons, setAddons] = useState(['tire-shine']);
 
   const toggleAddon = (id) => {
     setAddons(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -49,21 +49,20 @@ export default function PriceCalculator({ onProceedToBooking }) {
 
     let addonTotal = 0;
     const itemizedAddons = [];
-    if (addons.includes('tire-shine')) { addonTotal += 10; itemizedAddons.push({ name: 'High-Gloss Tire Shine', price: 10 }); }
-    if (addons.includes('bug-removal')) { addonTotal += 5; itemizedAddons.push({ name: 'Bug & Tar Removal', price: 5 }); }
-    if (addons.includes('summer-mats')) { addonTotal += 20; itemizedAddons.push({ name: 'Summer Mats Shampoo', price: 20 }); }
+    if (addons.includes('tire-shine')) { addonTotal += 10; itemizedAddons.push({ name: 'Tire Shine', price: 10 }); }
+    if (addons.includes('summer-mats')) { addonTotal += 20; itemizedAddons.push({ name: 'Summer Mats Shampoo Wash', price: 20 }); }
     if (addons.includes('engine-bay')) { addonTotal += 40; itemizedAddons.push({ name: 'Engine Bay Cleaning', price: 40 }); }
-    if (addons.includes('odour')) { addonTotal += 50; itemizedAddons.push({ name: 'Thermal Odour Treatment', price: 50 }); }
-    if (addons.includes('headlights')) { addonTotal += 60; itemizedAddons.push({ name: 'Headlight Restoration', price: 60 }); }
-    if (addons.includes('clay-bar')) { addonTotal += 60; itemizedAddons.push({ name: 'Clay Bar Decon', price: 60 }); }
-    if (addons.includes('pet-hair')) { addonTotal += 50; itemizedAddons.push({ name: 'Pet Hair Surcharge', price: 50 }); }
+    if (addons.includes('odour')) { addonTotal += 50; itemizedAddons.push({ name: 'Odour Treatment', price: 50 }); }
+    if (addons.includes('headlights')) { addonTotal += 60; itemizedAddons.push({ name: 'Headlight Restoration (pair)', price: 60 }); }
+    if (addons.includes('clay-bar')) { addonTotal += 60; itemizedAddons.push({ name: 'Clay Bar Decontamination', price: 60 }); }
+    if (addons.includes('pet-hair')) { addonTotal += 50; itemizedAddons.push({ name: 'If it\'s extra dirty (Kids/Pets/Work)', price: 50 }); }
 
     let vehicleLabel = 'Sedan';
     if (vehicle === 'crossover') vehicleLabel = 'Crossover (5 Seats)';
     if (vehicle === 'suv') vehicleLabel = 'SUV (3rd Row)';
     if (vehicle === 'van') vehicleLabel = 'Van';
 
-    return { base, addonTotal, total: base + addonTotal, pkgName, duration, vehicleLabel, itemizedAddons };
+    return { base, addonTotal, total: base + addonTotal, pkgName, duration, vehicleLabel, itemizedAddons, vehicle, pkg };
   }, [vehicle, pkg, addons]);
 
   const chipStyle = (active, danger = false) => ({
@@ -144,21 +143,13 @@ export default function PriceCalculator({ onProceedToBooking }) {
                   <div onClick={() => toggleAddon('tire-shine')} style={{ ...chipStyle(addons.includes('tire-shine')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <Disc style={{ width: '1rem', height: '1rem', color: 'var(--water)' }} />
-                      <span style={{ fontSize: '0.82rem' }}>Tire Shine ⭐</span>
+                      <span style={{ fontSize: '0.82rem' }}>Tire Shine</span>
                     </div>
                     <b style={{ fontSize: '0.95rem' }}>$10</b>
                   </div>
 
-                  <div onClick={() => toggleAddon('bug-removal')} style={{ ...chipStyle(addons.includes('bug-removal')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Bug style={{ width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
-                      <span style={{ fontSize: '0.82rem' }}>Bug Removal ⭐</span>
-                    </div>
-                    <b style={{ fontSize: '0.95rem' }}>$5</b>
-                  </div>
-
                   <div onClick={() => toggleAddon('summer-mats')} style={{ ...chipStyle(addons.includes('summer-mats')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '0.82rem' }}>Summer Mats Shampoo</span>
+                    <span style={{ fontSize: '0.82rem' }}>Summer Mats Shampoo Wash</span>
                     <b style={{ fontSize: '0.95rem' }}>$20</b>
                   </div>
 
@@ -168,12 +159,25 @@ export default function PriceCalculator({ onProceedToBooking }) {
                   </div>
 
                   <div onClick={() => toggleAddon('odour')} style={{ ...chipStyle(addons.includes('odour')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '0.82rem' }}>Thermal Odour Treatment</span>
+                    <span style={{ fontSize: '0.82rem' }}>Odour Treatment</span>
                     <b style={{ fontSize: '0.95rem' }}>$50</b>
                   </div>
 
+                  <div onClick={() => toggleAddon('headlights')} style={{ ...chipStyle(addons.includes('headlights')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '0.82rem' }}>Headlight Restoration (pair)</span>
+                    <b style={{ fontSize: '0.95rem' }}>$60</b>
+                  </div>
+
+                  <div onClick={() => toggleAddon('clay-bar')} style={{ ...chipStyle(addons.includes('clay-bar')), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '0.82rem' }}>Clay Bar Decontamination</span>
+                    <b style={{ fontSize: '0.95rem' }}>$60</b>
+                  </div>
+
                   <div onClick={() => toggleAddon('pet-hair')} style={{ ...chipStyle(addons.includes('pet-hair'), true), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '0.82rem' }}>Pet Hair / Heavy Work</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <AlertTriangle style={{ width: '1rem', height: '1rem', color: '#EF4444' }} />
+                      <span style={{ fontSize: '0.82rem' }}>If it's extra dirty</span>
+                    </div>
                     <b style={{ fontSize: '0.95rem', color: '#EF4444' }}>+$50</b>
                   </div>
                 </div>

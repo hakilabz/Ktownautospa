@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Check, FileText, ArrowRight } from 'lucide-react';
+import { Check, FileText, ArrowRight, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 export default function RateCard({ onOpenBooking, onSelectPackage }) {
+  const { addToCart, setIsCartOpen } = useCart();
   const [activeTab, setActiveTab] = useState('wash');
   const [vehicleType, setVehicleType] = useState('c-sedan');
 
@@ -20,6 +22,73 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
     { id: 'c-van', label: 'Van' },
   ];
 
+  const curVehicleLabel = vehicles.find((v) => v.id === vehicleType)?.label || 'Sedan';
+
+  const handleAddTierService = (title, priceMap, subtitle = '') => {
+    const price = priceMap[vehicleType] || priceMap['c-sedan'];
+    addToCart(
+      {
+        title,
+        vehicleType,
+        basePrice: price,
+        subtitle,
+      },
+      true
+    );
+  };
+
+  const handleAddInteriorCoating = (title, price, isStandalone = false) => {
+    addToCart(
+      {
+        title: `${title} (${isStandalone ? 'Standalone' : 'With Detail'})`,
+        vehicleType,
+        basePrice: price,
+        subtitle: isStandalone ? 'Standalone prep included' : 'Applied with detailing package',
+      },
+      true
+    );
+  };
+
+  const handleAddAddon = (title, price) => {
+    addToCart(
+      {
+        title,
+        vehicleType,
+        basePrice: price,
+        subtitle: 'Add-on service',
+      },
+      true
+    );
+  };
+
+  // Pricing lookups for reactive buttons
+  const washPrices = {
+    wash: { 'c-sedan': 30, 'c-cross': 40, 'c-suv': 45, 'c-van': 50 },
+    refresh: { 'c-sedan': 70, 'c-cross': 85, 'c-suv': 95, 'c-van': 105 },
+    medium: { 'c-sedan': 100, 'c-cross': 130, 'c-suv': 150, 'c-van': 160 },
+    interior: { 'c-sedan': 175, 'c-cross': 199, 'c-suv': 229, 'c-van': 249 },
+    full: { 'c-sedan': 200, 'c-cross': 230, 'c-suv': 250, 'c-van': 270 },
+  };
+
+  const polishPrices = {
+    wax: { 'c-sedan': 120, 'c-cross': 140, 'c-suv': 160, 'c-van': 180 },
+    gloss: { 'c-sedan': 200, 'c-cross': 230, 'c-suv': 260, 'c-van': 290 },
+    step1: { 'c-sedan': 350, 'c-cross': 400, 'c-suv': 450, 'c-van': 500 },
+    step2: { 'c-sedan': 650, 'c-cross': 750, 'c-suv': 850, 'c-van': 950 },
+  };
+
+  const coatPrices = {
+    rejuvenate: { 'c-sedan': 449, 'c-cross': 499, 'c-suv': 549, 'c-van': 599 },
+    ultra: { 'c-sedan': 649, 'c-cross': 749, 'c-suv': 849, 'c-van': 899 },
+    evo: { 'c-sedan': 1199, 'c-cross': 1299, 'c-suv': 1399, 'c-van': 1499 },
+    crystal: { 'c-sedan': 949, 'c-cross': 1049, 'c-suv': 1149, 'c-van': 1249 },
+    pro: { 'c-sedan': 1299, 'c-cross': 1449, 'c-suv': 1599, 'c-van': 1749 },
+    maxg: { 'c-sedan': 1699, 'c-cross': 1849, 'c-suv': 1999, 'c-van': 2149 },
+    diamond: { 'c-sedan': 1799, 'c-cross': 1949, 'c-suv': 2099, 'c-van': 2249 },
+    maintWash: { 'c-sedan': 55, 'c-cross': 65, 'c-suv': 75, 'c-van': 85 },
+    maintPlan: { 'c-sedan': 45, 'c-cross': 55, 'c-suv': 65, 'c-van': 75 },
+  };
+
   return (
     <section className="band band--tint" id="packages">
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
@@ -29,8 +98,22 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
           <p className="kicker">2026 rate card</p>
           <h2>Every price, on the page</h2>
           <p>
-            All prices in Canadian dollars plus HST. Appointment only. Prices can vary with the condition the vehicle arrives in, and we tell you before we start — never after.
+            All prices in CAD, plus HST &middot; Appointment only &middot; Final price confirmed at drop-off, never after.
           </p>
+          <div style={{
+            display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.4rem 0.8rem',
+            fontFamily: 'var(--mono)', fontSize: '0.74rem', fontWeight: 700,
+            color: 'var(--gold-primary)', letterSpacing: '0.06em', textTransform: 'uppercase',
+            marginTop: '0.75rem',
+          }}>
+            <span>Authorized System X Installer</span>
+            <span>&bull;</span>
+            <span>Nano-Brite Certified</span>
+            <span>&bull;</span>
+            <span>Auto-Brite Certified</span>
+            <span>&bull;</span>
+            <span>CARFAX Registered</span>
+          </div>
         </div>
 
         {/* Vehicle Picker Switcher */}
@@ -73,66 +156,116 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
             <p className="kicker">Wash &amp; detail</p>
             
             <div className="pricewrap">
-              <table className="prices">
+              <table className="prices" data-vehicle={vehicleType}>
                 <thead>
                   <tr>
                     <th scope="col">Service</th>
-                    <th scope="col" style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>Sedan</th>
-                    <th scope="col" style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>Crossover<small>5 seat</small></th>
-                    <th scope="col" style={{ display: vehicleType === 'c-suv' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>SUV<small>3rd row</small></th>
-                    <th scope="col" style={{ display: vehicleType === 'c-van' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>Van</th>
+                    <th scope="col" className="col-sedan">Sedan</th>
+                    <th scope="col" className="col-cross">Crossover<small>5 seat</small></th>
+                    <th scope="col" className="col-suv">SUV<small>3rd row</small></th>
+                    <th scope="col" className="col-van">Van</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <th scope="row">
-                      Hand Car Wash
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Hand Car Wash</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Hand Car Wash', washPrices.wash, 'Wash & wax soap, windows, blown dry')}
+                          className="btn-add-table"
+                          title="Add Hand Car Wash to Cart"
+                        >
+                          + Reserve ${washPrices.wash[vehicleType]}
+                        </button>
+                      </div>
                       <small>Wash &amp; wax soap, windows, blown dry</small>
                     </th>
-                    <td style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$30</td>
-                    <td style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$40</td>
-                    <td style={{ display: vehicleType === 'c-suv' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$45</td>
-                    <td style={{ display: vehicleType === 'c-van' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$50</td>
+                    <td className="col-sedan">$30</td>
+                    <td className="col-cross">$40</td>
+                    <td className="col-suv">$45</td>
+                    <td className="col-van">$50</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Interior Refresh
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Interior Refresh</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Interior Refresh', washPrices.refresh, 'Full blow-out and vacuum · approx 1 hr')}
+                          className="btn-add-table"
+                          title="Add Interior Refresh to Cart"
+                        >
+                          + Reserve ${washPrices.refresh[vehicleType]}
+                        </button>
+                      </div>
                       <small>Doors, jambs, panels and dashboard wiped down, full blow-out and vacuum, rubber mats washed or carpet mats dry-cleaned. No steam, no scrubbing &mdash; the quick tidy-up &middot; approx 1 hr</small>
                     </th>
-                    <td style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$70</td>
-                    <td style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$85</td>
-                    <td style={{ display: vehicleType === 'c-suv' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$95</td>
-                    <td style={{ display: vehicleType === 'c-van' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$105</td>
+                    <td className="col-sedan">$70</td>
+                    <td className="col-cross">$85</td>
+                    <td className="col-suv">$95</td>
+                    <td className="col-van">$105</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Medium Package
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Medium Package</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Medium Package', washPrices.medium, 'Interior vacuum & glass, mats, jambs, hand wash · approx 2 hrs')}
+                          className="btn-add-table"
+                          title="Add Medium Package to Cart"
+                        >
+                          + Reserve ${washPrices.medium[vehicleType]}
+                        </button>
+                      </div>
                       <small>Interior vacuum &amp; glass, mats, jambs, hand wash &middot; approx 2 hrs</small>
                     </th>
-                    <td style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$100</td>
-                    <td style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$130</td>
-                    <td style={{ display: vehicleType === 'c-suv' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$150</td>
-                    <td style={{ display: vehicleType === 'c-van' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$160</td>
+                    <td className="col-sedan">$100</td>
+                    <td className="col-cross">$130</td>
+                    <td className="col-suv">$150</td>
+                    <td className="col-van">$160</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Interior Complete <small style={{ display: 'inline', fontWeight: 400 }}>(interior only)</small>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Interior Complete <small style={{ display: 'inline', fontWeight: 400 }}>(interior only)</small></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Interior Complete', washPrices.interior, '305°F steam extraction, seats & carpets shampooed · approx 3 hrs')}
+                          className="btn-add-table"
+                          title="Add Interior Complete to Cart"
+                        >
+                          + Reserve ${washPrices.interior[vehicleType]}
+                        </button>
+                      </div>
                       <small>Everything we do inside &mdash; 305&deg;F steam extraction through the whole car, seats and carpets shampooed, vinyl and trim cleaned and dressed. The only thing it leaves out is the exterior wash &mdash; add a hand wash for $30 &middot; approx 3 hrs</small>
                     </th>
-                    <td style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$175</td>
-                    <td style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$199</td>
-                    <td style={{ display: vehicleType === 'c-suv' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$229</td>
-                    <td style={{ display: vehicleType === 'c-van' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$249</td>
+                    <td className="col-sedan">$175</td>
+                    <td className="col-cross">$199</td>
+                    <td className="col-suv">$229</td>
+                    <td className="col-van">$249</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Full Detail
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Full Detail</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Full Detail', washPrices.full, 'Medium Package + summer mats steamed, carpets & seats scrubbed · approx 4 hrs')}
+                          className="btn-add-table"
+                          title="Add Full Detail to Cart"
+                        >
+                          + Reserve ${washPrices.full[vehicleType]}
+                        </button>
+                      </div>
                       <small>Medium Package plus summer mats steamed, carpets &amp; seats scrubbed · approx 4 hrs</small>
                     </th>
-                    <td style={{ display: vehicleType === 'c-sedan' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$200</td>
-                    <td style={{ display: vehicleType === 'c-cross' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$230</td>
-                    <td style={{ display: vehicleType === 'c-suv' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$250</td>
-                    <td style={{ display: vehicleType === 'c-van' || window.innerWidth > 860 ? 'table-cell' : 'none' }}>$270</td>
+                    <td className="col-sedan">$200</td>
+                    <td className="col-cross">$230</td>
+                    <td className="col-suv">$250</td>
+                    <td className="col-van">$270</td>
                   </tr>
                 </tbody>
               </table>
@@ -179,14 +312,14 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
 
                 <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', textAlign: 'center' }}>
                   <p style={{ fontFamily: 'var(--mono)', fontSize: '0.92rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 1rem' }}>
-                    Approx. 2 hours · from $100
+                    Approx. 2 hours · ${washPrices.medium[vehicleType]} CAD ({curVehicleLabel})
                   </p>
                   <button 
-                    onClick={() => onSelectPackage ? onSelectPackage('Medium Package') : onOpenBooking()} 
+                    onClick={() => handleAddTierService('Medium Package', washPrices.medium, 'Interior vacuum & glass, mats, jambs, hand wash')} 
                     className="btn btn--outline" 
                     style={{ width: '100%' }}
                   >
-                    Select Medium Package
+                    Select Medium Package (${washPrices.medium[vehicleType]})
                   </button>
                 </div>
               </article>
@@ -227,14 +360,14 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
 
                 <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', textAlign: 'center' }}>
                   <p style={{ fontFamily: 'var(--mono)', fontSize: '0.92rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 1rem' }}>
-                    Approx. 4 hours · from $200
+                    Approx. 4 hours · ${washPrices.full[vehicleType]} CAD ({curVehicleLabel})
                   </p>
                   <button 
-                    onClick={() => onSelectPackage ? onSelectPackage('Full Detail') : onOpenBooking()} 
+                    onClick={() => handleAddTierService('Full Detail', washPrices.full, 'Medium Package plus summer mats steamed, carpets & seats scrubbed')} 
                     className="btn btn--gold" 
                     style={{ width: '100%' }}
                   >
-                    Select Full Detail Experience
+                    Select Full Detail Experience (${washPrices.full[vehicleType]})
                   </button>
                 </div>
               </article>
@@ -249,63 +382,99 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
             <p className="kicker">Polish &amp; protect</p>
             
             <div className="pricewrap">
-              <table className="prices">
+              <table className="prices" data-vehicle={vehicleType}>
                 <thead>
                   <tr>
                     <th scope="col">Service</th>
-                    <th scope="col">Sedan</th>
-                    <th scope="col">Crossover<small>5 seat</small></th>
-                    <th scope="col">SUV<small>3rd row</small></th>
-                    <th scope="col">Van</th>
+                    <th scope="col" className="col-sedan">Sedan</th>
+                    <th scope="col" className="col-cross">Crossover<small>5 seat</small></th>
+                    <th scope="col" className="col-suv">SUV<small>3rd row</small></th>
+                    <th scope="col" className="col-van">Van</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <th scope="row">
-                      Wash &amp; Machine Wax
-                      <small>No abrasives. High gloss &amp; paint protection for ~6 months · approx 2 hrs</small>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Wash &amp; Machine Wax</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Wash & Machine Wax', polishPrices.wax, 'Gloss and protection for ~6 months · approx 2 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${polishPrices.wax[vehicleType]}
+                        </button>
+                      </div>
+                      <small>No abrasives. Gloss and protection for around 6 months · approx 2 hrs</small>
                     </th>
-                    <td>$120</td>
-                    <td>$140</td>
-                    <td>$160</td>
-                    <td>$180</td>
+                    <td className="col-sedan">$120</td>
+                    <td className="col-cross">$140</td>
+                    <td className="col-suv">$160</td>
+                    <td className="col-van">$180</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Gloss Enhancement
-                      <small>Clay bar decon + one-step all-in-one polish. Reduces light swirls · approx 3 hrs</small>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Gloss Enhancement</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Gloss Enhancement', polishPrices.gloss, 'Clay + 1-step polish · approx 3 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${polishPrices.gloss[vehicleType]}
+                        </button>
+                      </div>
+                      <small>Clay plus one-step all-in-one polish. Reduces light swirls · approx 3 hrs</small>
                     </th>
-                    <td>$200</td>
-                    <td>$230</td>
-                    <td>$260</td>
-                    <td>$290</td>
+                    <td className="col-sedan">$200</td>
+                    <td className="col-cross">$230</td>
+                    <td className="col-suv">$260</td>
+                    <td className="col-van">$290</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      1-Step Paint Correction
-                      <small>Machine polish and sealant. Eliminates 50–70% of clear coat defects · approx 6 hrs</small>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>1-Step Paint Correction</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('1-Step Paint Correction', polishPrices.step1, 'Removes 50-70% of defects · approx 6 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${polishPrices.step1[vehicleType]}
+                        </button>
+                      </div>
+                      <small>Machine polish and sealant. Removes 50–70% of defects · approx 6 hrs</small>
                     </th>
-                    <td>$350</td>
-                    <td>$400</td>
-                    <td>$450</td>
-                    <td>$500</td>
+                    <td className="col-sedan">$350</td>
+                    <td className="col-cross">$400</td>
+                    <td className="col-suv">$450</td>
+                    <td className="col-van">$500</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      2-Step Paint Correction
-                      <small>Heavy compound + fine polish. Removes 80–90% of scratches &amp; swirls · approx 11 hrs</small>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>2-Step Paint Correction</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('2-Step Paint Correction', polishPrices.step2, 'Compound + polish. Removes 80-90% defects · approx 11 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${polishPrices.step2[vehicleType]}
+                        </button>
+                      </div>
+                      <small>Compound and polish. Removes 80–90% of defects · approx 11 hrs</small>
                     </th>
-                    <td>$650</td>
-                    <td>$750</td>
-                    <td>$850</td>
-                    <td>$950</td>
+                    <td className="col-sedan">$650</td>
+                    <td className="col-cross">$750</td>
+                    <td className="col-suv">$850</td>
+                    <td className="col-van">$950</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--muted-color)', margin: '1rem 0 0', lineHeight: 1.5 }}>
-              * Deep scratches that catch a fingernail cannot be fully compounded out without repainting. We measure paint thickness with digital gauges before any machine correction begins.
+              * Deep scratches that catch a fingernail cannot be fully removed. We measure paint depth before any correction begins.
             </p>
           </div>
         )}
@@ -372,116 +541,212 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
               </div>
             </div>
 
-            <p className="kicker">Ceramic coating packages — includes wash, iron decon, clay bar, correction and coating</p>
+            {/* Trim/Fabric/Glass Callout Banner */}
+            <div style={{
+              background: 'linear-gradient(180deg, #16386C, #0A1E42)',
+              border: '2px solid var(--gold)',
+              borderRadius: '10px',
+              padding: '0.9rem 1.25rem',
+              marginBottom: '1.8rem',
+              color: '#E4EDF7',
+              fontSize: '0.95rem',
+              textAlign: 'center',
+              lineHeight: 1.5,
+            }}>
+              You don't have to coat the whole car. Trim or fabric from $89, glass $125, wheels $249 &mdash; alone or with any detail. Full paint packages from $449.
+            </div>
+
+            <p className="kicker">Ceramic coating packages &mdash; includes wash, iron decon, clay bar, correction and coating</p>
             
             <div className="pricewrap">
-              <table className="prices">
+              <table className="prices" data-vehicle={vehicleType}>
                 <thead>
                   <tr>
                     <th scope="col">Service</th>
-                    <th scope="col">Sedan</th>
-                    <th scope="col">Crossover<small>5 seat</small></th>
-                    <th scope="col">SUV<small>3rd row</small></th>
-                    <th scope="col">Van</th>
+                    <th scope="col" className="col-sedan">Sedan</th>
+                    <th scope="col" className="col-cross">Crossover<small>5 seat</small></th>
+                    <th scope="col" className="col-suv">SUV<small>3rd row</small></th>
+                    <th scope="col" className="col-van">Van</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <th scope="row">
-                      Nano-Brite Rejuvenate <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>1 year</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Nano-Brite Rejuvenate <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>1 year</span></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Nano-Brite Rejuvenate (1 Year)', coatPrices.rejuvenate, 'Decon + 1-step correction + 1 layer · approx 5 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.rejuvenate[vehicleType]}
+                        </button>
+                      </div>
                       <small>Decon + 1-step correction + 1 layer · approx 5 hrs</small>
                     </th>
-                    <td>$449</td>
-                    <td>$499</td>
-                    <td>$549</td>
-                    <td>$599</td>
+                    <td className="col-sedan">$449</td>
+                    <td className="col-cross">$499</td>
+                    <td className="col-suv">$549</td>
+                    <td className="col-van">$599</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Nano-Brite Ultra <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>3 year</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Nano-Brite Ultra <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>3 year</span></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Nano-Brite Ultra (3 Year)', coatPrices.ultra, 'Decon + 1-step correction + 1 layer · approx 6 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.ultra[vehicleType]}
+                        </button>
+                      </div>
                       <small>Decon + 1-step correction + 1 layer · approx 6 hrs</small>
                     </th>
-                    <td>$649</td>
-                    <td>$749</td>
-                    <td>$849</td>
-                    <td>$899</td>
+                    <td className="col-sedan">$649</td>
+                    <td className="col-cross">$749</td>
+                    <td className="col-suv">$849</td>
+                    <td className="col-van">$899</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Nano-Brite EVO Graphene <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>7 year</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Nano-Brite EVO Graphene <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>7 year</span></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Nano-Brite EVO Graphene (7 Year)', coatPrices.evo, 'Graphene. Decon + 2-step correction + top coat · approx 10 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.evo[vehicleType]}
+                        </button>
+                      </div>
                       <small>Graphene coating. Decon + 2-step correction + top coat · approx 10 hrs</small>
                     </th>
-                    <td>$1199</td>
-                    <td>$1299</td>
-                    <td>$1399</td>
-                    <td>$1499</td>
+                    <td className="col-sedan">$1199</td>
+                    <td className="col-cross">$1299</td>
+                    <td className="col-suv">$1399</td>
+                    <td className="col-van">$1499</td>
                   </tr>
                   <tr style={{ background: 'rgba(62, 155, 218, 0.12)' }}>
                     <th scope="row">
-                      System X Crystal+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>2 year</span> <span className="cf-pill">CARFAX</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>System X Crystal+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>2 year</span> <span className="cf-pill">CARFAX</span></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('System X Crystal+ (2 Year CARFAX)', coatPrices.crystal, '1-step correction + paint and glass coating · approx 8 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.crystal[vehicleType]}
+                        </button>
+                      </div>
                       <small>1-step correction + paint and glass coating · approx 8 hrs</small>
                     </th>
-                    <td>$949</td>
-                    <td>$1049</td>
-                    <td>$1149</td>
-                    <td>$1249</td>
+                    <td className="col-sedan">$949</td>
+                    <td className="col-cross">$1049</td>
+                    <td className="col-suv">$1149</td>
+                    <td className="col-van">$1249</td>
                   </tr>
                   <tr style={{ background: 'rgba(62, 155, 218, 0.12)' }}>
                     <th scope="row">
-                      System X Pro+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>6 year</span> <span className="cf-pill">CARFAX</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>System X Pro+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>6 year</span> <span className="cf-pill">CARFAX</span></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('System X Pro+ (6 Year CARFAX)', coatPrices.pro, '2-step correction + paint, glass and wheel coatings · approx 11 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.pro[vehicleType]}
+                        </button>
+                      </div>
                       <small>2-step correction + paint, glass and wheel coatings · approx 11 hrs</small>
                     </th>
-                    <td>$1299</td>
-                    <td>$1449</td>
-                    <td>$1599</td>
-                    <td>$1749</td>
+                    <td className="col-sedan">$1299</td>
+                    <td className="col-cross">$1449</td>
+                    <td className="col-suv">$1599</td>
+                    <td className="col-van">$1749</td>
                   </tr>
                   <tr style={{ background: 'rgba(62, 155, 218, 0.12)' }}>
                     <th scope="row">
-                      System X Max G+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>10 year</span> <span className="cf-pill">CARFAX</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>System X Max G+ <span style={{ color: 'var(--heading-color)', fontWeight: 800 }}>10 year</span> <span className="cf-pill">CARFAX</span></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('System X Max G+ (10 Year CARFAX)', coatPrices.maxg, 'Graphene. 2-step correction + paint, glass, wheel · approx 12 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.maxg[vehicleType]}
+                        </button>
+                      </div>
                       <small>Graphene. 2-step correction + paint, glass and wheel coatings · approx 12 hrs</small>
                     </th>
-                    <td>$1699</td>
-                    <td>$1849</td>
-                    <td>$1999</td>
-                    <td>$2149</td>
+                    <td className="col-sedan">$1699</td>
+                    <td className="col-cross">$1849</td>
+                    <td className="col-suv">$1999</td>
+                    <td className="col-van">$2149</td>
                   </tr>
                   <tr style={{ background: 'rgba(62, 155, 218, 0.12)' }}>
                     <th scope="row">
-                      System X Diamond SS <span style={{ color: 'var(--gold-primary)', fontWeight: 900 }}>Lifetime</span> <span className="cf-pill">CARFAX</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>System X Diamond SS <span style={{ color: 'var(--gold-primary)', fontWeight: 900 }}>Lifetime</span> <span className="cf-pill">CARFAX</span></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('System X Diamond SS (Lifetime CARFAX)', coatPrices.diamond, '2-step correction + paint, glass, wheel coatings · approx 13 hrs')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.diamond[vehicleType]}
+                        </button>
+                      </div>
                       <small>2-step correction + paint, glass and wheel coatings · approx 13 hrs</small>
                     </th>
-                    <td>$1799</td>
-                    <td>$1949</td>
-                    <td>$2099</td>
-                    <td>$2249</td>
+                    <td className="col-sedan">$1799</td>
+                    <td className="col-cross">$1949</td>
+                    <td className="col-suv">$2099</td>
+                    <td className="col-van">$2249</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Ceramic Maintenance Wash
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Ceramic Maintenance Wash</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Ceramic Maintenance Wash', coatPrices.maintWash, 'Recommended every 6-8 weeks')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.maintWash[vehicleType]}
+                        </button>
+                      </div>
                       <small>Single visit. Recommended every 6–8 weeks</small>
                     </th>
-                    <td>$55</td>
-                    <td>$65</td>
-                    <td>$75</td>
-                    <td>$85</td>
+                    <td className="col-sedan">$55</td>
+                    <td className="col-cross">$65</td>
+                    <td className="col-suv">$75</td>
+                    <td className="col-van">$85</td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      Maintenance Plan <span style={{ color: 'var(--water-dk)', fontWeight: 700 }}>billed monthly</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span>Maintenance Plan <span style={{ color: 'var(--water-dk)', fontWeight: 700 }}>billed monthly</span></span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddTierService('Maintenance Plan (Monthly)', coatPrices.maintPlan, 'One wash every month · Priority booking')}
+                          className="btn-add-table"
+                        >
+                          + Reserve ${coatPrices.maintPlan[vehicleType]}
+                        </button>
+                      </div>
                       <small>One wash every month. Cancel anytime. Priority booking</small>
                     </th>
-                    <td>$45</td>
-                    <td>$55</td>
-                    <td>$65</td>
-                    <td>$75</td>
+                    <td className="col-sedan">$45</td>
+                    <td className="col-cross">$55</td>
+                    <td className="col-suv">$65</td>
+                    <td className="col-van">$75</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--muted-color)', margin: '1rem 0 0' }}>
-              * Additional coating layer: $150. Every System X installation includes warranty registration on CARFAX Canada.
+              * Includes wash, iron decon, clay bar, correction and coating. Additional coating layer $150. Every System X coating is registered with CARFAX and appears on the vehicle history report.
             </p>
           </div>
         )}
@@ -501,78 +766,50 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">
-                      System X LVP <span style={{ color: 'var(--gold-primary)' }}>Leather, vinyl &amp; plastic</span>
-                      <small>3-year warranty against spills and UV cracking. CARFAX registered</small>
-                    </th>
-                    <td>$229</td>
-                    <td>$389</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      System X Textile <span style={{ color: 'var(--gold-primary)' }}>Fabric &amp; carpet</span>
-                      <small>2-year hydrophobic stain protection. CARFAX registered</small>
-                    </th>
-                    <td>$149</td>
-                    <td>$259</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      System X LVP + Textile <span style={{ color: 'var(--gold-primary)', fontWeight: 800 }}>Complete Interior</span>
-                      <small>Full cabin coated, warranted and CARFAX registered</small>
-                    </th>
-                    <td>$325</td>
-                    <td>$499</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      Nano-Brite Leather Guard
-                      <small>8–12 month leather protection</small>
-                    </th>
-                    <td>$99</td>
-                    <td>$170</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      Nano-Brite Fabric Guard
-                      <small>8–12 month stain barrier</small>
-                    </th>
-                    <td>$89</td>
-                    <td>$150</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      Nano-Brite Leather + Fabric <span style={{ color: 'var(--gold-primary)' }}>Complete Interior</span>
-                      <small>8–12 month protection. Our best-value interior package</small>
-                    </th>
-                    <td>$175</td>
-                    <td>$279</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      System X Glass+ <span style={{ color: 'var(--water-dk)' }}>Windshield &amp; windows</span>
-                      <small>Up to 2 years. Drastically improves wet-weather driving visibility</small>
-                    </th>
-                    <td>$125</td>
-                    <td>$165</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      System X Wheel+ <span style={{ color: 'var(--water-dk)' }}>Wheel coating</span>
-                      <small>Repels corrosive brake dust. Wheels removed for 100% barrel coverage</small>
-                    </th>
-                    <td>$249</td>
-                    <td>$329</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      System X Revive <span style={{ color: 'var(--gold-primary)' }}>Trim restoration</span>
-                      <small>Restores faded oxidized exterior plastic &amp; rubber moldings</small>
-                    </th>
-                    <td>$89</td>
-                    <td>$129</td>
-                  </tr>
+                  {[
+                    { name: 'System X LVP', sub: '3-year warranty against spills & UV cracking. CARFAX registered', tag: 'Leather, vinyl & plastic', withDetail: 229, standalone: 389 },
+                    { name: 'System X Textile', sub: '2-year hydrophobic stain protection. CARFAX registered', tag: 'Fabric & carpet', withDetail: 149, standalone: 259 },
+                    { name: 'System X LVP + Textile', sub: 'Full cabin coated, warranted and CARFAX registered', tag: 'Complete Interior', withDetail: 325, standalone: 499, highlight: true },
+                    { name: 'Nano-Brite Leather Guard', sub: '8–12 month leather protection', tag: '', withDetail: 99, standalone: 170 },
+                    { name: 'Nano-Brite Fabric Guard', sub: '8–12 month stain barrier', tag: '', withDetail: 89, standalone: 150 },
+                    { name: 'Nano-Brite Leather + Fabric', sub: '8–12 month protection. Our best-value interior package', tag: 'Complete Interior', withDetail: 175, standalone: 279 },
+                    { name: 'System X Glass+', sub: 'Up to 2 years. Drastically improves wet-weather driving visibility', tag: 'Windshield & windows', withDetail: 125, standalone: 165 },
+                    { name: 'System X Wheel+', sub: 'Repels corrosive brake dust. Wheels removed for 100% barrel coverage', tag: 'Wheel coating', withDetail: 249, standalone: 329 },
+                    { name: 'System X Revive', sub: 'Restores faded oxidized exterior plastic & rubber moldings', tag: 'Trim restoration', withDetail: 89, standalone: 129 },
+                  ].map((item, idx) => (
+                    <tr key={idx}>
+                      <th scope="row">
+                        {item.name} {item.tag && <span style={{ color: 'var(--gold-primary)', fontWeight: item.highlight ? 800 : 600 }}>{item.tag}</span>}
+                        <small>{item.sub}</small>
+                      </th>
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+                          <span>${item.withDetail}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleAddInteriorCoating(item.name, item.withDetail, false)}
+                            className="btn-add-table"
+                            style={{ fontSize: '0.68rem', padding: '0.2rem 0.55rem' }}
+                          >
+                            + Add With Detail
+                          </button>
+                        </div>
+                      </td>
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+                          <span>${item.standalone}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleAddInteriorCoating(item.name, item.standalone, true)}
+                            className="btn-add-table"
+                            style={{ fontSize: '0.68rem', padding: '0.2rem 0.55rem' }}
+                          >
+                            + Add Standalone
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -595,17 +832,28 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                 </div>
                 
                 {[
-                  { name: 'Engine Bay Cleaning', price: '$40' },
-                  { name: 'High-Gloss Tire Shine', price: '$10' },
-                  { name: 'Summer Mats Shampoo Wash', price: '$20' },
-                  { name: 'Headlight Restoration (pair)', price: '$60' },
-                  { name: 'Clay Bar Decontamination', price: '$60' },
-                  { name: 'Thermal Odour / Smoke Treatment', price: '$50' },
-                  { name: 'Pet Hair Extraction', price: '$50–$100' },
+                  { name: 'Engine Bay Cleaning', price: '$40', priceNum: 40 },
+                  { name: 'Tire Shine', price: '$10', priceNum: 10 },
+                  { name: 'Summer Mats Shampoo Wash', price: '$20', priceNum: 20 },
+                  { name: 'Headlight Restoration (pair)', price: '$60', priceNum: 60 },
+                  { name: 'Clay Bar Decontamination', price: '$60', priceNum: 60 },
+                  { name: 'Odour Treatment', price: '$50', priceNum: 50 },
+                  { name: 'Pet Hair Removal', price: '$50', priceNum: 50 },
                 ].map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0.85rem 0', borderBottom: idx < 6 ? '1px dashed var(--surface-border)' : 'none' }}>
-                    <strong style={{ fontSize: '1.05rem', color: 'var(--heading-color)' }}>{item.name}</strong>
-                    <b style={{ fontFamily: 'var(--display)', fontSize: '1.75rem', color: 'var(--water-dk)' }}>{item.price}</b>
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.85rem 0', borderBottom: idx < 6 ? '1px dashed var(--surface-border)' : 'none' }}>
+                    <div>
+                      <strong style={{ fontSize: '1.05rem', color: 'var(--heading-color)', display: 'block' }}>{item.name}</strong>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                      <b style={{ fontFamily: 'var(--display)', fontSize: '1.65rem', color: 'var(--water-dk)' }}>{item.price}</b>
+                      <button
+                        type="button"
+                        onClick={() => handleAddAddon(item.name, item.priceNum)}
+                        className="btn-add-table"
+                      >
+                        + Add
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -621,25 +869,39 @@ export default function RateCard({ onOpenBooking, onSelectPackage }) {
                 <div style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '3.4rem', color: 'var(--gold-lt)', lineHeight: 1, margin: '0.8rem 0 0.4rem' }}>
                   +$50
                 </div>
-                <p style={{ color: '#D8E5F4', fontSize: '0.96rem', lineHeight: 1.6, maxWidth: '28rem', margin: '0 auto' }}>
-                  Not automatic. Applies only when a vehicle needs significantly more time and labor than usual — excessive pet hair, sand, heavy mud, or work truck muck. Heavily soiled vehicles are always quoted transparently upon inspection before any work begins.
+                <p style={{ color: '#D8E5F4', fontSize: '0.96rem', lineHeight: 1.6, maxWidth: '28rem', margin: '0 auto 1.25rem' }}>
+                  Not automatic. It applies only when a vehicle needs a lot more work than usual — heavy mess from kids or pets, or a work vehicle. We look the car over with you and tell you before any work begins, never after.
                 </p>
+                <button
+                  type="button"
+                  onClick={() => handleAddAddon("If it's extra dirty (Kids/Pets/Work)", 50)}
+                  className="btn btn--gold"
+                  style={{ minHeight: '40px', padding: '0 1.25rem', fontSize: '0.88rem' }}
+                >
+                  + Add Surcharge ($50)
+                </button>
               </div>
 
-              </div>
             </div>
-          )}
+          </div>
+        )}
 
-        {/* View or print rate card link from reference */}
+        {/* View or print rate card link and cart action */}
         <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <a href="/rates.html" className="btn btn--outline" target="_blank" rel="noopener noreferrer">
             <FileText style={{ width: '1.1rem', height: '1.1rem' }} />
             <span>View or print the full rate card</span>
           </a>
-          <button onClick={() => onOpenBooking()} className="btn btn--gold">
-            <span>Book an appointment</span>
-            <ArrowRight style={{ width: '1.1rem', height: '1.1rem' }} />
-          </button>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <button onClick={() => setIsCartOpen(true)} className="btn btn--outline">
+              <ShoppingBag style={{ width: '1.1rem', height: '1.1rem' }} />
+              <span>View Cart</span>
+            </button>
+            <button onClick={() => onOpenBooking()} className="btn btn--gold">
+              <span>Book an appointment</span>
+              <ArrowRight style={{ width: '1.1rem', height: '1.1rem' }} />
+            </button>
+          </div>
         </div>
 
       </div>

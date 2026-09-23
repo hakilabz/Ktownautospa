@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Calendar, Menu, X, Moon, Sun } from 'lucide-react';
+import { Phone, Calendar, Menu, X, Moon, Sun, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
+  const { cartCount, subtotal, setIsCartOpen } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -70,6 +72,59 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
               }}
             >
               {isLight ? <Moon style={{ width: '1.1rem', height: '1.1rem', color: 'var(--navy-deep)' }} /> : <Sun style={{ width: '1.1rem', height: '1.1rem', color: '#F0D590' }} />}
+            </button>
+
+            {/* Cart Button with Counter Badge */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              title="View Cart & Detailing Services"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                minHeight: '42px',
+                padding: '0 0.85rem',
+                borderRadius: '999px',
+                background: cartCount > 0 ? 'rgba(201, 160, 60, 0.15)' : 'var(--chip-inactive-bg)',
+                border: `1.5px solid ${cartCount > 0 ? 'var(--gold)' : 'var(--chip-inactive-border)'}`,
+                color: 'var(--heading-color)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                position: 'relative',
+                flexShrink: 0,
+              }}
+            >
+              <ShoppingBag style={{ width: '1.1rem', height: '1.1rem', color: 'var(--gold-primary)' }} />
+              {cartCount > 0 && (
+                <>
+                  <span
+                    style={{
+                      fontFamily: 'var(--mono)',
+                      fontSize: '0.78rem',
+                      fontWeight: 800,
+                      color: 'var(--gold-primary)',
+                    }}
+                  >
+                    ${subtotal.toFixed(0)}
+                  </span>
+                  <span
+                    style={{
+                      background: 'var(--gold)',
+                      color: '#0A1E42',
+                      fontSize: '0.72rem',
+                      fontWeight: 900,
+                      borderRadius: '50%',
+                      width: '1.25rem',
+                      height: '1.25rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {cartCount}
+                  </span>
+                </>
+              )}
             </button>
 
             {/* Direct Phone CTA */}
@@ -162,6 +217,16 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', borderTop: '1px solid var(--surface-border)', paddingTop: '0.9rem' }}>
+            {cartCount > 0 && (
+              <button 
+                onClick={() => { setMobileMenuOpen(false); setIsCartOpen(true); }} 
+                className="btn btn--gold" 
+                style={{ width: '100%', minHeight: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+              >
+                <ShoppingBag style={{ width: '1rem', height: '1rem' }} />
+                <span>View Cart ({cartCount}) &middot; ${subtotal.toFixed(0)} CAD</span>
+              </button>
+            )}
             <a href="tel:+16479153530" className="btn btn--gold" style={{ width: '100%', minHeight: '48px' }}>
               <Phone style={{ width: '1rem', height: '1rem' }} />
               <span>Call 647-915-3530</span>
