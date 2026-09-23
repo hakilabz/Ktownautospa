@@ -202,7 +202,7 @@ export default function CheckoutModal() {
           origin: { y: 0.6 },
           colors: ['#F0D590', '#C9A03C', '#3E9BDA', '#12305F'],
         });
-      } catch (e) {
+      } catch {
         // Confetti optional
       }
     } catch (err) {

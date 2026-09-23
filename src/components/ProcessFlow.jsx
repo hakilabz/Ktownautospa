@@ -43,7 +43,7 @@ export default function ProcessFlow() {
           <p className="kicker">The System X process</p>
           <h2>Five steps, every coating, no shortcuts</h2>
           <p>
-            This is the sequence System X requires of accredited installation centres. Skip any step and the ceramic nanostructures cannot bond to clear coat — which is why factory warranty is strictly tied to accredited installers.
+            This is the sequence System X requires of accredited installation centres. Skip any step and the ceramic coating cannot properly bond to clear coat — which is why factory warranty is strictly tied to accredited installers.
           </p>
         </div>
 

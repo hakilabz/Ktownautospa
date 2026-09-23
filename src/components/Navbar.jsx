@@ -37,8 +37,8 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
     <header style={{
       position: 'sticky', top: 0, left: 0, right: 0, zIndex: 60,
       background: 'var(--header-bg)', borderBottom: '1px solid var(--header-border)',
-      boxShadow: '0 2px 14px rgba(12,34,71,.08)',
-      transition: 'background-color 0.3s ease, border-color 0.3s ease',
+      boxShadow: scrolled ? '0 4px 20px rgba(10, 30, 66, 0.18)' : '0 2px 14px rgba(12, 34, 71, 0.08)',
+      transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.25s ease',
     }}>
       {/* Top Header Bar */}
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0.55rem 1rem' }}>

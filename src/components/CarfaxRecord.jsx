@@ -1,5 +1,4 @@
 import React from 'react';
-import { ShieldCheck, FileCheck, CheckCircle2 } from 'lucide-react';
 
 export default function CarfaxRecord() {
   return (
@@ -72,7 +71,7 @@ export default function CarfaxRecord() {
               Almost nobody can prove it. There's usually no receipt in the glovebox and no way for a future buyer to verify claims — so at resale it's just a verbal promise, and it's valued as such.
             </p>
             <p style={{ color: '#CFDDEE', fontSize: '1.06rem', lineHeight: 1.65, margin: '0 0 1.2rem' }}>
-              System X revolutionized this. Because Ktown Auto Spa is an accredited installation center, we register your vehicle’s VIN and warranty directly into the database. 
+              System X changed this. Because Ktown Auto Spa is an accredited installation center, we register your vehicle’s VIN and warranty directly into the database. 
               The application appears on your vehicle’s official <strong>CARFAX Canada history report</strong> as a permanent service record: date, product grade, and shop location.
             </p>
             <div style={{ fontFamily: 'var(--mono)', fontSize: '0.86rem', color: '#9FB8D4', borderLeft: '3px solid rgba(240,213,144,0.5)', paddingLeft: '1rem', marginTop: '1.5rem', lineHeight: 1.6 }}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Bug, Disc, Droplets, Sun, AlertTriangle } from 'lucide-react';
+import { Sparkles, Disc, Droplets, Sun, AlertTriangle } from 'lucide-react';
 
 export default function Addons({ onAddonToggle, selectedAddons = [] }) {
   const addonsList = [

@@ -463,26 +463,54 @@ body {
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* Responsive Vehicle Column Filtering & Highlight */
-@media (max-width: 860px) {
-  .prices .col-sedan,
-  .prices .col-cross,
-  .prices .col-suv,
-  .prices .col-van {
-    display: none !important;
-  }
-  .prices[data-vehicle="c-sedan"] .col-sedan,
-  .prices[data-vehicle="c-cross"] .col-cross,
-  .prices[data-vehicle="c-suv"] .col-suv,
-  .prices[data-vehicle="c-van"] .col-van {
-    display: table-cell !important;
-  }
+/* Interactive Price Cell in Unified Rate Card */
+.prices tbody td {
+  padding: 0.4rem 0.35rem;
+  text-align: center;
+  border-right: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--surface-border);
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.7rem;
+  color: var(--water-dk);
+  line-height: 1;
 }
-.prices[data-vehicle="c-sedan"] td.col-sedan,
-.prices[data-vehicle="c-cross"] td.col-cross,
-.prices[data-vehicle="c-suv"] td.col-suv,
-.prices[data-vehicle="c-van"] td.col-van {
-  background: rgba(201, 160, 60, 0.12);
+
+.price-cell-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  padding: 0.55rem 0.4rem;
+  width: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.price-cell-btn:hover {
+  background: rgba(201, 160, 60, 0.16);
+  border-color: var(--gold-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 160, 60, 0.18);
+}
+
+.price-cell-btn:active {
+  transform: scale(0.96);
+}
+
+:root[data-theme="dark"] .price-cell-btn:hover {
+  background: rgba(201, 160, 60, 0.25);
+  border-color: var(--gold-lt);
+  color: var(--gold-lt);
 }
 
 /* CARFAX Table Pill Badge */
@@ -663,48 +691,6 @@ body {
   border-bottom-color: var(--surface-card);
 }
 
-/* Vehicle Picker */
-.vpick {
-  display: flex;
-  margin: 0 0 1.2rem;
-  align-items: center;
-  gap: 0.7rem;
-  flex-wrap: wrap;
-}
-
-.vpick__lbl {
-  font-family: var(--mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold-primary);
-}
-
-.vpick__btns {
-  display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-}
-
-.vpick button {
-  min-height: 42px;
-  padding: 0 1rem;
-  border-radius: 999px;
-  border: 2px solid var(--chip-inactive-border);
-  background: var(--chip-inactive-bg);
-  color: var(--chip-inactive-text);
-  font-family: var(--body);
-  font-weight: 700;
-  font-size: 0.92rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.vpick button.is-on {
-  background: linear-gradient(180deg, var(--gold-lt), var(--gold));
-  border-color: var(--gold-dk);
-  color: #0A1E42 !important;
-}
 
 /* Floating Chat */
 .chat {

@@ -58,11 +58,11 @@ export default function Hero({ onOpenBooking }) {
           {/* Main Headline */}
           <h1 style={{
             fontFamily: 'var(--display)', fontWeight: 800,
-            fontSize: 'clamp(2.9rem, 7.5vw, 4.8rem)', lineHeight: 0.95,
+            fontSize: 'clamp(2.7rem, 7vw, 4.5rem)', lineHeight: 0.98,
             textTransform: 'uppercase', margin: 0,
             textShadow: '0 2px 22px rgba(0,0,0,0.6)',
           }}>
-            Experience the <span style={{ color: 'var(--gold-lt)' }}>shine</span> you deserve
+            Hand Car Wash, Detailing &amp; <span style={{ color: 'var(--gold-lt)' }}>Ceramic Coating</span>
           </h1>
 
           {/* Lede Subtitle */}

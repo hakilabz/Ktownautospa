@@ -16,7 +16,7 @@ export default function Credentials() {
     {
       icon: <Star style={{ width: '1.4rem', height: '1.4rem', color: '#0A1E42' }} />,
       title: 'Auto-Brite Certified Detailer',
-      desc: 'Formal detailing certification plus specialized one-on-one multi-stage paint correction mastery.',
+      desc: 'Formal detailing certification plus specialized one-on-one multi-stage paint correction training and experience.',
     },
     {
       icon: <FileText style={{ width: '1.4rem', height: '1.4rem', color: '#0A1E42' }} />,

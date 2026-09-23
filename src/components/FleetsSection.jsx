@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, Phone, Mail } from 'lucide-react';
 
-export default function FleetsSection({ onOpenBooking }) {
+export default function FleetsSection() {
   const fleetFeatures = [
     {
       title: 'Scheduled Washes',

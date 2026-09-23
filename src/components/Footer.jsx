@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MapPin, MessageCircle, ShieldCheck } from 'lucide-react';
+import { Phone, Mail, MessageCircle } from 'lucide-react';
 
 export default function Footer({ onOpenBooking }) {
   return (

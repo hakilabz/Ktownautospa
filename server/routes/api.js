@@ -126,7 +126,7 @@ router.post('/create-payment-intent', async (req, res) => {
 // 4. Save and confirm a reservation (Card paid or Pay-at-drop-off)
 router.post('/reservations', async (req, res) => {
   try {
-    const { reservationId, items, customer, appointment, paymentMethod, paymentStatus, total } = req.body;
+    const { reservationId, items, customer, appointment, paymentMethod, paymentStatus } = req.body;
 
     const id = reservationId || ('KT-' + Math.floor(100000 + Math.random() * 900000));
     const totals = calculateOrderTotals(items || []);

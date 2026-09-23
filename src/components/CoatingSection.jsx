@@ -1,8 +1,8 @@
 import React from 'react';
-import { ShieldCheck, Check, Sparkles } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
-export default function CoatingSection({ onOpenBooking }) {
+export default function CoatingSection() {
   const { addToCart } = useCart();
 
   return (
@@ -250,7 +250,7 @@ export default function CoatingSection({ onOpenBooking }) {
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>It needs a day or two to cure</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
-                    Keep the vehicle out of rain and away from water hoses for the initial 24 to 48 hours after application while the nanostructures cure.
+                    Keep the vehicle out of rain and away from water hoses for the initial 24 to 48 hours after application while the ceramic layer cures.
                   </span>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Anchor, Phone, MessageCircle, Waves, ShieldCheck } from 'lucide-react';
+import { Anchor, Phone, MessageCircle, Waves } from 'lucide-react';
 
 export default function BoatsSection() {
   return (
@@ -71,8 +71,9 @@ export default function BoatsSection() {
                 'Rideau Marina',
                 'Loyalist Cove Marina (Bath)',
               ].map((m, idx) => (
-                <div key={idx} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(240,213,144,0.3)', borderRadius: '8px', padding: '0.6rem 0.8rem', fontSize: '0.8rem', color: '#E4EDF7' }}>
-                  ⚓ {m}
+                <div key={idx} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(240,213,144,0.3)', borderRadius: '8px', padding: '0.6rem 0.8rem', fontSize: '0.8rem', color: '#E4EDF7', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <Anchor style={{ width: '0.85rem', height: '0.85rem', color: 'var(--gold-lt)', flexShrink: 0 }} />
+                  <span>{m}</span>
                 </div>
               ))}
             </div>

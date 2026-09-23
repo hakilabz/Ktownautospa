@@ -3,10 +3,10 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from '
 const CartContext = createContext(null);
 
 export const VEHICLE_OPTIONS = [
-  { id: 'c-sedan', label: 'Sedan', icon: '🚗' },
-  { id: 'c-cross', label: 'Crossover (5 seat)', icon: '🚙' },
-  { id: 'c-suv', label: 'SUV (3rd row)', icon: '🚐' },
-  { id: 'c-van', label: 'Van', icon: '🚐' },
+  { id: 'c-sedan', label: 'Sedan' },
+  { id: 'c-cross', label: 'Crossover (5 seat)' },
+  { id: 'c-suv', label: 'SUV (3rd row)' },
+  { id: 'c-van', label: 'Van' },
 ];
 
 export const ADDON_CATALOG = [

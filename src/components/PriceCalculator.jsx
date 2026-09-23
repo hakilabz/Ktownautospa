@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Clock, ArrowRight, Disc, Sparkles, ShieldAlert, AlertTriangle } from 'lucide-react';
+import { Clock, ArrowRight, Disc, AlertTriangle, Car } from 'lucide-react';
 
 export default function PriceCalculator({ onProceedToBooking }) {
   const [vehicle, setVehicle] = useState('sedan');
@@ -100,14 +100,15 @@ export default function PriceCalculator({ onProceedToBooking }) {
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem' }}>
                   {[
-                    { id: 'sedan', label: 'Sedan', icon: '🚗' },
-                    { id: 'crossover', label: 'Crossover (5-Seat)', icon: '🚙' },
-                    { id: 'suv', label: 'SUV (3rd Row)', icon: '🚐' },
-                    { id: 'van', label: 'Passenger Van', icon: '🚐' },
+                    { id: 'sedan', label: 'Sedan', seats: 'Standard 4-door' },
+                    { id: 'crossover', label: 'Crossover', seats: '5-seat compact' },
+                    { id: 'suv', label: 'SUV', seats: '3rd row 7-seat' },
+                    { id: 'van', label: 'Van / Minivan', seats: 'Passenger van' },
                   ].map((v) => (
                     <button key={v.id} type="button" onClick={() => setVehicle(v.id)} style={chipStyle(vehicle === v.id)}>
-                      <div style={{ fontSize: '1.4rem', marginBottom: '0.2rem' }}>{v.icon}</div>
-                      <div style={{ fontSize: '0.78rem' }}>{v.label}</div>
+                      <Car style={{ width: '1.4rem', height: '1.4rem', marginBottom: '0.35rem', opacity: 0.9 }} />
+                      <div style={{ fontSize: '0.86rem', fontWeight: 700 }}>{v.label}</div>
+                      <div style={{ fontSize: '0.72rem', opacity: 0.75 }}>{v.seats}</div>
                     </button>
                   ))}
                 </div>
