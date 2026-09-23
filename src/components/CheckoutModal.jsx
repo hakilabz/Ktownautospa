@@ -194,6 +194,24 @@ export default function CheckoutModal() {
       setStep('success');
       clearCart();
 
+      // Dispatch browser-level notification backup to guarantee delivery
+      try {
+        const itemSummary = cart.map(i => `${i.title} (${i.vehicleLabel}) - $${i.totalPrice} CAD`).join(', ');
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            access_key: '2e1c3132-7a7a-4c2c-80a5-f8510800fa26',
+            subject: `🚨 NEW BOOKING: ${formData.name} - ${resvData.reservation?.id} ($${grandTotal.toFixed(2)} CAD)`,
+            from_name: 'Ktown Auto Spa Bookings',
+            replyto: formData.email,
+            message: `Booking Ref: ${resvData.reservation?.id}\nCustomer: ${formData.name} (${formData.phone}, ${formData.email})\nVehicle: ${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}\nDate: ${formData.preferredDate} (${formData.preferredSlot})\nServices: ${itemSummary}\nTotal: $${grandTotal.toFixed(2)} CAD\nPayment: ${formData.paymentMethod}\nNotes: ${formData.notes || 'None'}`,
+          }),
+        }).catch(() => {});
+      } catch {
+        // Non-blocking
+      }
+
       // Confetti celebration
       try {
         confetti({
@@ -207,7 +225,34 @@ export default function CheckoutModal() {
       }
     } catch (err) {
       console.error('Checkout error:', err);
-      setErrorMsg(err.message || 'An error occurred during booking. Please try again.');
+      const friendlyMsg = err.message || 'An error occurred during booking. Please try again.';
+      setErrorMsg(friendlyMsg);
+
+      // Record failed payment attempt on backend so owners can rescue the booking
+      if (formData.paymentMethod === 'card_stripe') {
+        try {
+          fetch('/api/payment-failed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              customer: {
+                name: formData.name,
+                phone: formData.phone,
+                email: formData.email,
+                vehicleYear: formData.vehicleYear,
+                vehicleMake: formData.vehicleMake,
+                vehicleModel: formData.vehicleModel,
+                notes: formData.notes,
+              },
+              items: cart,
+              error: friendlyMsg,
+              attemptedPaymentMethod: 'card_stripe',
+            }),
+          }).catch(() => {});
+        } catch {
+          // Non-blocking
+        }
+      }
     } finally {
       setSubmitting(false);
     }
@@ -308,16 +353,42 @@ END:VCALENDAR`;
                     background: 'rgba(239, 68, 68, 0.12)',
                     border: '1.5px solid #EF4444',
                     borderRadius: '8px',
-                    padding: '0.75rem 1rem',
-                    color: '#EF4444',
+                    padding: '0.9rem 1rem',
+                    color: '#f87171',
                     fontSize: '0.86rem',
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
+                    flexDirection: 'column',
+                    gap: '0.6rem',
                   }}
                 >
-                  <AlertCircle style={{ width: '1.1rem', height: '1.1rem', flexShrink: 0 }} />
-                  <span>{errorMsg}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <AlertCircle style={{ width: '1.1rem', height: '1.1rem', flexShrink: 0, color: '#ef4444' }} />
+                    <span style={{ fontWeight: 600 }}>{errorMsg}</span>
+                  </div>
+
+                  {formData.paymentMethod === 'card_stripe' && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.2rem' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData(prev => ({ ...prev, paymentMethod: 'pay_at_dropoff' }));
+                          setErrorMsg('');
+                        }}
+                        style={{
+                          background: 'var(--gold, #c9a03c)',
+                          color: '#0a1e42',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '0.45rem 0.85rem',
+                          fontSize: '0.8rem',
+                          fontWeight: 800,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        ✓ Switch to Pay at Drop-off &amp; Reserve Spot Now
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

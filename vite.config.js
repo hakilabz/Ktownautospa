@@ -8,6 +8,7 @@ export default defineConfig({
     tailwindcss(),
     react(),
   ],
+  envPrefix: ['VITE_', 'STRIPE_'],
   server: {
     host: '127.0.0.1',
     port: 5173,

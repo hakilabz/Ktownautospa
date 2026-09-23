@@ -1,0 +1,87 @@
+# ==============================================================================
+# Ktown Auto Spa - robots.txt
+# Hand Car Wash, Auto Detailing & System X Ceramic Coating in Kingston, ON
+# https://ktownautospa.ca
+# ==============================================================================
+
+# 1. Global Rule for All Web Crawlers & Search Engines
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /data/
+
+# 2. Major Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# 3. AI Search Engines, LLMs & Retrieval Crawlers (Explicitly Allowed)
+# OpenAI (ChatGPT, SearchGPT, GPT-4o)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic (Claude 3.5 Sonnet, Claude 3 Opus)
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Google Gemini / Vertex AI
+User-agent: Google-Extended
+Allow: /
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Common Crawl & Open AI Repositories
+User-agent: CCBot
+Allow: /
+
+# Cohere AI
+User-agent: cohere-ai
+Allow: /
+
+# ByteDance
+User-agent: Bytespider
+Allow: /
+
+# 4. XML Sitemap Location
+Sitemap: https://ktownautospa.ca/sitemap.xml

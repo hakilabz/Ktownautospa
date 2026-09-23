@@ -19,12 +19,26 @@ import Footer from './components/Footer';
 import WhatsAppChat from './components/WhatsAppChat';
 import CartDrawer from './components/CartDrawer';
 import CheckoutModal from './components/CheckoutModal';
+import AdminPortalModal from './components/AdminPortalModal';
 
 function MainApp() {
   const { cart, addToCart, proceedToCheckout, setIsCartOpen } = useCart();
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('ktown_theme') || 'dark';
   });
+
+  // Listen for #admin in URL to open Owner Portal
+  useEffect(() => {
+    const checkAdminHash = () => {
+      if (window.location.hash === '#admin' || window.location.search.includes('admin=true')) {
+        setIsAdminOpen(true);
+      }
+    };
+    checkAdminHash();
+    window.addEventListener('hashchange', checkAdminHash);
+    return () => window.removeEventListener('hashchange', checkAdminHash);
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -134,7 +148,7 @@ function MainApp() {
       </main>
 
       {/* Footer with Contact Links & Copyright */}
-      <Footer onOpenBooking={() => handleOpenBooking()} />
+      <Footer onOpenBooking={() => handleOpenBooking()} onOpenAdmin={() => setIsAdminOpen(true)} />
 
       {/* Floating Interactive WhatsApp Chat Widget */}
       <WhatsAppChat />
@@ -144,6 +158,17 @@ function MainApp() {
 
       {/* Complete Reservation & Payment Modal (Stripe + Pay at Drop-off) */}
       <CheckoutModal />
+
+      {/* Owner Admin Portal (PIN-protected for viewing revenue & failed leads) */}
+      <AdminPortalModal
+        isOpen={isAdminOpen}
+        onClose={() => {
+          setIsAdminOpen(false);
+          if (window.location.hash === '#admin') {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+        }}
+      />
 
     </div>
   );

@@ -14,6 +14,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Security hardening
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
 // Middleware
 app.use(cors());
 
@@ -31,9 +41,11 @@ app.use(express.urlencoded({ extended: true }));
 // Mount API routes
 app.use('/api', apiRouter);
 
-// Serve static frontend in production build
+// Serve static frontend in production build & public assets
 const distPath = path.join(__dirname, '../dist');
+const publicPath = path.join(__dirname, '../public');
 app.use(express.static(distPath));
+app.use(express.static(publicPath));
 
 // Fallback to index.html for SPA client-side routes
 app.use((req, res) => {
