@@ -1,13 +1,51 @@
-import React, { useState } from 'react';
-import { ArrowLeftRight, Disc, Bug, Flame } from 'lucide-react';
+import React from 'react';
+import { Disc, Bug, Flame, CheckCircle } from 'lucide-react';
 
 export default function Gallery() {
-  const [sliderPos, setSliderPos] = useState(50);
+  const comparisonCards = [
+    {
+      src: '/images/police_footwell_before_after.webp',
+      alt: 'Police vehicle driver footwell, before and after: gravel and mud on the left, clean carpet and sill on the right',
+      title: 'Police Patrol Unit — Driver Footwell',
+      badge: 'Before & After',
+      desc: 'Gravel, heavy road salt, and winter brine on the left · Hot thermal steam extraction, spotless carpet and sill on the right.',
+    },
+    {
+      src: '/images/ministry_pickup_cab_clean.webp',
+      alt: 'Ministry pickup truck cab, before and after: debris on the mats on the left, clean on the right',
+      title: 'Ministry Crew Pickup — Cabin Deep Clean',
+      badge: 'Before & After',
+      desc: 'Accumulated job-site gravel and clay mud on the left · Sanitized and returned to factory-correct matte finish on the right.',
+    },
+  ];
+
+  const fleetPhotos = [
+    {
+      src: '/images/police_suv_side_bay.webp',
+      alt: 'Police SUV, side view, in the wash bay',
+      caption: 'Police SUV in wash bay (side view)',
+    },
+    {
+      src: '/images/ministry_pickup_exterior.webp',
+      alt: 'Ministry pickup with cap, washed, parked outside the shop',
+      caption: 'Ministry fleet truck washed & ready',
+    },
+    {
+      src: '/images/police_suv_front_bay.webp',
+      alt: 'Police SUV, front view, in the wash bay',
+      caption: 'Police interceptor front inspection',
+    },
+    {
+      src: '/images/ministry_pickup_interior_clean.webp',
+      alt: 'Ministry pickup cab interior after cleaning',
+      caption: 'Cabin sanitized & dust-purged',
+    },
+  ];
 
   const workCards = [
     {
       title: 'High-Gloss Tire & Rim Shine',
-      desc: 'Brake dust removal & $10 deep silicone shine barrier restoration.',
+      desc: 'Brake dust removal & deep protective silicone shine barrier restoration.',
       tag: 'Tire Shine - $10',
       icon: <Disc style={{ width: '1.25rem', height: '1.25rem', color: 'var(--water)' }} />,
     },
@@ -19,129 +57,75 @@ export default function Gallery() {
     },
     {
       title: 'Thermal Carpet & Seat Steam Extraction',
-      desc: 'Deep steam extraction pulls salt, winter brine, pet hair and coffee stains.',
+      desc: '305°F dry steam extraction pulls salt, winter brine, pet hair, and coffee stains.',
       tag: 'Full Detail Feature',
       icon: <Flame style={{ width: '1.25rem', height: '1.25rem', color: '#E65100' }} />,
     },
   ];
 
   return (
-    <section className="band" id="work">
+    <section className="band band--tint" id="work">
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
         
         {/* Section Header */}
         <div className="section-head" style={{ marginBottom: '2.5rem' }}>
-          <p className="kicker">Our work</p>
-          <h2>Same car. Drag the slider.</h2>
+          <p className="kicker">Our work &middot; Recent fleet work</p>
+          <h2>Real agency vehicles detailed in our bays</h2>
           <p>
-            This is what true multi-stage paint correction actually accomplishes. Swirl marks and oxidation are polished out of the clear coat, and the true optical depth and mirror gloss come back.
+            Actual police patrol interceptors, provincial ministries, and commercial work trucks detailed in our Kingston shop bays. 100% authentic before-and-after proof — zero stock photos or AI mockups.
           </p>
         </div>
 
-        {/* Interactive Comparison Slider */}
-        <div 
-          style={{
-            position: 'relative',
-            borderRadius: '12px',
-            overflow: 'hidden',
-            border: '2px solid var(--surface-border-gold)',
-            boxShadow: '0 16px 40px rgba(12, 34, 71, 0.2)',
-            aspectRatio: '16/9',
-            maxHeight: '560px',
-            userSelect: 'none',
-          }}
-        >
-          {/* AFTER (Full background) */}
-          <div 
-            style={{
-              position: 'absolute', inset: 0,
-              backgroundImage: `url('/car-after.jpg')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
+        {/* 2 Comparison Before & After Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.75rem' }}>
+          {comparisonCards.map((card, idx) => (
+            <figure key={idx} className="frame" style={{ padding: '1rem', margin: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                  <span className="card-badge" style={{ background: 'var(--gold-primary)', color: 'var(--navy-deep)', fontWeight: 800 }}>
+                    {card.badge}
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontFamily: 'var(--mono)', fontSize: '0.74rem', color: 'var(--gold-primary)', fontWeight: 700 }}>
+                    <CheckCircle style={{ width: '0.85rem', height: '0.85rem' }} />
+                    Kingston Shop Bay
+                  </span>
+                </div>
+                
+                <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--surface-border)', aspectRatio: '16/10', background: '#000' }}>
+                  <img 
+                    src={card.src} 
+                    alt={card.alt} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+              </div>
 
-          {/* BEFORE (Clipped left side) */}
-          <div 
-            style={{
-              position: 'absolute', inset: 0,
-              backgroundImage: `url('/car-before.jpg')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              clipPath: `inset(0 ${100 - sliderPos}% 0 0)`,
-            }}
-          />
-
-          {/* Tags */}
-          <div style={{
-            position: 'absolute', bottom: '1rem', left: '1rem', zIndex: 10,
-            fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em',
-            textTransform: 'uppercase', padding: '0.35rem 0.75rem', borderRadius: '6px',
-            background: 'rgba(10, 30, 66, 0.92)', color: '#FFFFFF',
-            border: '1px solid rgba(255,255,255,0.15)',
-          }}>
-            Before: Mud &amp; Swirls
-          </div>
-
-          <div style={{
-            position: 'absolute', bottom: '1rem', right: '1rem', zIndex: 10,
-            fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em',
-            textTransform: 'uppercase', padding: '0.35rem 0.75rem', borderRadius: '6px',
-            background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
-            color: '#0A1E42', fontWeight: 800,
-            border: '1px solid #B3862A',
-          }}>
-            After: Ktown Spa Mirror Shine
-          </div>
-
-          {/* Divider Line */}
-          <div 
-            style={{
-              position: 'absolute', top: 0, bottom: 0,
-              left: `${sliderPos}%`, width: '3px',
-              background: 'var(--gold-lt)',
-              transform: 'translateX(-50%)',
-              pointerEvents: 'none', zIndex: 15,
-            }}
-          />
-
-          {/* Drag Knob Handle */}
-          <div 
-            style={{
-              position: 'absolute', top: '50%',
-              left: `${sliderPos}%`,
-              transform: 'translate(-50%, -50%)',
-              width: '52px', height: '52px', minWidth: '52px', minHeight: '52px',
-              borderRadius: '50%',
-              background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
-              border: '3px solid #0A1E42',
-              pointerEvents: 'none', zIndex: 20,
-              display: 'grid', placeItems: 'center',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-              color: '#0A1E42',
-              flexShrink: 0,
-            }}
-          >
-            <ArrowLeftRight style={{ width: '1.3rem', height: '1.3rem' }} />
-          </div>
-
-          {/* Range Slider Overlay */}
-          <input
-            type="range"
-            min="5"
-            max="95"
-            value={sliderPos}
-            onChange={(e) => setSliderPos(Number(e.target.value))}
-            style={{
-              position: 'absolute', inset: 0, width: '100%', height: '100%',
-              margin: 0, opacity: 0, cursor: 'ew-resize', zIndex: 25,
-            }}
-            aria-label="Drag slider left or right to compare before and after"
-          />
+              <figcaption style={{ marginTop: '0.9rem', fontSize: '0.92rem', color: 'var(--muted-color)', lineHeight: 1.5 }}>
+                <strong style={{ color: 'var(--heading-color)', display: 'block', fontSize: '1.05rem', marginBottom: '0.25rem' }}>
+                  {card.title}
+                </strong>
+                {card.desc}
+              </figcaption>
+            </figure>
+          ))}
         </div>
 
-        {/* Feature Highlights Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginTop: '2.5rem' }}>
+        {/* 4-Photo Real Fleet Detail Strip */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          {fleetPhotos.map((photo, idx) => (
+            <figure key={idx} className="frame" style={{ padding: '0.65rem', margin: 0 }}>
+              <div style={{ borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--surface-border)', aspectRatio: '4/3', background: '#000' }}>
+                <img src={photo.src} alt={photo.alt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+              <figcaption style={{ marginTop: '0.55rem', fontSize: '0.82rem', color: 'var(--muted-color)', textAlign: 'center', fontWeight: 600 }}>
+                {photo.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        {/* Detail Specialties Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginTop: '2.5rem', marginBottom: '1.5rem' }}>
           {workCards.map((item, idx) => (
             <div key={idx} className="frame" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.4rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -161,6 +145,10 @@ export default function Gallery() {
             </div>
           ))}
         </div>
+
+        <p style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', color: 'var(--muted-color)', margin: 0, opacity: 0.85, textAlign: 'center' }}>
+          * Fleet unit numbers, license plates, and official crests have been deliberately blurred to maintain agency privacy standards.
+        </p>
 
       </div>
     </section>

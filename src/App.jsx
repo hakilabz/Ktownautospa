@@ -105,9 +105,6 @@ function MainApp() {
         {/* Credentials & Authorized Brand Partner Tiles */}
         <Credentials />
 
-        {/* Our Work - Before & After Interactive Slider */}
-        <Gallery />
-
         {/* Paint Protection, Ceramic Coating & Straight Answers */}
         <CoatingSection onOpenBooking={() => handleOpenBooking()} />
 
@@ -119,6 +116,9 @@ function MainApp() {
 
         {/* Fleet & Commercial Programs */}
         <FleetsSection onOpenBooking={() => handleOpenBooking()} />
+
+        {/* Our Work - Real Agency Vehicles Detailed in Our Bays */}
+        <Gallery />
 
         {/* Boats & Marine Slip-Side Detailing */}
         <BoatsSection />
