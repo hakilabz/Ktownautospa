@@ -75,19 +75,21 @@ export default function Gallery() {
           {/* Tags */}
           <div style={{
             position: 'absolute', bottom: '1rem', left: '1rem', zIndex: 10,
-            fontFamily: 'var(--mono)', fontSize: '0.8rem', letterSpacing: '0.12em',
-            textTransform: 'uppercase', padding: '0.42rem 0.9rem', borderRadius: '999px',
+            fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em',
+            textTransform: 'uppercase', padding: '0.35rem 0.75rem', borderRadius: '6px',
             background: 'rgba(10, 30, 66, 0.92)', color: '#FFFFFF',
+            border: '1px solid rgba(255,255,255,0.15)',
           }}>
             Before: Mud &amp; Swirls
           </div>
 
           <div style={{
             position: 'absolute', bottom: '1rem', right: '1rem', zIndex: 10,
-            fontFamily: 'var(--mono)', fontSize: '0.8rem', letterSpacing: '0.12em',
-            textTransform: 'uppercase', padding: '0.42rem 0.9rem', borderRadius: '999px',
+            fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em',
+            textTransform: 'uppercase', padding: '0.35rem 0.75rem', borderRadius: '6px',
             background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
             color: '#0A1E42', fontWeight: 800,
+            border: '1px solid #B3862A',
           }}>
             After: Ktown Spa Mirror Shine
           </div>
@@ -109,16 +111,18 @@ export default function Gallery() {
               position: 'absolute', top: '50%',
               left: `${sliderPos}%`,
               transform: 'translate(-50%, -50%)',
-              width: '56px', height: '56px', borderRadius: '50%',
+              width: '52px', height: '52px', minWidth: '52px', minHeight: '52px',
+              borderRadius: '50%',
               background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
               border: '3px solid #0A1E42',
               pointerEvents: 'none', zIndex: 20,
               display: 'grid', placeItems: 'center',
               boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
               color: '#0A1E42',
+              flexShrink: 0,
             }}
           >
-            <ArrowLeftRight style={{ width: '1.4rem', height: '1.4rem' }} />
+            <ArrowLeftRight style={{ width: '1.3rem', height: '1.3rem' }} />
           </div>
 
           {/* Range Slider Overlay */}
@@ -139,16 +143,12 @@ export default function Gallery() {
         {/* Feature Highlights Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginTop: '2.5rem' }}>
           {workCards.map((item, idx) => (
-            <div key={idx} className="frame" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.5rem' }}>
+            <div key={idx} className="frame" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.4rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ padding: '0.5rem', background: 'var(--chip-inactive-bg)', borderRadius: '8px', border: '1px solid var(--surface-border)' }}>
                   {item.icon}
                 </div>
-                <span style={{
-                  background: 'var(--navy-deep)', color: 'var(--gold-lt)',
-                  fontFamily: 'var(--mono)', fontSize: '0.74rem', fontWeight: 700,
-                  padding: '0.25rem 0.65rem', borderRadius: '999px', textTransform: 'uppercase',
-                }}>
+                <span className="card-badge" style={{ fontSize: '0.72rem', padding: '0.25rem 0.6rem' }}>
                   {item.tag}
                 </span>
               </div>

@@ -44,8 +44,8 @@ export default function Footer({ onOpenBooking }) {
               onClick={onOpenBooking} 
               style={{
                 background: 'rgba(255,255,255,0.08)', color: 'var(--gold-lt)',
-                border: '1px solid var(--gold)', borderRadius: '999px',
-                padding: '0.3rem 0.85rem', cursor: 'pointer', fontFamily: 'var(--body)', fontWeight: 700,
+                border: '1px solid var(--gold)', borderRadius: '6px',
+                padding: '0.35rem 0.85rem', cursor: 'pointer', fontFamily: 'var(--body)', fontWeight: 700,
               }}
             >
               Book Online

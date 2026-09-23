@@ -117,7 +117,7 @@ export default function ReviewsSection() {
         {/* Physical Clipboard Sheets Gallery */}
         <div style={{ marginBottom: '2.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-            <span className="capsule capsule--sm">Physical Customer Log Sheets</span>
+            <span className="card-badge">Physical Customer Log Sheets</span>
             <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', color: 'var(--muted-color)' }}>
               Actual signed feedback logged at vehicle pickup
             </span>

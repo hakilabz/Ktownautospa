@@ -18,9 +18,9 @@ export default function LocationHours({ onOpenBooking }) {
             </p>
 
             {/* Big Action Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2rem' }}>
-              <a href="tel:+16479153530" className="btn btn--gold" style={{ minHeight: '64px', fontSize: '1.2rem', width: '100%' }}>
-                <Phone style={{ width: '1.4rem', height: '1.4rem' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem' }}>
+              <a href="tel:+16479153530" className="btn btn--gold" style={{ minHeight: '50px', fontSize: '1.05rem', width: '100%' }}>
+                <Phone style={{ width: '1.25rem', height: '1.25rem' }} />
                 <span>Call 647-915-3530</span>
               </a>
 
@@ -29,13 +29,13 @@ export default function LocationHours({ onOpenBooking }) {
                 target="_blank" 
                 rel="noopener" 
                 className="btn btn--wa"
-                style={{ minHeight: '56px', fontSize: '1.05rem', width: '100%' }}
+                style={{ minHeight: '48px', fontSize: '0.98rem', width: '100%' }}
               >
-                <MessageCircle style={{ width: '1.3rem', height: '1.3rem' }} />
+                <MessageCircle style={{ width: '1.2rem', height: '1.2rem' }} />
                 <span>Message us on WhatsApp</span>
               </a>
 
-              <a href="sms:+16479153530" className="btn btn--cream" style={{ minHeight: '52px', fontSize: '1rem', width: '100%' }}>
+              <a href="sms:+16479153530" className="btn btn--cream" style={{ minHeight: '46px', fontSize: '0.94rem', width: '100%' }}>
                 <span>Or send a quick text</span>
               </a>
             </div>
@@ -104,16 +104,16 @@ export default function LocationHours({ onOpenBooking }) {
               <button 
                 onClick={onOpenBooking} 
                 className="btn btn--gold" 
-                style={{ width: '100%', minHeight: '60px', fontSize: '1.1rem', marginBottom: '1rem' }}
+                style={{ width: '100%', minHeight: '48px', fontSize: '1.02rem', marginBottom: '0.85rem' }}
               >
-                <Calendar style={{ width: '1.25rem', height: '1.25rem' }} />
+                <Calendar style={{ width: '1.15rem', height: '1.15rem' }} />
                 <span>Open Booking Form</span>
               </button>
 
               <a 
                 href="mailto:ktownautomobilespa@gmail.com" 
                 className="btn btn--outline" 
-                style={{ width: '100%', minHeight: '48px', fontSize: '0.92rem' }}
+                style={{ width: '100%', minHeight: '44px', fontSize: '0.9rem' }}
               >
                 <Mail style={{ width: '1rem', height: '1rem' }} />
                 <span>Email: ktownautomobilespa@gmail.com</span>

@@ -79,7 +79,10 @@ export default function CartDrawer() {
               style={{
                 width: '2.4rem',
                 height: '2.4rem',
-                borderRadius: '50%',
+                minWidth: '2.4rem',
+                minHeight: '2.4rem',
+                flexShrink: 0,
+                borderRadius: '8px',
                 background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
                 color: '#0A1E42',
                 display: 'flex',
@@ -135,9 +138,12 @@ export default function CartDrawer() {
             <div style={{ textAlign: 'center', margin: 'auto 0', padding: '1.5rem 0.5rem' }}>
               <div
                 style={{
-                  width: '4.5rem',
-                  height: '4.5rem',
-                  borderRadius: '50%',
+                  width: '4.2rem',
+                  height: '4.2rem',
+                  minWidth: '4.2rem',
+                  minHeight: '4.2rem',
+                  flexShrink: 0,
+                  borderRadius: '12px',
                   background: 'var(--chip-inactive-bg)',
                   border: '1.5px dashed var(--gold)',
                   display: 'flex',
@@ -252,10 +258,10 @@ export default function CartDrawer() {
                             background: 'var(--chip-inactive-bg)',
                             color: 'var(--gold-primary)',
                             border: '1px solid var(--surface-border-gold)',
-                            borderRadius: '999px',
+                            borderRadius: '6px',
                             fontSize: '0.72rem',
                             fontWeight: 700,
-                            padding: '0.12rem 0.55rem',
+                            padding: '0.15rem 0.55rem',
                             marginBottom: '0.35rem',
                           }}
                         >

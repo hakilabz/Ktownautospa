@@ -36,11 +36,12 @@ export default function HowItWorks() {
               style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}
             >
               <div style={{
-                display: 'grid', placeItems: 'center', width: '50px', height: '50px',
-                borderRadius: '50%', background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
+                display: 'grid', placeItems: 'center', width: '48px', height: '48px',
+                minWidth: '48px', minHeight: '48px', flexShrink: 0,
+                borderRadius: '10px', background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
                 border: '2px solid #0A1E42', color: '#0A1E42',
-                fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem',
-                marginBottom: '0.6rem',
+                fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.65rem',
+                marginBottom: '0.6rem', boxShadow: '0 4px 12px rgba(201, 160, 60, 0.25)',
               }}>
                 {s.num}
               </div>

@@ -308,37 +308,50 @@ export default function RateCard({ onOpenBooking }) {
             </div>
 
             {/* Signature Package Highlight Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', marginTop: '2.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
               
               {/* Medium Package */}
               <article className="frame" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
-                  <div style={{ textAlign: 'center', marginTop: '-2.8rem', marginBottom: '1.4rem' }}>
-                    <span className="capsule">Medium Package</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <h3 style={{ margin: 0, fontFamily: 'var(--display)', fontSize: '1.55rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--heading-color)' }}>
+                      Medium Package
+                    </h3>
+                    <span className="card-badge">Popular Choice</span>
                   </div>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.85rem' }}>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                      <div>Inside &amp; outside cleaning</div>
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)', alignItems: 'start' }}>
+                      <div className="check-badge">
+                        <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                      </div>
+                      <div style={{ paddingTop: '1px' }}>Inside &amp; outside cleaning</div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                      <div>
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)', alignItems: 'start' }}>
+                      <div className="check-badge">
+                        <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                      </div>
+                      <div style={{ paddingTop: '1px' }}>
                         Full interior detail
                         <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>Glass wipe down and thorough vacuum</span>
                       </div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                      <div>Rubber mats shampoo washed</div>
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)', alignItems: 'start' }}>
+                      <div className="check-badge">
+                        <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                      </div>
+                      <div style={{ paddingTop: '1px' }}>Rubber mats shampoo washed</div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                      <div>All doors &amp; jambs wiped &amp; degreased</div>
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)', alignItems: 'start' }}>
+                      <div className="check-badge">
+                        <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                      </div>
+                      <div style={{ paddingTop: '1px' }}>All doors &amp; jambs wiped &amp; degreased</div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                      <div>
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)', alignItems: 'start' }}>
+                      <div className="check-badge">
+                        <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                      </div>
+                      <div style={{ paddingTop: '1px' }}>
                         Exterior body &amp; tire hand wash
                         <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>No pressure washers — 100% paint safe hand washing</span>
                       </div>
@@ -347,10 +360,10 @@ export default function RateCard({ onOpenBooking }) {
                 </div>
 
                 <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', textAlign: 'center' }}>
-                  <p style={{ fontFamily: 'var(--mono)', fontSize: '0.86rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 0.75rem' }}>
+                  <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 0.75rem' }}>
                     Approx. 2 hours · Select vehicle to reserve:
                   </p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.45rem', marginBottom: '0.5rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.25rem' }}>
                     {[
                       { id: 'c-sedan', name: 'Sedan', price: 100 },
                       { id: 'c-cross', name: 'Cross', price: 130 },
@@ -361,12 +374,11 @@ export default function RateCard({ onOpenBooking }) {
                         key={tier.id}
                         type="button"
                         onClick={() => handleAddTierService('Medium Package', tier.id, tier.price, 'Interior vacuum & glass, mats, jambs, hand wash')}
-                        className="btn btn--outline"
-                        style={{ padding: '0.55rem 0.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}
+                        className="rate-tier-tile"
                         title={`Reserve Medium Package for ${tier.name} ($${tier.price})`}
                       >
-                        <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', opacity: 0.85 }}>{tier.name}</span>
-                        <strong style={{ fontSize: '1.05rem', color: 'var(--heading-color)', marginTop: '2px' }}>${tier.price}</strong>
+                        <span className="rate-tier-label">{tier.name}</span>
+                        <strong className="rate-tier-price">${tier.price}</strong>
                       </button>
                     ))}
                   </div>
@@ -376,30 +388,39 @@ export default function RateCard({ onOpenBooking }) {
               {/* Full Detail */}
               <article className="frame" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
-                  <div style={{ textAlign: 'center', marginTop: '-2.8rem', marginBottom: '1.4rem' }}>
-                    <span className="capsule">Full Detail</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <h3 style={{ margin: 0, fontFamily: 'var(--display)', fontSize: '1.55rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--heading-color)' }}>
+                      Full Detail
+                    </h3>
+                    <span className="card-badge" style={{ background: 'var(--gold-primary)', color: 'var(--navy-deep)', fontWeight: 800 }}>Complete Detail</span>
                   </div>
-                  <p style={{ fontWeight: 800, color: 'var(--heading-color)', fontSize: '1.05rem', marginBottom: '1rem' }}>
+                  <p style={{ fontWeight: 800, color: 'var(--heading-color)', fontSize: '1.02rem', marginBottom: '0.85rem' }}>
                     Includes all features from Medium Package, plus:
                   </p>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.85rem' }}>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                      <div>
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)', alignItems: 'start' }}>
+                      <div className="check-badge">
+                        <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                      </div>
+                      <div style={{ paddingTop: '1px' }}>
                         Summer mats shampoo washed &amp; steamed
                         <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>Hot thermal extraction of salt, mud, spills &amp; stains</span>
                       </div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                      <div>
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)', alignItems: 'start' }}>
+                      <div className="check-badge">
+                        <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                      </div>
+                      <div style={{ paddingTop: '1px' }}>
                         Non-removable carpets &amp; seats
                         <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>Deep scrubbed and hot steam sanitized for an ultra-fresh cabin</span>
                       </div>
                     </li>
-                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)' }}>
-                      <Check style={{ width: '1.25rem', height: '1.25rem', color: 'var(--gold-primary)', flexShrink: 0 }} />
-                      <div>
+                    <li style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.75rem', fontWeight: 700, color: 'var(--heading-color)', alignItems: 'start' }}>
+                      <div className="check-badge">
+                        <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                      </div>
+                      <div style={{ paddingTop: '1px' }}>
                         Cabin sanitize &amp; deodorize
                         <span style={{ display: 'block', fontWeight: 400, color: 'var(--muted-color)', fontSize: '0.92rem' }}>Hypoallergenic clean, zero chemical perfume residue</span>
                       </div>
@@ -408,10 +429,10 @@ export default function RateCard({ onOpenBooking }) {
                 </div>
 
                 <div style={{ marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', textAlign: 'center' }}>
-                  <p style={{ fontFamily: 'var(--mono)', fontSize: '0.86rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 0.75rem' }}>
+                  <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--gold-primary)', fontWeight: 700, margin: '0 0 0.75rem' }}>
                     Approx. 4 hours · Select vehicle to reserve:
                   </p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.45rem', marginBottom: '0.5rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '0.25rem' }}>
                     {[
                       { id: 'c-sedan', name: 'Sedan', price: 200 },
                       { id: 'c-cross', name: 'Cross', price: 230 },
@@ -422,12 +443,11 @@ export default function RateCard({ onOpenBooking }) {
                         key={tier.id}
                         type="button"
                         onClick={() => handleAddTierService('Full Detail', tier.id, tier.price, 'Medium Package plus summer mats steamed, carpets & seats scrubbed')}
-                        className="btn btn--gold"
-                        style={{ padding: '0.55rem 0.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}
+                        className="rate-tier-tile rate-tier-tile--gold"
                         title={`Reserve Full Detail for ${tier.name} ($${tier.price})`}
                       >
-                        <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', opacity: 0.9 }}>{tier.name}</span>
-                        <strong style={{ fontSize: '1.05rem', color: '#0A1E42', marginTop: '2px' }}>${tier.price}</strong>
+                        <span className="rate-tier-label">{tier.name}</span>
+                        <strong className="rate-tier-price">${tier.price}</strong>
                       </button>
                     ))}
                   </div>
@@ -602,63 +622,121 @@ export default function RateCard({ onOpenBooking }) {
         {/* Tab 5: Add-ons & Surcharge */}
         {activeTab === 'extra' && (
           <div role="tabpanel" id="panel-extra" aria-labelledby="tab-extra">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', marginTop: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '1.5rem', marginTop: '1.5rem', alignItems: 'stretch' }}>
               
-              {/* Add-ons list */}
-              <div className="frame">
-                <div style={{ marginTop: '-2.6rem', marginBottom: '1.2rem' }}>
-                  <span className="capsule capsule--sm">Add-ons</span>
-                </div>
-                
-                {[
-                  { name: 'Engine Bay Cleaning', price: '$40', priceNum: 40 },
-                  { name: 'Tire Shine', price: '$10', priceNum: 10 },
-                  { name: 'Summer Mats Shampoo Wash', price: '$20', priceNum: 20 },
-                  { name: 'Headlight Restoration (pair)', price: '$60', priceNum: 60 },
-                  { name: 'Clay Bar Decontamination', price: '$60', priceNum: 60 },
-                  { name: 'Odour Treatment', price: '$50', priceNum: 50 },
-                  { name: 'Pet Hair Removal', price: '$50', priceNum: 50 },
-                ].map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.85rem 0', borderBottom: idx < 6 ? '1px dashed var(--surface-border)' : 'none' }}>
-                    <div>
-                      <strong style={{ fontSize: '1.05rem', color: 'var(--heading-color)', display: 'block' }}>{item.name}</strong>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                      <b style={{ fontFamily: 'var(--display)', fontSize: '1.65rem', color: 'var(--water-dk)' }}>{item.price}</b>
-                      <button
-                        type="button"
-                        onClick={() => handleAddAddon(item.name, item.priceNum)}
-                        className="btn-add-table"
-                      >
-                        + Add
-                      </button>
-                    </div>
+              {/* Add-ons list card */}
+              <div className="frame" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                    <h3 style={{ margin: 0, fontFamily: 'var(--display)', fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--heading-color)' }}>
+                      A La Carte Add-ons
+                    </h3>
+                    <span className="card-badge">A la carte</span>
                   </div>
-                ))}
+
+                  <div style={{ display: 'grid', gap: '0.25rem' }}>
+                    {[
+                      { name: 'Engine Bay Cleaning', price: '$40', priceNum: 40, sub: 'Degrease, detail & dress plastic shrouds' },
+                      { name: 'Headlight Restoration (pair)', price: '$60', priceNum: 60, sub: 'Wet sand, compound, polish & UV seal' },
+                      { name: 'Clay Bar Decontamination', price: '$60', priceNum: 60, sub: 'Removes embedded industrial fallout' },
+                      { name: 'Odour Treatment', price: '$50', priceNum: 50, sub: 'Thermal fogging & cabin disinfection' },
+                      { name: 'Pet Hair Removal', price: '$50', priceNum: 50, sub: 'Specialized rubber brushes & suction extraction' },
+                      { name: 'Summer Mats Shampoo Wash', price: '$20', priceNum: 20, sub: 'Deep scrub, hot water extract & dry' },
+                      { name: 'Tire Shine', price: '$10', priceNum: 10, sub: 'Sling-free deep satin protective dressing' },
+                    ].map((item, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          padding: '0.75rem 0.5rem',
+                          borderRadius: '6px',
+                          borderBottom: idx < 6 ? '1px dashed var(--surface-border)' : 'none',
+                          gap: '1rem',
+                        }}
+                      >
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <strong style={{ fontSize: '0.98rem', color: 'var(--heading-color)', display: 'block' }}>
+                            {item.name}
+                          </strong>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--muted-color)', display: 'block' }}>
+                            {item.sub}
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+                          <b style={{ fontFamily: 'var(--display)', fontSize: '1.4rem', color: 'var(--water-dk)' }}>{item.price}</b>
+                          <button
+                            type="button"
+                            onClick={() => handleAddAddon(item.name, item.priceNum)}
+                            className="btn-add-table"
+                          >
+                            + Add
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* Surcharge Box */}
-              <div className="frame frame--navy" style={{ textAlign: 'center' }}>
-                <div style={{ marginTop: '-2.6rem', marginBottom: '1.2rem' }}>
-                  <span className="capsule capsule--sm">Surcharge</span>
+              {/* Surcharge Policy Box */}
+              <div className="frame frame--navy" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                    <h3 style={{ margin: 0, fontFamily: 'var(--display)', fontSize: '1.45rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--gold-lt)' }}>
+                      Heavy Soil Surcharge
+                    </h3>
+                    <span className="card-badge" style={{ background: 'rgba(240, 213, 144, 0.2)', color: 'var(--gold-lt)', borderColor: 'var(--gold)' }}>
+                      Transparent Policy
+                    </span>
+                  </div>
+
+                  <p style={{ color: '#F0D590', fontWeight: 800, fontSize: '1.15rem', margin: '0 0 0.5rem' }}>
+                    If your vehicle requires extraordinary labor
+                  </p>
+                  
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', margin: '0.5rem 0 1rem' }}>
+                    <div style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '2.8rem', color: 'var(--gold-lt)', lineHeight: 1 }}>
+                      +$50
+                    </div>
+                    <span style={{ fontFamily: 'var(--mono)', fontSize: '0.85rem', color: '#D8E5F4', textTransform: 'uppercase' }}>
+                      Flat Surcharge (CAD)
+                    </span>
+                  </div>
+
+                  <p style={{ color: '#D8E5F4', fontSize: '0.94rem', lineHeight: 1.6, margin: '0 0 1.25rem' }}>
+                    <strong>Never surprise-billed.</strong> This surcharge applies strictly when a vehicle has severe child spills, excessive pet fur woven into carpets, sand, or heavy job-site trade mud that requires substantial extra machine extraction time.
+                  </p>
+
+                  <div style={{ background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(240, 213, 144, 0.3)', borderRadius: '8px', padding: '0.85rem 1rem', marginBottom: '1.5rem' }}>
+                    <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: '0.5rem', fontSize: '0.86rem', color: '#E2ECF7' }}>
+                      <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ color: 'var(--gold-lt)', fontWeight: 800 }}>✓</span>
+                        Walkaround conducted together at drop-off
+                      </li>
+                      <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ color: 'var(--gold-lt)', fontWeight: 800 }}>✓</span>
+                        Price confirmed in writing before any work begins
+                      </li>
+                      <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ color: 'var(--gold-lt)', fontWeight: 800 }}>✓</span>
+                        Zero hidden fees or post-detail surprises
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <p style={{ color: '#F0D590', fontWeight: 800, fontSize: '1.2rem', margin: 0 }}>
-                  If it's extra dirty
-                </p>
-                <div style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '3.4rem', color: 'var(--gold-lt)', lineHeight: 1, margin: '0.8rem 0 0.4rem' }}>
-                  +$50
+
+                <div style={{ borderTop: '1px dashed rgba(240, 213, 144, 0.25)', paddingTop: '1rem', marginTop: '1rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => handleAddAddon("If it's extra dirty (Kids/Pets/Work)", 50)}
+                    className="btn btn--gold"
+                    style={{ width: '100%', minHeight: '44px', fontSize: '0.92rem' }}
+                  >
+                    + Add Soil Surcharge to Reservation ($50)
+                  </button>
                 </div>
-                <p style={{ color: '#D8E5F4', fontSize: '0.96rem', lineHeight: 1.6, maxWidth: '28rem', margin: '0 auto 1.25rem' }}>
-                  Not automatic. It applies only when a vehicle needs a lot more work than usual — heavy mess from kids or pets, or a work vehicle. We look the car over with you and tell you before any work begins, never after.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => handleAddAddon("If it's extra dirty (Kids/Pets/Work)", 50)}
-                  className="btn btn--gold"
-                  style={{ minHeight: '40px', padding: '0 1.25rem', fontSize: '0.88rem' }}
-                >
-                  + Add Surcharge ($50)
-                </button>
               </div>
 
             </div>

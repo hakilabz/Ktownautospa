@@ -62,7 +62,8 @@ export default function ProcessFlow() {
               {/* Number Badge */}
               <div style={{
                 position: 'absolute', top: '-14px', left: '1.2rem',
-                width: '32px', height: '32px', borderRadius: '50%',
+                width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', flexShrink: 0,
+                borderRadius: '6px',
                 display: 'grid', placeItems: 'center',
                 background: 'linear-gradient(180deg, var(--gold-lt), var(--gold))',
                 color: 'var(--navy-deep)', border: '2px solid var(--navy-deep)',

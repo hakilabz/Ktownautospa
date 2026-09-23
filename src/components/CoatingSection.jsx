@@ -24,6 +24,11 @@ export default function CoatingSection() {
           {/* Paint Correction */}
           <article className="frame" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                <span className="card-badge">Step 1 Preparation</span>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: '0.74rem', color: 'var(--muted-color)', textTransform: 'uppercase' }}>Surface Correction</span>
+              </div>
+
               <div style={{
                 background: '#0C0C0E', border: '2px solid var(--surface-border-gold)', borderRadius: '10px',
                 padding: '0.85rem 1rem', marginBottom: '1.2rem', textAlign: 'center', color: '#FFFFFF',
@@ -78,6 +83,11 @@ export default function CoatingSection() {
           {/* Nano-Brite Coating */}
           <article className="frame" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                <span className="card-badge">Entry Ceramic</span>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: '0.74rem', color: 'var(--gold-primary)', fontWeight: 700, textTransform: 'uppercase' }}>1, 3 &amp; 7 Year</span>
+              </div>
+
               <div style={{
                 background: 'linear-gradient(180deg, #16386C, #0A1E42)', border: '2px solid var(--gold)', borderRadius: '10px',
                 padding: '0.85rem 1rem', marginBottom: '1.2rem', textAlign: 'center', color: '#FFFFFF',
@@ -134,21 +144,18 @@ export default function CoatingSection() {
             background: 'var(--surface-card)',
             border: '2px solid var(--surface-border-gold)',
             display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-            position: 'relative',
           }}>
-            <div style={{
-              position: 'absolute', top: '-14px', left: '1.5rem',
-              background: 'var(--navy-deep)', color: 'var(--gold-lt)',
-              fontFamily: 'var(--mono)', fontSize: '0.74rem', letterSpacing: '0.12em',
-              textTransform: 'uppercase', padding: '0.35rem 0.85rem', borderRadius: '999px',
-            }}>
-              Registered on CARFAX Canada
-            </div>
-
             <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                <span className="card-badge" style={{ background: 'var(--gold-primary)', color: 'var(--navy-deep)', fontWeight: 800 }}>
+                  Flagship Protection
+                </span>
+                <span className="cf-pill" style={{ margin: 0 }}>CARFAX Registered</span>
+              </div>
+
               <div style={{
                 background: '#1A1A1C', border: '2px solid var(--gold)', borderRadius: '10px',
-                padding: '0.85rem 1rem', marginBottom: '1.2rem', marginTop: '0.5rem', textAlign: 'center', color: '#FFFFFF',
+                padding: '0.85rem 1rem', marginBottom: '1.2rem', textAlign: 'center', color: '#FFFFFF',
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
               }}>
                 <div style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.4rem' }}>
@@ -215,8 +222,10 @@ export default function CoatingSection() {
             
             {/* Left Column */}
             <div style={{ display: 'grid', gap: '1.25rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                <Check style={{ width: '1.2rem', height: '1.2rem', color: 'var(--gold-primary)', marginTop: '3px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem', alignItems: 'start' }}>
+                <div className="check-badge">
+                  <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                </div>
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>It's a second clear coat, not a wax</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
@@ -225,8 +234,10 @@ export default function CoatingSection() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                <Check style={{ width: '1.2rem', height: '1.2rem', color: 'var(--gold-primary)', marginTop: '3px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem', alignItems: 'start' }}>
+                <div className="check-badge">
+                  <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                </div>
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>It won't stop a shopping cart</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
@@ -235,8 +246,10 @@ export default function CoatingSection() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                <Check style={{ width: '1.2rem', height: '1.2rem', color: 'var(--gold-primary)', marginTop: '3px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem', alignItems: 'start' }}>
+                <div className="check-badge">
+                  <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                </div>
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>The prep is most of the job</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
@@ -245,8 +258,10 @@ export default function CoatingSection() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                <Check style={{ width: '1.2rem', height: '1.2rem', color: 'var(--gold-primary)', marginTop: '3px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem', alignItems: 'start' }}>
+                <div className="check-badge">
+                  <Check style={{ width: '13px', height: '13px', color: 'var(--gold-primary)' }} />
+                </div>
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>It needs a day or two to cure</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
@@ -258,8 +273,10 @@ export default function CoatingSection() {
 
             {/* Right Column */}
             <div style={{ display: 'grid', gap: '1.25rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                <Check style={{ width: '1.2rem', height: '1.2rem', color: 'var(--water)', marginTop: '3px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem', alignItems: 'start' }}>
+                <div className="check-badge" style={{ background: 'rgba(62, 155, 218, 0.12)', borderColor: 'rgba(62, 155, 218, 0.35)' }}>
+                  <Check style={{ width: '13px', height: '13px', color: 'var(--water)' }} />
+                </div>
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>Wash it every couple of weeks</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
@@ -268,8 +285,10 @@ export default function CoatingSection() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                <Check style={{ width: '1.2rem', height: '1.2rem', color: 'var(--water)', marginTop: '3px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem', alignItems: 'start' }}>
+                <div className="check-badge" style={{ background: 'rgba(62, 155, 218, 0.12)', borderColor: 'rgba(62, 155, 218, 0.35)' }}>
+                  <Check style={{ width: '13px', height: '13px', color: 'var(--water)' }} />
+                </div>
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>Stay out of automatic brush washes</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
@@ -278,8 +297,10 @@ export default function CoatingSection() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                <Check style={{ width: '1.2rem', height: '1.2rem', color: 'var(--water)', marginTop: '3px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem', alignItems: 'start' }}>
+                <div className="check-badge" style={{ background: 'rgba(62, 155, 218, 0.12)', borderColor: 'rgba(62, 155, 218, 0.35)' }}>
+                  <Check style={{ width: '13px', height: '13px', color: 'var(--water)' }} />
+                </div>
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>Deal with bird droppings promptly</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>
@@ -288,8 +309,10 @@ export default function CoatingSection() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem' }}>
-                <Check style={{ width: '1.2rem', height: '1.2rem', color: 'var(--water)', marginTop: '3px' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.85rem', alignItems: 'start' }}>
+                <div className="check-badge" style={{ background: 'rgba(62, 155, 218, 0.12)', borderColor: 'rgba(62, 155, 218, 0.35)' }}>
+                  <Check style={{ width: '13px', height: '13px', color: 'var(--water)' }} />
+                </div>
                 <div>
                   <strong style={{ color: 'var(--heading-color)', display: 'block', marginBottom: '0.2rem' }}>Water beading means it's working</strong>
                   <span style={{ color: 'var(--muted-color)', fontSize: '0.94rem', lineHeight: 1.55 }}>

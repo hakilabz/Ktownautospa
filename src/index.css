@@ -129,65 +129,91 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
+/* Custom Scrollbar - apply only to vertical window scrolling */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
   width: 8px;
 }
-::-webkit-scrollbar-track {
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
   background: var(--bg-page);
 }
-::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dk) 100%);
   border-radius: 4px;
 }
 
-/* Base Buttons */
+/* Explicitly hide scrollbars on all nav and horizontal ribbons to prevent any top bars */
+nav, .nav-no-scrollbar, .tablist, .pricewrap {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+nav::-webkit-scrollbar,
+.nav-no-scrollbar::-webkit-scrollbar,
+.tablist::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Base Buttons - Modern Luxury Rounded Rectangles */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  min-height: 54px;
-  padding: 0 1.6rem;
-  font-size: 1rem;
-  font-weight: 800;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0 1.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
   text-decoration: none;
-  border-radius: 999px;
+  border-radius: 8px;
   cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .btn:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(10, 30, 66, 0.15);
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn--gold {
-  background: linear-gradient(180deg, var(--gold-lt) 0%, var(--gold) 52%, var(--gold-lt) 100%);
+  background: linear-gradient(180deg, #F0D590 0%, #C9A03C 100%);
   color: #0A1E42 !important;
-  border-color: var(--gold-dk);
-  box-shadow: 0 3px 0 rgba(154, 117, 36, 0.45);
+  border-color: #B3862A;
+  box-shadow: 0 4px 14px rgba(201, 160, 60, 0.25);
 }
 
 .btn--gold:hover {
-  filter: brightness(1.06);
+  filter: brightness(1.08);
+  box-shadow: 0 6px 18px rgba(201, 160, 60, 0.35);
 }
 
 .btn--navy {
   background: var(--navy);
   color: #FFFFFF !important;
-  border-color: var(--navy-deep);
+  border-color: rgba(201, 160, 60, 0.4);
+  box-shadow: 0 4px 14px rgba(10, 30, 66, 0.2);
 }
 
 .btn--navy:hover {
-  background: var(--water-dk);
+  background: #143568;
+  border-color: var(--gold);
 }
 
 .btn--cream {
-  background: var(--cream);
+  background: #FFFFFF;
   color: var(--navy-deep) !important;
-  border-color: var(--gold-dk);
+  border-color: var(--surface-border-gold);
+  box-shadow: 0 2px 8px rgba(10, 30, 66, 0.06);
 }
 
 :root[data-theme="dark"] .btn--cream {
@@ -198,16 +224,13 @@ body {
 
 .btn--cream:hover {
   background: var(--cream-2);
-}
-
-:root[data-theme="dark"] .btn--cream:hover {
-  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--gold);
 }
 
 .btn--outline {
   background: transparent;
   color: var(--heading-color) !important;
-  border-color: var(--gold-dk);
+  border-color: var(--surface-border-gold);
 }
 
 :root[data-theme="dark"] .btn--outline {
@@ -216,11 +239,8 @@ body {
 }
 
 .btn--outline:hover {
-  background: var(--cream-2);
-}
-
-:root[data-theme="dark"] .btn--outline:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(201, 160, 60, 0.12);
+  border-color: var(--gold);
 }
 
 .btn--wa {
@@ -233,46 +253,34 @@ body {
   background: #31E074;
 }
 
-/* Card Framing - The Signature Frame from the reference */
+/* Card Framing - Sleek luxury cards with zero double borders */
 .frame {
   position: relative;
-  background: var(--surface-card-subtle);
-  border: 2px solid var(--surface-border-gold);
-  border-radius: 14px;
-  padding: clamp(1.5rem, 3.5vw, 2.4rem);
-  box-shadow: 0 10px 30px rgba(12, 34, 71, 0.10);
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border-gold);
+  border-radius: 12px;
+  padding: clamp(1.25rem, 2.5vw, 1.85rem);
+  box-shadow: 0 4px 20px rgba(12, 34, 71, 0.06);
   color: var(--body-color);
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
+/* Remove the archaic double-line inner border ::before pseudo element */
 .frame::before {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(154, 117, 36, 0.55);
-  border-radius: 9px;
-  pointer-events: none;
+  display: none !important;
 }
 
 :root[data-theme="dark"] .frame {
   background: var(--surface-card);
   border-color: var(--surface-border-gold);
-  color: var(--body-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-:root[data-theme="dark"] .frame::before {
-  border-color: rgba(201, 160, 60, 0.35);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
 }
 
 .frame--navy {
   background: linear-gradient(180deg, #16386C, #0A1E42) !important;
   border-color: var(--gold) !important;
   color: #FFFFFF !important;
-}
-
-.frame--navy::before {
-  border-color: rgba(240, 213, 144, 0.45) !important;
+  box-shadow: 0 8px 30px rgba(10, 30, 66, 0.25) !important;
 }
 
 .frame--water {
@@ -285,31 +293,93 @@ body {
   border-color: var(--water);
 }
 
-/* Gold Capsule Pill Heading */
+/* Modern Card Badges - Clean inline badges, no awkward border pokes */
+.card-badge,
 .capsule {
-  display: inline-block;
-  background: linear-gradient(180deg, var(--gold-lt) 0%, var(--gold) 50%, var(--gold-lt) 100%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(180deg, #F0D590 0%, #C9A03C 100%);
   color: #0A1E42 !important;
-  border: 2px solid #0A1E42;
-  border-radius: 999px;
-  font-family: var(--display);
+  border: 1px solid #B3862A;
+  border-radius: 6px;
+  font-family: var(--mono);
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
-  font-size: clamp(1.4rem, 3.2vw, 2rem);
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
   line-height: 1;
-  padding: 0.5rem 1.7rem;
-  box-shadow: 0 3px 0 rgba(154, 117, 36, 0.5);
+  padding: 0.38rem 0.75rem;
+  box-shadow: 0 2px 8px rgba(201, 160, 60, 0.2);
 }
 
 .capsule--sm {
-  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
-  padding: 0.38rem 1.25rem;
+  font-size: 0.72rem;
+  padding: 0.3rem 0.6rem;
+}
+
+/* Bullet Checkmark Badge - Perfect 24x24 square, never stretches */
+.check-badge {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 6px;
+  background: rgba(201, 160, 60, 0.15);
+  border: 1px solid var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Multi-Vehicle Rate Tiles */
+.rate-tier-tile {
+  background: var(--surface-card);
+  border: 1.5px solid var(--surface-border-gold);
+  border-radius: 8px;
+  padding: 0.65rem 0.35rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  color: var(--heading-color);
+  box-sizing: border-box;
+}
+
+.rate-tier-tile:hover {
+  background: rgba(201, 160, 60, 0.15);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 160, 60, 0.2);
+}
+
+.rate-tier-tile:active {
+  transform: scale(0.96);
+}
+
+.rate-tier-tile--gold {
+  background: rgba(201, 160, 60, 0.12);
+  border-color: var(--gold-primary);
+}
+
+.rate-tier-tile--gold:hover {
+  background: linear-gradient(180deg, var(--gold-lt), var(--gold));
+  border-color: var(--gold-dk);
+}
+
+.rate-tier-tile--gold:hover strong,
+.rate-tier-tile--gold:hover span {
+  color: #0A1E42 !important;
 }
 
 /* Sections */
 .band {
-  padding: clamp(3.5rem, 7vw, 5.5rem) 0;
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
   position: relative;
 }
 

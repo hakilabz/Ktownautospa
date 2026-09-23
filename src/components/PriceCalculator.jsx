@@ -198,7 +198,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
                   ESTIMATE RECEIPT
                 </h3>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.76rem', color: 'var(--gold-lt)', background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.7rem', borderRadius: '999px', border: '1px solid rgba(240,213,144,0.3)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.76rem', color: 'var(--gold-lt)', background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.7rem', borderRadius: '6px', border: '1px solid rgba(240,213,144,0.3)' }}>
                 <Clock style={{ width: '0.85rem', height: '0.85rem' }} />
                 <span>{calculation.duration}</span>
               </div>
@@ -242,7 +242,7 @@ export default function PriceCalculator({ onProceedToBooking }) {
             <button 
               onClick={() => onProceedToBooking(calculation)} 
               className="btn btn--gold" 
-              style={{ width: '100%', minHeight: '56px' }}
+              style={{ width: '100%', minHeight: '48px', fontSize: '1.02rem' }}
             >
               <span>Book Appointment For ${calculation.total}</span>
               <ArrowRight style={{ width: '1.1rem', height: '1.1rem' }} />
