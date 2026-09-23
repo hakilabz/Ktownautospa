@@ -53,6 +53,12 @@ export default function Footer({ onOpenBooking }) {
           </div>
 
         </div>
+
+        {/* Developer Attribution */}
+        <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'center', fontSize: '0.78rem', color: '#7E95B3', fontFamily: 'var(--mono)' }}>
+          Developed and maintained by <a href="https://hakilabz.ai" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold-lt)', textDecoration: 'none', fontWeight: 600 }}>HakiLabz.ai</a> &middot; Proudly serving Canadian small businesses.
+        </div>
+
       </div>
     </footer>
   );
