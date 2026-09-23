@@ -84,11 +84,7 @@ export default function WhatsAppChat() {
           </div>
 
           <div className="chat__body">
-            <p style={{
-              background: '#FFFFFF', border: '1px solid var(--cream-3)',
-              borderRadius: '4px 14px 14px 14px', padding: '0.85rem 1rem',
-              fontSize: '0.92rem', color: 'var(--slate)', margin: '0 0 1rem', lineHeight: 1.5,
-            }}>
+            <p className="chat__bubble">
               Hi! Send us a message and we'll get right back to you. A quick photo of your car helps us quote you accurately.
             </p>
 

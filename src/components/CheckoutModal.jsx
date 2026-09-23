@@ -2,19 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {
   X,
   Calendar,
-  Clock,
-  Phone,
-  Mail,
-  Car,
   CreditCard,
-  ShieldCheck,
   CheckCircle2,
   CalendarPlus,
   ArrowRight,
   Loader2,
   Lock,
   AlertCircle,
-  FileText,
   Printer
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -66,6 +60,23 @@ export default function CheckoutModal() {
       setFormData(prev => ({ ...prev, preferredDate: `${yyyy}-${mm}-${dd}` }));
     }
   }, [formData.preferredDate]);
+
+  // Lock body scroll and listen for escape key when modal is open
+  useEffect(() => {
+    if (isCheckoutOpen) {
+      document.body.classList.add('modal-open');
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+          setIsCheckoutOpen(false);
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.classList.remove('modal-open');
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isCheckoutOpen, setIsCheckoutOpen]);
 
   if (!isCheckoutOpen) return null;
 
@@ -254,63 +265,25 @@ END:VCALENDAR`;
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 110,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'rgba(5, 17, 36, 0.82)',
-        backdropFilter: 'blur(7px)',
-        padding: '1rem',
-        overflowY: 'auto',
-      }}
+      className="checkout-overlay"
       onClick={() => setIsCheckoutOpen(false)}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="checkoutModalTitle"
     >
       <div
-        style={{
-          width: 'min(820px, 100%)',
-          maxHeight: '92vh',
-          background: 'var(--bg-page)',
-          border: '2px solid var(--gold)',
-          borderRadius: '16px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.6)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          zIndex: 111,
-        }}
+        className="checkout-modal-container"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Topbar */}
-        <div
-          style={{
-            padding: '1.2rem 1.6rem',
-            borderBottom: '1px solid var(--surface-border)',
-            background: 'var(--header-bg)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <img src="/logo.png" alt="Ktown Auto Spa" style={{ height: '36px', width: 'auto' }} />
-            <div>
-              <h2
-                style={{
-                  fontFamily: 'var(--display)',
-                  fontSize: '1.5rem',
-                  fontWeight: 800,
-                  margin: 0,
-                  textTransform: 'uppercase',
-                  color: 'var(--heading-color)',
-                  lineHeight: 1,
-                }}
-              >
-                {step === 'form' ? 'Checkout & Appointment Scheduling' : 'Booking Confirmed'}
+        <div className="checkout-header">
+          <div className="checkout-header-left">
+            <img src="/logo.png" alt="Ktown Auto Spa" className="checkout-header-logo" />
+            <div style={{ minWidth: 0 }}>
+              <h2 id="checkoutModalTitle" className="checkout-header-title">
+                {step === 'form' ? 'Checkout & Scheduling' : 'Booking Confirmed'}
               </h2>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: '0.74rem', color: 'var(--muted-color)' }}>
+              <span className="checkout-header-sub">
                 36 Joseph St, Kingston ON &middot; 647-915-3530
               </span>
             </div>
@@ -318,23 +291,17 @@ END:VCALENDAR`;
 
           <button
             onClick={() => setIsCheckoutOpen(false)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--muted-color)',
-              cursor: 'pointer',
-              padding: '0.4rem',
-              display: 'flex',
-            }}
+            className="checkout-close-btn"
+            aria-label="Close checkout modal"
           >
             <X style={{ width: '1.4rem', height: '1.4rem' }} />
           </button>
         </div>
 
         {/* Modal Content */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.6rem' }}>
+        <div className="checkout-body">
           {step === 'form' ? (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
               {errorMsg && (
                 <div
                   style={{
@@ -355,51 +322,36 @@ END:VCALENDAR`;
               )}
 
               {/* Grid 2 Columns: Details + Order Summary */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '1.6rem' }}>
+              <div className="checkout-grid-main">
                 
                 {/* Left Column: Form Fields */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   
                   {/* Step A: Appointment Schedule */}
                   <div>
-                    <label style={{ fontFamily: 'var(--mono)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)', display: 'block', marginBottom: '0.5rem' }}>
+                    <label className="checkout-field-label">
                       1. Preferred Date &amp; Drop-off Slot
                     </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.6rem', marginBottom: '0.6rem' }}>
+                    <div className="checkout-row-date-slot">
                       <div>
+                        <span className="checkout-input-sublabel">Drop-off Date *</span>
                         <input
                           type="date"
                           name="preferredDate"
                           value={formData.preferredDate}
                           onChange={handleChange}
                           required
-                          style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            borderRadius: '8px',
-                            border: '1px solid var(--surface-border)',
-                            background: 'var(--surface-card)',
-                            color: 'var(--text-main)',
-                            fontSize: '0.9rem',
-                            fontFamily: 'var(--body)',
-                          }}
+                          className="checkout-input"
                         />
                       </div>
                       <div>
+                        <span className="checkout-input-sublabel">Arrival Window *</span>
                         <select
                           name="preferredSlot"
                           value={formData.preferredSlot}
                           onChange={handleChange}
-                          style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            borderRadius: '8px',
-                            border: '1px solid var(--surface-border)',
-                            background: 'var(--surface-card)',
-                            color: 'var(--text-main)',
-                            fontSize: '0.82rem',
-                            fontFamily: 'var(--body)',
-                          }}
+                          className="checkout-input"
+                          style={{ fontSize: '0.84rem' }}
                         >
                           <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
                           <option value="Afternoon (12 PM - 3 PM)">Afternoon (12 PM - 3 PM)</option>
@@ -407,14 +359,14 @@ END:VCALENDAR`;
                         </select>
                       </div>
                     </div>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', display: 'block' }}>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem' }}>
                       Open Saturdays &middot; Heated indoor bays year-round
                     </span>
                   </div>
 
                   {/* Step B: Customer Information */}
                   <div>
-                    <label style={{ fontFamily: 'var(--mono)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)', display: 'block', marginBottom: '0.5rem' }}>
+                    <label className="checkout-field-label">
                       2. Contact Information
                     </label>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
@@ -425,17 +377,9 @@ END:VCALENDAR`;
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        style={{
-                          width: '100%',
-                          padding: '0.75rem',
-                          borderRadius: '8px',
-                          border: '1px solid var(--surface-border)',
-                          background: 'var(--surface-card)',
-                          color: 'var(--text-main)',
-                          fontSize: '0.9rem',
-                        }}
+                        className="checkout-input"
                       />
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
+                      <div className="checkout-row-contact">
                         <input
                           type="tel"
                           name="phone"
@@ -443,15 +387,7 @@ END:VCALENDAR`;
                           value={formData.phone}
                           onChange={handleChange}
                           required
-                          style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            borderRadius: '8px',
-                            border: '1px solid var(--surface-border)',
-                            background: 'var(--surface-card)',
-                            color: 'var(--text-main)',
-                            fontSize: '0.9rem',
-                          }}
+                          className="checkout-input"
                         />
                         <input
                           type="email"
@@ -460,15 +396,7 @@ END:VCALENDAR`;
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            borderRadius: '8px',
-                            border: '1px solid var(--surface-border)',
-                            background: 'var(--surface-card)',
-                            color: 'var(--text-main)',
-                            fontSize: '0.9rem',
-                          }}
+                          className="checkout-input"
                         />
                       </div>
                     </div>
@@ -476,24 +404,17 @@ END:VCALENDAR`;
 
                   {/* Step C: Vehicle Information */}
                   <div>
-                    <label style={{ fontFamily: 'var(--mono)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)', display: 'block', marginBottom: '0.5rem' }}>
+                    <label className="checkout-field-label">
                       3. Vehicle Details
                     </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1fr', gap: '0.6rem', marginBottom: '0.6rem' }}>
+                    <div className="checkout-row-vehicle">
                       <input
                         type="text"
                         name="vehicleYear"
                         placeholder="Year"
                         value={formData.vehicleYear}
                         onChange={handleChange}
-                        style={{
-                          padding: '0.75rem',
-                          borderRadius: '8px',
-                          border: '1px solid var(--surface-border)',
-                          background: 'var(--surface-card)',
-                          color: 'var(--text-main)',
-                          fontSize: '0.9rem',
-                        }}
+                        className="checkout-input"
                       />
                       <input
                         type="text"
@@ -501,14 +422,7 @@ END:VCALENDAR`;
                         placeholder="Make (e.g. BMW)"
                         value={formData.vehicleMake}
                         onChange={handleChange}
-                        style={{
-                          padding: '0.75rem',
-                          borderRadius: '8px',
-                          border: '1px solid var(--surface-border)',
-                          background: 'var(--surface-card)',
-                          color: 'var(--text-main)',
-                          fontSize: '0.9rem',
-                        }}
+                        className="checkout-input"
                       />
                       <input
                         type="text"
@@ -516,14 +430,7 @@ END:VCALENDAR`;
                         placeholder="Model (e.g. M3)"
                         value={formData.vehicleModel}
                         onChange={handleChange}
-                        style={{
-                          padding: '0.75rem',
-                          borderRadius: '8px',
-                          border: '1px solid var(--surface-border)',
-                          background: 'var(--surface-card)',
-                          color: 'var(--text-main)',
-                          fontSize: '0.9rem',
-                        }}
+                        className="checkout-input"
                       />
                     </div>
                     <textarea
@@ -532,23 +439,15 @@ END:VCALENDAR`;
                       placeholder="Special requests or instructions (e.g. pet hair, drop-off timing)"
                       value={formData.notes}
                       onChange={handleChange}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        borderRadius: '8px',
-                        border: '1px solid var(--surface-border)',
-                        background: 'var(--surface-card)',
-                        color: 'var(--text-main)',
-                        fontSize: '0.85rem',
-                        resize: 'none',
-                      }}
+                      className="checkout-input"
+                      style={{ resize: 'none', height: 'auto', minHeight: '58px' }}
                     />
                   </div>
 
                 </div>
 
                 {/* Right Column: Order Breakdown & Payment Method */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   
                   {/* Order Summary Box */}
                   <div
@@ -556,13 +455,13 @@ END:VCALENDAR`;
                       background: 'var(--surface-card)',
                       border: '1.5px solid var(--surface-border)',
                       borderRadius: '12px',
-                      padding: '1.25rem',
+                      padding: '1.15rem',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.8rem',
+                      gap: '0.75rem',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.6rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.55rem' }}>
                       <span style={{ fontFamily: 'var(--mono)', fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--gold-primary)', fontWeight: 800 }}>
                         Order Summary
                       </span>
@@ -571,20 +470,20 @@ END:VCALENDAR`;
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', maxHeight: '180px', overflowY: 'auto' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', maxHeight: '160px', overflowY: 'auto' }}>
                       {cart.map((item, idx) => {
                         const addTotal = (item.addons || []).reduce((a, b) => a + b.price, 0);
                         const lineTotal = (item.basePrice || 0) + addTotal;
 
                         return (
-                          <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem' }}>
-                            <div>
-                              <strong style={{ color: 'var(--text-main)', display: 'block' }}>{item.title}</strong>
-                              <span style={{ color: 'var(--muted-color)', fontSize: '0.74rem' }}>
+                          <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.6rem', fontSize: '0.84rem' }}>
+                            <div style={{ minWidth: 0 }}>
+                              <strong style={{ color: 'var(--text-main)', display: 'block', wordBreak: 'break-word' }}>{item.title}</strong>
+                              <span style={{ color: 'var(--muted-color)', fontSize: '0.72rem', display: 'block' }}>
                                 Class: {item.vehicleLabel} {item.addons?.length ? `(+${item.addons.length} add-ons)` : ''}
                               </span>
                             </div>
-                            <b style={{ fontFamily: 'var(--display)', fontSize: '1.1rem', color: 'var(--water-dk)' }}>
+                            <b style={{ fontFamily: 'var(--display)', fontSize: '1.1rem', color: 'var(--water-dk)', flexShrink: 0 }}>
                               ${lineTotal}
                             </b>
                           </div>
@@ -593,7 +492,7 @@ END:VCALENDAR`;
                     </div>
 
                     {/* Tax & Total */}
-                    <div style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.86rem' }}>
+                    <div style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.3rem', fontSize: '0.85rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--muted-color)' }}>
                         <span>Subtotal:</span>
                         <span>${subtotal.toFixed(2)} CAD</span>
@@ -603,9 +502,9 @@ END:VCALENDAR`;
                         <span>${hstTax.toFixed(2)} CAD</span>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '0.4rem', borderTop: '1px dashed var(--surface-border)' }}>
-                        <span style={{ fontWeight: 800, color: 'var(--heading-color)', fontSize: '0.95rem' }}>Grand Total:</span>
+                        <span style={{ fontWeight: 800, color: 'var(--heading-color)', fontSize: '0.92rem' }}>Grand Total:</span>
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontFamily: 'var(--display)', fontSize: '1.85rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
+                          <span style={{ fontFamily: 'var(--display)', fontSize: '1.75rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
                             ${grandTotal.toFixed(2)}
                           </span>
                           <span style={{ fontSize: '0.7rem', color: 'var(--muted-color)', marginLeft: '0.3rem' }}>CAD</span>
@@ -616,49 +515,38 @@ END:VCALENDAR`;
 
                   {/* Payment Selection */}
                   <div>
-                    <label style={{ fontFamily: 'var(--mono)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)', display: 'block', marginBottom: '0.6rem' }}>
+                    <label className="checkout-field-label">
                       4. Select Payment Option
                     </label>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                       {/* Option 1: Credit Card (Stripe) */}
-                      <label
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: '0.75rem',
-                          padding: '0.85rem',
-                          borderRadius: '10px',
-                          border: `1.5px solid ${formData.paymentMethod === 'card_stripe' ? 'var(--gold)' : 'var(--surface-border)'}`,
-                          background: formData.paymentMethod === 'card_stripe' ? 'rgba(201, 160, 60, 0.08)' : 'var(--surface-card)',
-                          cursor: 'pointer',
-                        }}
-                      >
+                      <label className={`checkout-pay-option ${formData.paymentMethod === 'card_stripe' ? 'is-selected' : 'not-selected'}`}>
                         <input
                           type="radio"
                           name="paymentMethod"
                           value="card_stripe"
                           checked={formData.paymentMethod === 'card_stripe'}
                           onChange={handleChange}
-                          style={{ marginTop: '0.2rem' }}
+                          style={{ marginTop: '0.2rem', accentColor: 'var(--gold)' }}
                         />
-                        <div style={{ flex: 1 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div className="checkout-pay-header">
                             <strong style={{ fontSize: '0.9rem', color: 'var(--heading-color)' }}>
                               Pay with Credit Card
                             </strong>
-                            <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', fontSize: '0.68rem', background: '#0A1E42', color: 'var(--gold-lt)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                            <div className="checkout-stripe-badge">
                               <Lock style={{ width: '0.65rem', height: '0.65rem' }} />
                               <span>Powered by Stripe</span>
                             </div>
                           </div>
-                          <span style={{ fontSize: '0.76rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.15rem' }}>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem' }}>
                             Secure 256-bit encryption. Visa, Mastercard, Amex.
                           </span>
 
                           {/* Card input mockup fields */}
                           {formData.paymentMethod === 'card_stripe' && (
-                            <div style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                               <div style={{ position: 'relative' }}>
                                 <input
                                   type="text"
@@ -666,35 +554,19 @@ END:VCALENDAR`;
                                   value={formData.cardNumber}
                                   onChange={handleCardNumberChange}
                                   maxLength={19}
-                                  style={{
-                                    width: '100%',
-                                    padding: '0.65rem 0.75rem 0.65rem 2.2rem',
-                                    borderRadius: '6px',
-                                    border: '1px solid var(--surface-border)',
-                                    background: 'var(--bg-page)',
-                                    color: 'var(--text-main)',
-                                    fontSize: '0.85rem',
-                                    fontFamily: 'monospace',
-                                  }}
+                                  className="checkout-input"
+                                  style={{ paddingLeft: '2.2rem', fontFamily: 'monospace', fontSize: '0.85rem' }}
                                 />
-                                <CreditCard style={{ position: 'absolute', left: '0.7rem', top: '50%', transform: 'translateY(-50%)', width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
+                                <CreditCard style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
                               </div>
-                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.4rem' }}>
+                              <div className="checkout-row-card-details">
                                 <input
                                   type="text"
                                   placeholder="MM/YY"
                                   value={formData.cardExp}
                                   onChange={handleExpChange}
                                   maxLength={5}
-                                  style={{
-                                    padding: '0.6rem 0.75rem',
-                                    borderRadius: '6px',
-                                    border: '1px solid var(--surface-border)',
-                                    background: 'var(--bg-page)',
-                                    color: 'var(--text-main)',
-                                    fontSize: '0.85rem',
-                                    textAlign: 'center',
-                                  }}
+                                  className="checkout-input checkout-input-center"
                                 />
                                 <input
                                   type="password"
@@ -703,15 +575,7 @@ END:VCALENDAR`;
                                   value={formData.cardCvc}
                                   onChange={handleChange}
                                   maxLength={4}
-                                  style={{
-                                    padding: '0.6rem 0.75rem',
-                                    borderRadius: '6px',
-                                    border: '1px solid var(--surface-border)',
-                                    background: 'var(--bg-page)',
-                                    color: 'var(--text-main)',
-                                    fontSize: '0.85rem',
-                                    textAlign: 'center',
-                                  }}
+                                  className="checkout-input checkout-input-center"
                                 />
                                 <input
                                   type="text"
@@ -720,15 +584,7 @@ END:VCALENDAR`;
                                   value={formData.cardZip}
                                   onChange={handleChange}
                                   maxLength={7}
-                                  style={{
-                                    padding: '0.6rem 0.75rem',
-                                    borderRadius: '6px',
-                                    border: '1px solid var(--surface-border)',
-                                    background: 'var(--bg-page)',
-                                    color: 'var(--text-main)',
-                                    fontSize: '0.85rem',
-                                    textAlign: 'center',
-                                  }}
+                                  className="checkout-input checkout-input-center"
                                 />
                               </div>
                             </div>
@@ -737,32 +593,21 @@ END:VCALENDAR`;
                       </label>
 
                       {/* Option 2: Pay at Drop-off */}
-                      <label
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: '0.75rem',
-                          padding: '0.85rem',
-                          borderRadius: '10px',
-                          border: `1.5px solid ${formData.paymentMethod === 'pay_at_dropoff' ? 'var(--gold)' : 'var(--surface-border)'}`,
-                          background: formData.paymentMethod === 'pay_at_dropoff' ? 'rgba(201, 160, 60, 0.08)' : 'var(--surface-card)',
-                          cursor: 'pointer',
-                        }}
-                      >
+                      <label className={`checkout-pay-option ${formData.paymentMethod === 'pay_at_dropoff' ? 'is-selected' : 'not-selected'}`}>
                         <input
                           type="radio"
                           name="paymentMethod"
                           value="pay_at_dropoff"
                           checked={formData.paymentMethod === 'pay_at_dropoff'}
                           onChange={handleChange}
-                          style={{ marginTop: '0.2rem' }}
+                          style={{ marginTop: '0.2rem', accentColor: 'var(--gold)' }}
                         />
-                        <div>
-                          <strong style={{ fontSize: '0.9rem', color: 'var(--heading-color)' }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <strong style={{ fontSize: '0.9rem', color: 'var(--heading-color)', display: 'block' }}>
                             Pay at Drop-off (In Shop)
                           </strong>
-                          <span style={{ fontSize: '0.76rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.15rem' }}>
-                            Inspect your vehicle with our technician first. Pay by debit, card or e-transfer in the shop.
+                          <span style={{ fontSize: '0.75rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem', lineHeight: 1.4 }}>
+                            Inspect your vehicle with our technician first. Pay by debit, credit card or e-transfer in the shop.
                           </span>
                         </div>
                       </label>
@@ -773,8 +618,7 @@ END:VCALENDAR`;
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="btn btn--gold"
-                    style={{ width: '100%', minHeight: '54px', fontSize: '1rem', fontWeight: 900 }}
+                    className="btn btn--gold checkout-submit-btn"
                   >
                     {submitting ? (
                       <>
@@ -788,7 +632,7 @@ END:VCALENDAR`;
                             ? `Pay $${grandTotal.toFixed(2)} CAD & Reserve`
                             : `Reserve Appointment ($${grandTotal.toFixed(2)} CAD)`}
                         </span>
-                        <ArrowRight style={{ width: '1.1rem', height: '1.1rem' }} />
+                        <ArrowRight style={{ width: '1.1rem', height: '1.1rem', flexShrink: 0 }} />
                       </>
                     )}
                   </button>
@@ -803,11 +647,11 @@ END:VCALENDAR`;
             </form>
           ) : (
             /* Confirmation Receipt View */
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', textAlign: 'center', padding: '1rem 0' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem', textAlign: 'center', padding: '0.5rem 0 1rem' }}>
               <div
                 style={{
-                  width: '4.5rem',
-                  height: '4.5rem',
+                  width: '4rem',
+                  height: '4rem',
                   borderRadius: '50%',
                   background: 'rgba(16, 185, 129, 0.15)',
                   border: '2px solid #10B981',
@@ -818,86 +662,71 @@ END:VCALENDAR`;
                   margin: '0 auto',
                 }}
               >
-                <CheckCircle2 style={{ width: '2.5rem', height: '2.5rem' }} />
+                <CheckCircle2 style={{ width: '2.2rem', height: '2.2rem' }} />
               </div>
 
               <div>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--gold-primary)', fontWeight: 800 }}>
                   Booking Confirmed
                 </span>
-                <h3 style={{ fontFamily: 'var(--display)', fontSize: '2.4rem', fontWeight: 900, margin: '0.2rem 0', color: 'var(--heading-color)' }}>
+                <h3 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(1.7rem, 5vw, 2.3rem)', fontWeight: 900, margin: '0.2rem 0', color: 'var(--heading-color)', lineHeight: 1.1 }}>
                   WE HAVE YOUR APPOINTMENT!
                 </h3>
-                <p style={{ color: 'var(--muted-color)', fontSize: '0.95rem', maxWidth: '42ch', margin: '0 auto' }}>
+                <p style={{ color: 'var(--muted-color)', fontSize: '0.92rem', maxWidth: '44ch', margin: '0 auto', wordBreak: 'break-word' }}>
                   A confirmation email has been dispatched to <strong>{confirmedReservation?.customer?.email}</strong>.
                 </p>
               </div>
 
               {/* Receipt Summary Card */}
-              <div
-                style={{
-                  background: 'var(--surface-card)',
-                  border: '2px solid var(--surface-border-gold)',
-                  borderRadius: '12px',
-                  padding: '1.4rem',
-                  textAlign: 'left',
-                  maxWidth: '520px',
-                  margin: '0 auto',
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.75rem',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.6rem' }}>
-                  <span style={{ color: 'var(--muted-color)', fontSize: '0.85rem' }}>Reservation Reference:</span>
-                  <strong style={{ fontFamily: 'var(--mono)', fontSize: '1rem', color: 'var(--gold-primary)' }}>
+              <div className="checkout-receipt-card">
+                <div className="checkout-receipt-row checkout-receipt-row-border">
+                  <span className="checkout-receipt-label">Reservation Reference:</span>
+                  <strong className="checkout-receipt-value-gold">
                     {confirmedReservation?.id}
                   </strong>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                  <span style={{ color: 'var(--muted-color)' }}>Scheduled Drop-off:</span>
-                  <strong style={{ color: 'var(--text-main)' }}>
+                <div className="checkout-receipt-row">
+                  <span className="checkout-receipt-label">Scheduled Drop-off:</span>
+                  <strong className="checkout-receipt-value">
                     {confirmedReservation?.appointment?.date} &middot; {confirmedReservation?.appointment?.slot}
                   </strong>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                  <span style={{ color: 'var(--muted-color)' }}>Shop Address:</span>
-                  <strong style={{ color: 'var(--text-main)' }}>36 Joseph St, Kingston, ON K7K 2H5</strong>
+                <div className="checkout-receipt-row">
+                  <span className="checkout-receipt-label">Shop Address:</span>
+                  <strong className="checkout-receipt-value">36 Joseph St, Kingston, ON K7K 2H5</strong>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                  <span style={{ color: 'var(--muted-color)' }}>Vehicle:</span>
-                  <strong style={{ color: 'var(--text-main)' }}>
+                <div className="checkout-receipt-row">
+                  <span className="checkout-receipt-label">Vehicle:</span>
+                  <strong className="checkout-receipt-value">
                     {confirmedReservation?.customer?.vehicleYear} {confirmedReservation?.customer?.vehicleMake} {confirmedReservation?.customer?.vehicleModel || 'Vehicle'}
                   </strong>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                  <span style={{ color: 'var(--muted-color)' }}>Payment Method:</span>
-                  <strong style={{ color: 'var(--text-main)' }}>
+                <div className="checkout-receipt-row">
+                  <span className="checkout-receipt-label">Payment Method:</span>
+                  <strong className="checkout-receipt-value">
                     {confirmedReservation?.payment?.method === 'card_stripe' ? 'Credit Card (Stripe)' : 'Pay at Drop-off (In-Store)'}
                   </strong>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px dashed var(--surface-border)', paddingTop: '0.6rem' }}>
+                <div className="checkout-receipt-row" style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.6rem' }}>
                   <span style={{ fontWeight: 800, color: 'var(--heading-color)' }}>Total Amount:</span>
-                  <div style={{ fontFamily: 'var(--display)', fontSize: '1.6rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
+                  <div style={{ fontFamily: 'var(--display)', fontSize: '1.5rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
                     ${confirmedReservation?.pricing?.grandTotal?.toFixed(2)} CAD
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons: Add to Calendar, iCal, Print */}
-              <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div className="checkout-confirm-actions">
                 <a
                   href={generateGoogleCalendarUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn--gold"
-                  style={{ minHeight: '44px', padding: '0 1.25rem', fontSize: '0.88rem' }}
                 >
                   <CalendarPlus style={{ width: '1rem', height: '1rem' }} />
                   <span>Google Calendar</span>
@@ -907,7 +736,6 @@ END:VCALENDAR`;
                   type="button"
                   onClick={downloadIcs}
                   className="btn btn--outline"
-                  style={{ minHeight: '44px', padding: '0 1.25rem', fontSize: '0.88rem' }}
                 >
                   <Calendar style={{ width: '1rem', height: '1rem' }} />
                   <span>Download iCal</span>
@@ -917,14 +745,13 @@ END:VCALENDAR`;
                   type="button"
                   onClick={() => window.print()}
                   className="btn btn--outline"
-                  style={{ minHeight: '44px', padding: '0 1.25rem', fontSize: '0.88rem' }}
                 >
                   <Printer style={{ width: '1rem', height: '1rem' }} />
                   <span>Print Receipt</span>
                 </button>
               </div>
 
-              <div>
+              <div style={{ marginTop: '0.25rem' }}>
                 <button
                   onClick={() => {
                     setIsCheckoutOpen(false);

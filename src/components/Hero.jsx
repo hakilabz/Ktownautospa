@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Calendar, ArrowRight, ShieldCheck, Sparkles, MessageCircle } from 'lucide-react';
+import { Phone, Calendar, ArrowRight, MessageCircle } from 'lucide-react';
 
 export default function Hero({ onOpenBooking }) {
   return (

@@ -1,6 +1,6 @@
-import React from 'react';
-import { X, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Plus, Sparkles, Car } from 'lucide-react';
-import { useCart, VEHICLE_OPTIONS } from '../context/CartContext';
+import React, { useEffect } from 'react';
+import { X, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Car } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 export default function CartDrawer() {
   const {
@@ -16,6 +16,23 @@ export default function CartDrawer() {
     clearCart,
     proceedToCheckout,
   } = useCart();
+
+  // Lock body scroll and listen for escape key when drawer is open
+  useEffect(() => {
+    if (isCartOpen) {
+      document.body.classList.add('modal-open');
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+          setIsCartOpen(false);
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.classList.remove('modal-open');
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isCartOpen, setIsCartOpen]);
 
   if (!isCartOpen) return null;
 
@@ -344,7 +361,7 @@ export default function CartDrawer() {
         {cart.length > 0 && (
           <div
             style={{
-              padding: '1.25rem 1.5rem',
+              padding: '1.25rem 1.5rem max(1.25rem, env(safe-area-inset-bottom))',
               borderTop: '2px solid var(--surface-border-gold)',
               background: 'var(--header-bg)',
               display: 'flex',
