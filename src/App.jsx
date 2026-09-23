@@ -148,7 +148,7 @@ function MainApp() {
       </main>
 
       {/* Footer with Contact Links & Copyright */}
-      <Footer onOpenBooking={() => handleOpenBooking()} onOpenAdmin={() => setIsAdminOpen(true)} />
+      <Footer onOpenBooking={() => handleOpenBooking()} />
 
       {/* Floating Interactive WhatsApp Chat Widget */}
       <WhatsAppChat />

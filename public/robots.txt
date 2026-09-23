@@ -9,6 +9,8 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /data/
+Disallow: /admin
+Disallow: /#admin
 
 # 2. Major Search Engine Crawlers
 User-agent: Googlebot

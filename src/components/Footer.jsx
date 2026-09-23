@@ -1,7 +1,7 @@
 import React from 'react';
 import { Phone, Mail, MessageCircle } from 'lucide-react';
 
-export default function Footer({ onOpenBooking, onOpenAdmin }) {
+export default function Footer({ onOpenBooking }) {
   return (
     <footer 
       style={{
@@ -16,30 +16,9 @@ export default function Footer({ onOpenBooking, onOpenAdmin }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
-              <p style={{ margin: 0, color: '#E4EDF7', fontWeight: 600 }}>
-                &copy; {new Date().getFullYear()} Ktown Auto Spa &middot; 36 Joseph St, Kingston, Ontario
-              </p>
-              {onOpenAdmin && (
-                <button
-                  type="button"
-                  onClick={onOpenAdmin}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#627d9e',
-                    fontSize: '0.74rem',
-                    cursor: 'pointer',
-                    textDecoration: 'underline',
-                    padding: '0 4px',
-                    fontFamily: 'var(--mono)',
-                  }}
-                  title="Owner & Staff Portal"
-                >
-                  Staff Portal
-                </button>
-              )}
-            </div>
+            <p style={{ margin: 0, color: '#E4EDF7', fontWeight: 600 }}>
+              &copy; {new Date().getFullYear()} Ktown Auto Spa &middot; 36 Joseph St, Kingston, Ontario
+            </p>
             <span style={{ fontSize: '0.84rem', color: '#9DB4CF' }}>
               Serving Kingston, Amherstview, Loyalist Township, Bath, Odessa &amp; Napanee
             </span>
