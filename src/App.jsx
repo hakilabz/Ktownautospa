@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CartProvider, useCart } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import RateCard from './components/RateCard';
-import PriceCalculator from './components/PriceCalculator';
+import QuoteBuilder from './components/QuoteBuilder';
 import WhyShop from './components/WhyShop';
 import Credentials from './components/Credentials';
 import Gallery from './components/Gallery';
@@ -17,6 +16,7 @@ import ReviewsSection from './components/ReviewsSection';
 import LocationHours from './components/LocationHours';
 import Footer from './components/Footer';
 import WhatsAppChat from './components/WhatsAppChat';
+import FloatingMobileCart from './components/FloatingMobileCart';
 import CartDrawer from './components/CartDrawer';
 import CheckoutModal from './components/CheckoutModal';
 import AdminPortalModal from './components/AdminPortalModal';
@@ -100,18 +100,12 @@ function MainApp() {
         onToggleTheme={toggleTheme} 
       />
       
-      <main id="main">
+      <main id="main" className="site-main-content">
         {/* Hero with CARFAX Canada Callout & Booking CTAs */}
         <Hero onOpenBooking={() => handleOpenBooking()} />
 
-        {/* 2026 Complete Rate Card with Tabs & Vehicle Picker */}
-        <RateCard 
-          onOpenBooking={() => handleOpenBooking()} 
-          onSelectPackage={handleSelectPackage} 
-        />
-
-        {/* Custom Quote Builder & Interactive Price Estimator */}
-        <PriceCalculator onProceedToBooking={handleOpenBooking} />
+        {/* 2026 Unified Interactive Quote Builder & Complete Service Catalog */}
+        <QuoteBuilder onProceedToBooking={() => handleOpenBooking()} />
 
         {/* Why a Shop, Not a Driveway */}
         <WhyShop />
@@ -152,6 +146,9 @@ function MainApp() {
 
       {/* Floating Interactive WhatsApp Chat Widget */}
       <WhatsAppChat />
+
+      {/* Mobile Floating Cart Button */}
+      <FloatingMobileCart />
 
       {/* Slide-over Shopping Cart Drawer */}
       <CartDrawer />

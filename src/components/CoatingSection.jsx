@@ -5,6 +5,14 @@ import { useCart } from '../context/CartContext';
 export default function CoatingSection() {
   const { addToCart } = useCart();
 
+  const navigateToQuoteTab = (tab) => {
+    window.dispatchEvent(new CustomEvent('select-quote-tab', { detail: { tab } }));
+    const el = document.getElementById('packages');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="band band--tint" id="coating">
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
@@ -58,7 +66,7 @@ export default function CoatingSection() {
               </p>
             </div>
 
-            <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+            <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => navigateToQuoteTab('polish')}>
               <div>
                 <b style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--water-dk)' }}>from $350</b>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-color)', marginLeft: '0.4rem' }}>
@@ -66,16 +74,15 @@ export default function CoatingSection() {
                 </span>
               </div>
               <button 
-                onClick={() => addToCart({
-                  title: 'Paint Correction (1-Step)',
-                  vehicleType: 'c-sedan',
-                  basePrice: 350,
-                  subtitle: 'Machine polish & paint depth measurement · approx 6 hrs',
-                }, true)} 
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToQuoteTab('polish');
+                }} 
                 className="btn btn--outline" 
                 style={{ minHeight: '40px', padding: '0 1rem', fontSize: '0.85rem' }}
               >
-                + Add to Cart
+                View Packages &rarr;
               </button>
             </div>
           </article>
@@ -117,7 +124,7 @@ export default function CoatingSection() {
               </p>
             </div>
 
-            <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+            <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => navigateToQuoteTab('coat')}>
               <div>
                 <b style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--water-dk)' }}>from $449</b>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-color)', marginLeft: '0.4rem' }}>
@@ -125,16 +132,15 @@ export default function CoatingSection() {
                 </span>
               </div>
               <button 
-                onClick={() => addToCart({
-                  title: 'Nano-Brite Rejuvenate (1 Year)',
-                  vehicleType: 'c-sedan',
-                  basePrice: 449,
-                  subtitle: 'Decon + 1-step correction + 1 layer ceramic · approx 5 hrs',
-                }, true)} 
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToQuoteTab('coat');
+                }} 
                 className="btn btn--outline" 
                 style={{ minHeight: '40px', padding: '0 1rem', fontSize: '0.85rem' }}
               >
-                + Add to Cart
+                View Packages &rarr;
               </button>
             </div>
           </article>
@@ -185,7 +191,7 @@ export default function CoatingSection() {
               </p>
             </div>
 
-            <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+            <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => navigateToQuoteTab('coat')}>
               <div>
                 <b style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--water-dk)' }}>from $949</b>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-color)', marginLeft: '0.4rem' }}>
@@ -193,16 +199,15 @@ export default function CoatingSection() {
                 </span>
               </div>
               <button 
-                onClick={() => addToCart({
-                  title: 'System X Crystal+ (2 Year CARFAX)',
-                  vehicleType: 'c-sedan',
-                  basePrice: 949,
-                  subtitle: '1-step correction + paint & glass + CARFAX Canada registration · approx 8 hrs',
-                }, true)} 
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToQuoteTab('coat');
+                }} 
                 className="btn btn--gold" 
                 style={{ minHeight: '40px', padding: '0 1.2rem', fontSize: '0.85rem' }}
               >
-                + Add to Cart
+                View Packages &rarr;
               </button>
             </div>
           </article>

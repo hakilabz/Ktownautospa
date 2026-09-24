@@ -195,7 +195,7 @@ export const VEHICLES = {
 };
 
 // Calculate validated cart totals on server side
-export function calculateOrderTotals(cartItems = []) {
+export function calculateOrderTotals(cartItems = [], discountAmount = 0, paymentMethod = 'pay_at_dropoff') {
   let subtotal = 0;
   const validatedItems = [];
 
@@ -257,16 +257,30 @@ export function calculateOrderTotals(cartItems = []) {
     });
   }
 
+  // Deduct coupon discount if applied
+  const validatedDiscount = Math.min(subtotal, Math.max(0, Number(discountAmount) || 0));
+  const netSubtotal = Math.max(0, subtotal - validatedDiscount);
+
   // 13% Ontario HST for Kingston, Ontario
-  const hstTax = Math.round(subtotal * 0.13 * 100) / 100;
-  const grandTotal = Math.round((subtotal + hstTax) * 100) / 100;
+  const hstTax = Math.round(netSubtotal * 0.13 * 100) / 100;
+
+  // 3% Online Card Processing Fee (Applied only for live Stripe card payments)
+  const isCard = paymentMethod === 'card_stripe';
+  const cardFee = isCard ? Math.round(netSubtotal * 0.03 * 100) / 100 : 0;
+
+  const grandTotal = Math.round((netSubtotal + hstTax + cardFee) * 100) / 100;
   const amountInCents = Math.round(grandTotal * 100);
 
   return {
     items: validatedItems,
-    subtotal,
+    subtotal: Math.round(subtotal * 100) / 100,
+    discountAmount: Math.round(validatedDiscount * 100) / 100,
+    netSubtotal: Math.round(netSubtotal * 100) / 100,
     hstRate: 0.13,
     hstTax,
+    cardFeeRate: isCard ? 0.03 : 0,
+    cardFee,
+    paymentMethod,
     grandTotal,
     amountInCents,
   };

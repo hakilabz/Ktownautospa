@@ -109,7 +109,7 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
 }
 
@@ -125,8 +125,12 @@ body {
     radial-gradient(circle at 72% 64%, rgba(154, 117, 36, 0.04) 0 2px, transparent 2px),
     radial-gradient(circle at 44% 88%, rgba(154, 117, 36, 0.04) 0 1px, transparent 1px);
   background-size: 180px 180px, 240px 240px, 120px 120px;
-  overflow-x: hidden;
+  overflow-x: clip;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.site-main-content {
+  padding-top: clamp(58px, 6vw, 72px);
 }
 
 /* Custom Scrollbar - apply only to vertical window scrolling */
@@ -805,6 +809,17 @@ nav::-webkit-scrollbar,
   border-bottom-color: var(--surface-card);
 }
 
+
+/* Floating Mobile Cart */
+.mobile-floating-cart {
+  display: block;
+}
+
+@media (min-width: 901px) {
+  .mobile-floating-cart {
+    display: none !important;
+  }
+}
 
 /* Floating Chat */
 .chat {

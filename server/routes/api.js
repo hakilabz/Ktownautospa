@@ -64,6 +64,44 @@ function saveReservation(reservation) {
   }
 }
 
+// Coupon storage for owner-managed discounts
+const COUPONS_FILE = isVercel
+  ? path.join('/tmp', 'ktown_coupons.json')
+  : path.join(__dirname, '../data/coupons.json');
+
+let inMemoryCoupons = [];
+
+function getCoupons() {
+  try {
+    if (!fs.existsSync(COUPONS_FILE)) {
+      try {
+        fs.writeFileSync(COUPONS_FILE, JSON.stringify([]));
+      } catch {
+        return inMemoryCoupons;
+      }
+      return [];
+    }
+    const data = fs.readFileSync(COUPONS_FILE, 'utf-8');
+    return JSON.parse(data || '[]');
+  } catch (err) {
+    return inMemoryCoupons;
+  }
+}
+
+function saveCoupons(list) {
+  try {
+    inMemoryCoupons = list;
+    try {
+      fs.writeFileSync(COUPONS_FILE, JSON.stringify(list, null, 2));
+    } catch (fsErr) {
+      console.warn('Storage fallback to memory (coupons):', fsErr.message);
+    }
+    return list;
+  } catch (err) {
+    return list;
+  }
+}
+
 // 1. Health check & configuration status
 router.get('/health', (req, res) => {
   res.json({
@@ -81,6 +119,142 @@ router.get('/rates', (req, res) => {
     rateCard: RATE_CARD,
     vehicles: VEHICLES,
   });
+});
+
+// Admin Authentication Helper
+function isAuthorizedAdmin(req) {
+  const adminPin = req.headers['x-admin-pin'] || req.query.pin || req.body?.pin;
+  const configuredPin = process.env.ADMIN_PIN || 'ktown2026';
+  return Boolean(adminPin && adminPin === configuredPin);
+}
+
+function recordCouponUsage(couponCode) {
+  if (!couponCode) return;
+  try {
+    const list = getCoupons();
+    const match = list.find(c => c.code.toUpperCase() === couponCode.trim().toUpperCase());
+    if (match) {
+      match.usedCount = (match.usedCount || 0) + 1;
+      saveCoupons(list);
+    }
+  } catch (err) {
+    console.warn('Coupon usage record note:', err.message);
+  }
+}
+
+// 2b. Validate customer coupon code
+router.get('/coupons/validate', (req, res) => {
+  const code = (req.query.code || '').trim().toUpperCase();
+  const subtotal = Math.max(0, Number(req.query.subtotal) || 0);
+
+  if (!code) {
+    return res.status(400).json({ valid: false, error: 'Coupon code is required.' });
+  }
+
+  const coupons = getCoupons();
+  const match = coupons.find(c => c.code.toUpperCase() === code);
+
+  if (!match || !match.active) {
+    return res.status(404).json({ valid: false, error: 'Invalid or expired coupon code.' });
+  }
+
+  if (match.expiresAt && new Date(match.expiresAt) < new Date()) {
+    return res.status(400).json({ valid: false, error: 'This coupon code has expired.' });
+  }
+
+  if (match.maxRedemptions && match.usedCount >= match.maxRedemptions) {
+    return res.status(400).json({ valid: false, error: 'This coupon has reached its maximum redemption limit.' });
+  }
+
+  let discount = 0;
+  if (match.type === 'percent') {
+    discount = (subtotal * match.value) / 100;
+  } else {
+    discount = match.value;
+  }
+
+  if (match.maxDiscountCap && match.maxDiscountCap > 0) {
+    discount = Math.min(discount, match.maxDiscountCap);
+  }
+
+  discount = Math.min(subtotal, Math.round(discount * 100) / 100);
+
+  res.json({
+    valid: true,
+    coupon: {
+      code: match.code,
+      type: match.type,
+      value: match.value,
+      maxDiscountCap: match.maxDiscountCap,
+    },
+    discountAmount: discount,
+  });
+});
+
+// 2c. Get all coupons (Admin)
+router.get('/admin/coupons', (req, res) => {
+  if (!isAuthorizedAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid Owner PIN.' });
+  }
+  res.json({ coupons: getCoupons() });
+});
+
+// 2d. Create coupon (Admin)
+router.post('/admin/coupons', (req, res) => {
+  if (!isAuthorizedAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid Owner PIN.' });
+  }
+
+  const { code, type, value, maxDiscountCap, maxRedemptions, expiresAt } = req.body;
+  if (!code || !code.trim()) {
+    return res.status(400).json({ error: 'Coupon code is required.' });
+  }
+
+  const cleanCode = code.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+  if (cleanCode.length < 2) {
+    return res.status(400).json({ error: 'Coupon code must be at least 2 alphanumeric characters.' });
+  }
+
+  const numericValue = Number(value);
+  if (isNaN(numericValue) || numericValue <= 0) {
+    return res.status(400).json({ error: 'Discount value must be greater than 0.' });
+  }
+
+  const coupons = getCoupons();
+  if (coupons.some(c => c.code.toUpperCase() === cleanCode)) {
+    return res.status(400).json({ error: `Coupon code '${cleanCode}' already exists.` });
+  }
+
+  const newCoupon = {
+    code: cleanCode,
+    type: type === 'fixed' ? 'fixed' : 'percent',
+    value: numericValue,
+    maxDiscountCap: maxDiscountCap ? Math.max(0, Number(maxDiscountCap)) : null,
+    maxRedemptions: maxRedemptions ? Math.max(1, parseInt(maxRedemptions, 10)) : null,
+    usedCount: 0,
+    expiresAt: expiresAt || null,
+    active: true,
+    createdAt: new Date().toISOString(),
+  };
+
+  coupons.unshift(newCoupon);
+  saveCoupons(coupons);
+
+  res.status(201).json({ success: true, coupon: newCoupon, coupons });
+});
+
+// 2e. Delete coupon (Admin)
+router.delete('/admin/coupons/:code', (req, res) => {
+  if (!isAuthorizedAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid Owner PIN.' });
+  }
+
+  const codeToDelete = (req.params.code || '').trim().toUpperCase();
+  const coupons = getCoupons();
+  const filtered = coupons.filter(c => c.code.toUpperCase() !== codeToDelete);
+  saveCoupons(filtered);
+
+  res.json({ success: true, coupons: filtered });
 });
 
 // 3. Create Stripe Payment Intent (or mock intent if keys pending)
@@ -145,27 +319,53 @@ router.post('/create-payment-intent', async (req, res) => {
 // 3b. Create Stripe Checkout Session (Direct Stripe-hosted flow with Apple Pay, Google Pay & Cards)
 router.post('/create-checkout-session', async (req, res) => {
   try {
-    const { items, customer, appointment } = req.body;
+    const { items, customer, appointment, couponCode, discountAmount } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty. Please add detailing services.' });
     }
 
-    const totals = calculateOrderTotals(items);
+    let validatedDiscount = 0;
+    let appliedCouponObj = null;
+    if (couponCode) {
+      const coupons = getCoupons();
+      const c = coupons.find(x => x.code.toUpperCase() === couponCode.trim().toUpperCase() && x.active);
+      if (c && (!c.maxRedemptions || c.usedCount < c.maxRedemptions)) {
+        const rawSubtotal = (items || []).reduce((sum, item) => {
+          const addons = (item.addons || []).reduce((a, b) => a + (b.price || 0), 0);
+          return sum + ((item.basePrice || 0) + addons);
+        }, 0);
+        let disc = c.type === 'percent' ? (rawSubtotal * c.value) / 100 : c.value;
+        if (c.maxDiscountCap > 0) disc = Math.min(disc, c.maxDiscountCap);
+        validatedDiscount = Math.min(rawSubtotal, Math.round(disc * 100) / 100);
+        appliedCouponObj = c;
+      }
+    } else if (discountAmount > 0) {
+      validatedDiscount = Number(discountAmount);
+    }
+
+    const totals = calculateOrderTotals(items, validatedDiscount, 'card_stripe');
     const reservationId = 'KT-' + Math.floor(100000 + Math.random() * 900000);
 
     if (isStripeConfigured && stripe) {
-      const line_items = items.map(item => ({
-        price_data: {
-          currency: 'cad',
-          product_data: {
-            name: `${item.title} (${item.vehicleLabel})`,
-            description: item.addons?.length ? `Includes: ${item.addons.map(a => a.title).join(', ')}` : 'Ktown Auto Spa Professional Detailing',
+      const line_items = items.map(item => {
+        const itemAddons = (item.addons || []).reduce((a, b) => a + (b.price || 0), 0);
+        const itemGross = (item.basePrice || 0) + itemAddons;
+        const ratio = totals.subtotal > 0 ? itemGross / totals.subtotal : 1 / items.length;
+        const netItemPrice = Math.max(0.50, Math.round(totals.netSubtotal * ratio * 100) / 100);
+
+        return {
+          price_data: {
+            currency: 'cad',
+            product_data: {
+              name: `${item.title} (${item.vehicleLabel})${appliedCouponObj ? ` [Promo: -${appliedCouponObj.code}]` : ''}`,
+              description: item.addons?.length ? `Includes: ${item.addons.map(a => a.title).join(', ')}` : 'Ktown Auto Spa Professional Detailing',
+            },
+            unit_amount: Math.round(netItemPrice * 100),
           },
-          unit_amount: Math.round(item.totalPrice * 100),
-        },
-        quantity: 1,
-      }));
+          quantity: 1,
+        };
+      });
 
       if (totals.hstTax > 0) {
         line_items.push({
@@ -175,6 +375,20 @@ router.post('/create-checkout-session', async (req, res) => {
               name: 'Ontario Harmonized Sales Tax (HST 13%)',
             },
             unit_amount: Math.round(totals.hstTax * 100),
+          },
+          quantity: 1,
+        });
+      }
+
+      if (totals.cardFee > 0) {
+        line_items.push({
+          price_data: {
+            currency: 'cad',
+            product_data: {
+              name: 'Online Card Processing Surcharge (3%)',
+              description: 'Standard credit card payment gateway transaction processing fee',
+            },
+            unit_amount: Math.round(totals.cardFee * 100),
           },
           quantity: 1,
         });
@@ -201,9 +415,14 @@ router.post('/create-checkout-session', async (req, res) => {
           customerNotes: customer?.notes || '',
           appointmentDate: appointment?.date || '',
           appointmentSlot: appointment?.slot || '',
+          couponCode: couponCode || '',
           subtotal: String(totals.subtotal),
+          discountAmount: String(totals.discountAmount || 0),
+          netSubtotal: String(totals.netSubtotal),
           hstTax: String(totals.hstTax),
+          cardFee: String(totals.cardFee),
           grandTotal: String(totals.grandTotal),
+          paymentMethod: 'card_stripe',
         },
         success_url: `${origin}/?booking=success&reservation_id=${reservationId}&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/?booking=cancelled`,
@@ -230,10 +449,14 @@ router.post('/create-checkout-session', async (req, res) => {
         items: totals.items,
         pricing: {
           subtotal: totals.subtotal,
+          discountAmount: totals.discountAmount || 0,
+          netSubtotal: totals.netSubtotal,
           hstTax: totals.hstTax,
+          cardFee: totals.cardFee,
           grandTotal: totals.grandTotal,
           currency: 'CAD',
         },
+        couponCode: couponCode || null,
         payment: {
           method: 'card_stripe',
           status: 'pending_payment',
@@ -320,10 +543,14 @@ router.get('/confirm-stripe-session', async (req, res) => {
         items: [],
         pricing: {
           subtotal: parseFloat(metadata.subtotal || '0') || ((session.amount_total || 0) / 100 / 1.13),
+          discountAmount: parseFloat(metadata.discountAmount || '0'),
+          netSubtotal: parseFloat(metadata.netSubtotal || '0') || ((session.amount_total || 0) / 100 / 1.13),
           hstTax: parseFloat(metadata.hstTax || '0') || (((session.amount_total || 0) / 100) - ((session.amount_total || 0) / 100 / 1.13)),
+          cardFee: parseFloat(metadata.cardFee || '0'),
           grandTotal: parseFloat(metadata.grandTotal || '0') || ((session.amount_total || 0) / 100),
           currency: 'CAD',
         },
+        couponCode: metadata.couponCode || null,
         payment: {
           method: 'card_stripe',
           status: 'paid',
@@ -344,6 +571,10 @@ router.get('/confirm-stripe-session', async (req, res) => {
     }
 
     saveReservation(resv);
+
+    if (session.metadata?.couponCode || resv.couponCode) {
+      recordCouponUsage(session.metadata?.couponCode || resv.couponCode);
+    }
 
     // Send email notifications if not already sent for this paid booking
     let notificationResults = null;
@@ -367,13 +598,43 @@ router.get('/confirm-stripe-session', async (req, res) => {
   }
 });
 
-// 4. Save and confirm a reservation (Card paid or Pay-at-drop-off)
+// 4. Save and confirm a reservation (Card paid, e-Transfer, or Cash)
 router.post('/reservations', async (req, res) => {
   try {
-    const { reservationId, items, customer, appointment, paymentMethod, paymentStatus } = req.body;
+    const { reservationId, items, customer, appointment, paymentMethod, paymentStatus, couponCode, discountAmount } = req.body;
 
     const id = reservationId || ('KT-' + Math.floor(100000 + Math.random() * 900000));
-    const totals = calculateOrderTotals(items || []);
+    const cleanMethod = ['card_stripe', 'etransfer', 'cash', 'pay_at_dropoff'].includes(paymentMethod) ? paymentMethod : 'cash';
+
+    let validatedDiscount = 0;
+    if (couponCode) {
+      const coupons = getCoupons();
+      const c = coupons.find(x => x.code.toUpperCase() === couponCode.trim().toUpperCase() && x.active);
+      if (c && (!c.maxRedemptions || c.usedCount < c.maxRedemptions)) {
+        const rawSub = (items || []).reduce((sum, item) => {
+          const addons = (item.addons || []).reduce((a, b) => a + (b.price || 0), 0);
+          return sum + ((item.basePrice || 0) + addons);
+        }, 0);
+        let disc = c.type === 'percent' ? (rawSub * c.value) / 100 : c.value;
+        if (c.maxDiscountCap > 0) disc = Math.min(disc, c.maxDiscountCap);
+        validatedDiscount = Math.min(rawSub, Math.round(disc * 100) / 100);
+      }
+    } else if (discountAmount > 0) {
+      validatedDiscount = Number(discountAmount);
+    }
+
+    const totals = calculateOrderTotals(items || [], validatedDiscount, cleanMethod);
+
+    let initialPaymentStatus = 'pending';
+    if (cleanMethod === 'etransfer') {
+      initialPaymentStatus = 'pending_etransfer';
+    } else if (cleanMethod === 'cash') {
+      initialPaymentStatus = 'pending_cash';
+    } else if (cleanMethod === 'card_stripe') {
+      initialPaymentStatus = paymentStatus || 'paid';
+    } else {
+      initialPaymentStatus = 'pending_at_dropoff';
+    }
 
     const newReservation = {
       id,
@@ -393,18 +654,26 @@ router.post('/reservations', async (req, res) => {
       items: totals.items,
       pricing: {
         subtotal: totals.subtotal,
+        discountAmount: totals.discountAmount || 0,
+        netSubtotal: totals.netSubtotal,
         hstTax: totals.hstTax,
+        cardFee: totals.cardFee,
         grandTotal: totals.grandTotal,
         currency: 'CAD',
       },
+      couponCode: couponCode || null,
       payment: {
-        method: paymentMethod || 'pay_at_dropoff', // 'card_stripe' | 'pay_at_dropoff'
-        status: paymentStatus || (paymentMethod === 'card_stripe' ? 'paid' : 'pending_at_dropoff'),
+        method: cleanMethod,
+        status: initialPaymentStatus,
       },
       status: 'confirmed',
     };
 
     saveReservation(newReservation);
+
+    if (couponCode) {
+      recordCouponUsage(couponCode);
+    }
 
     // Dispatch dual notifications to ktownautomobilespa@gmail.com and gud4notin@hotmail.com
     let notificationResults = null;
@@ -491,29 +760,97 @@ router.get('/admin/reservations', async (req, res) => {
   const all = getReservations();
   const confirmed = all.filter(r => r.status === 'confirmed');
   const failed = all.filter(r => r.status === 'failed');
+  const cancelled = all.filter(r => r.status === 'cancelled');
 
-  const paidCount = confirmed.filter(r => r.payment?.status === 'paid').length;
-  const dropoffCount = confirmed.filter(r => r.payment?.status !== 'paid').length;
-  const totalRevenue = confirmed
-    .filter(r => r.payment?.status === 'paid')
-    .reduce((sum, r) => sum + (r.pricing?.grandTotal || 0), 0);
+  const paidReservations = confirmed.filter(r => r.payment?.status === 'paid');
+  const pendingReservations = confirmed.filter(r => r.payment?.status !== 'paid');
 
-  const pendingRevenue = confirmed
-    .filter(r => r.payment?.status !== 'paid')
-    .reduce((sum, r) => sum + (r.pricing?.grandTotal || 0), 0);
+  const totalRevenue = paidReservations.reduce((sum, r) => sum + (r.pricing?.grandTotal || 0), 0);
+  const pendingRevenue = pendingReservations.reduce((sum, r) => sum + (r.pricing?.grandTotal || 0), 0);
+
+  // Breakdown by payment method
+  const stripePaidCount = paidReservations.filter(r => r.payment?.method === 'card_stripe').length;
+  const etransferPaidCount = paidReservations.filter(r => r.payment?.receivedVia === 'etransfer' || (r.payment?.method === 'etransfer' && r.payment?.status === 'paid')).length;
+  const cashPaidCount = paidReservations.filter(r => r.payment?.receivedVia === 'cash' || (r.payment?.method === 'cash' && r.payment?.status === 'paid')).length;
+
+  const etransferPendingCount = pendingReservations.filter(r => r.payment?.method === 'etransfer' || r.payment?.status === 'pending_etransfer').length;
+  const cashPendingCount = pendingReservations.filter(r => r.payment?.method === 'cash' || r.payment?.status === 'pending_cash' || r.payment?.method === 'pay_at_dropoff').length;
 
   res.json({
     stats: {
       totalBookings: confirmed.length,
-      paidCount,
-      dropoffCount,
+      paidCount: paidReservations.length,
+      dropoffCount: pendingReservations.length,
       failedAttemptsCount: failed.length,
+      cancelledCount: cancelled.length,
       totalRevenue: Math.round(totalRevenue * 100) / 100,
       pendingRevenue: Math.round(pendingRevenue * 100) / 100,
+      stripePaidCount,
+      etransferPaidCount,
+      cashPaidCount,
+      etransferPendingCount,
+      cashPendingCount,
     },
     confirmed,
     failedAttempts: failed,
+    cancelled,
   });
+});
+
+// 5c. Owner Admin Reservation Management (Mark Money Received, Mark Cash Received, Reschedule, Cancel)
+router.patch('/admin/reservations/:id', async (req, res) => {
+  if (!isAuthorizedAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid Owner PIN.' });
+  }
+
+  const resvId = req.params.id;
+  const { action, date, slot, reason, notes } = req.body;
+  const list = getReservations();
+  const resv = list.find(r => r.id === resvId);
+
+  if (!resv) {
+    return res.status(404).json({ error: 'Reservation not found.' });
+  }
+
+  if (action === 'mark_etransfer_paid' || action === 'mark_cash_paid' || action === 'mark_paid') {
+    const receivedVia = action === 'mark_etransfer_paid' ? 'etransfer' : (action === 'mark_cash_paid' ? 'cash' : (resv.payment?.method || 'shop_direct'));
+    resv.payment = {
+      ...resv.payment,
+      status: 'paid',
+      receivedVia,
+      paidAt: new Date().toISOString(),
+    };
+    resv.status = 'confirmed';
+    if (notes) {
+      resv.adminNotes = (resv.adminNotes ? resv.adminNotes + ' | ' : '') + notes;
+    }
+  } else if (action === 'reschedule') {
+    if (!date) {
+      return res.status(400).json({ error: 'New appointment date is required.' });
+    }
+    const previousDate = resv.appointment?.date;
+    const previousSlot = resv.appointment?.slot;
+    resv.appointment = {
+      ...resv.appointment,
+      date,
+      slot: slot || resv.appointment?.slot || 'Morning (9 AM - 12 PM)',
+    };
+    resv.rescheduledHistory = resv.rescheduledHistory || [];
+    resv.rescheduledHistory.push({
+      from: `${previousDate} (${previousSlot})`,
+      to: `${date} (${resv.appointment.slot})`,
+      at: new Date().toISOString(),
+    });
+  } else if (action === 'cancel') {
+    resv.status = 'cancelled';
+    resv.cancelledAt = new Date().toISOString();
+    resv.cancellationReason = reason || 'Cancelled by administrator';
+  } else {
+    return res.status(400).json({ error: `Unknown action: ${action}` });
+  }
+
+  saveReservation(resv);
+  res.json({ success: true, reservation: resv });
 });
 
 // 6. Stripe Webhook handler

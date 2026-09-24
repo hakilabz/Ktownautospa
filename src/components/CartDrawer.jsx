@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { X, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Car } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Car, Tag, Check, Loader2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 export default function CartDrawer() {
@@ -7,8 +7,15 @@ export default function CartDrawer() {
     cart,
     cartCount,
     subtotal,
+    discountAmount,
+    netSubtotal,
     hstTax,
+    grandTotalStandard,
+    grandTotalCard,
     grandTotal,
+    appliedCoupon,
+    applyCoupon,
+    removeCoupon,
     isCartOpen,
     setIsCartOpen,
     addToCart,
@@ -16,6 +23,26 @@ export default function CartDrawer() {
     clearCart,
     proceedToCheckout,
   } = useCart();
+
+  const [inputCoupon, setInputCoupon] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponMsg, setCouponMsg] = useState({ text: '', isError: false });
+
+  const handleApplyCoupon = async (e) => {
+    e.preventDefault();
+    if (!inputCoupon.trim()) return;
+    setCouponLoading(true);
+    setCouponMsg({ text: '', isError: false });
+    try {
+      const res = await applyCoupon(inputCoupon.trim());
+      setCouponMsg({ text: `Applied! Saved $${res.discountAmount.toFixed(2)} CAD`, isError: false });
+      setInputCoupon('');
+    } catch (err) {
+      setCouponMsg({ text: err.message || 'Failed to apply coupon', isError: true });
+    } finally {
+      setCouponLoading(false);
+    }
+  };
 
   // Lock body scroll and listen for escape key when drawer is open
   useEffect(() => {
@@ -375,15 +402,103 @@ export default function CartDrawer() {
               gap: '0.85rem',
             }}
           >
+            {/* Promo / Coupon Code Section */}
+            <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--surface-border)', borderRadius: '8px', padding: '0.65rem 0.75rem' }}>
+              {appliedCoupon ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                    <Tag style={{ width: '0.9rem', height: '0.9rem', color: '#10B981' }} />
+                    <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#10B981' }}>
+                      {appliedCoupon.code}
+                    </span>
+                    <span style={{ fontSize: '0.74rem', color: 'var(--muted-color)' }}>
+                      (-${discountAmount.toFixed(2)} CAD off)
+                    </span>
+                  </div>
+                  <button
+                    onClick={removeCoupon}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#EF4444',
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      padding: '0.2rem 0.4rem',
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleApplyCoupon} style={{ display: 'flex', gap: '0.45rem' }}>
+                  <div style={{ position: 'relative', flex: 1 }}>
+                    <input
+                      type="text"
+                      placeholder="Coupon / Promo code"
+                      value={inputCoupon}
+                      onChange={(e) => setInputCoupon(e.target.value.toUpperCase())}
+                      style={{
+                        width: '100%',
+                        padding: '0.4rem 0.6rem',
+                        fontSize: '0.82rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px',
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--surface-border)',
+                        borderRadius: '6px',
+                        color: 'var(--text-main)',
+                        outline: 'none',
+                      }}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={couponLoading || !inputCoupon.trim()}
+                    style={{
+                      padding: '0.4rem 0.85rem',
+                      background: 'var(--gold)',
+                      border: 'none',
+                      borderRadius: '6px',
+                      color: '#0A1E42',
+                      fontSize: '0.8rem',
+                      fontWeight: 800,
+                      cursor: couponLoading || !inputCoupon.trim() ? 'not-allowed' : 'pointer',
+                      opacity: couponLoading || !inputCoupon.trim() ? 0.6 : 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                    }}
+                  >
+                    {couponLoading ? <Loader2 style={{ width: '0.8rem', height: '0.8rem', animation: 'spin 1s linear infinite' }} /> : 'Apply'}
+                  </button>
+                </form>
+              )}
+              {couponMsg.text && (
+                <div style={{ marginTop: '0.35rem', fontSize: '0.74rem', color: couponMsg.isError ? '#EF4444' : '#10B981' }}>
+                  {couponMsg.text}
+                </div>
+              )}
+            </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '0.9rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--muted-color)' }}>
                 <span>Subtotal:</span>
                 <strong style={{ color: 'var(--text-main)' }}>${subtotal.toFixed(2)} CAD</strong>
               </div>
+
+              {discountAmount > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10B981' }}>
+                  <span>Coupon Discount ({appliedCoupon?.code}):</span>
+                  <strong>-${discountAmount.toFixed(2)} CAD</strong>
+                </div>
+              )}
+
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--muted-color)' }}>
                 <span>Ontario HST (13%):</span>
                 <strong style={{ color: 'var(--text-main)' }}>${hstTax.toFixed(2)} CAD</strong>
               </div>
+
               <div
                 style={{
                   display: 'flex',
@@ -398,7 +513,7 @@ export default function CartDrawer() {
                     Estimated Total
                   </span>
                   <span style={{ display: 'block', fontSize: '0.72rem', color: 'var(--muted-color)' }}>
-                    All prices confirmed before service begins
+                    0% extra fee on e-Transfer &amp; Cash &middot; 3% card fee at Stripe
                   </span>
                 </div>
                 <div style={{ textAlign: 'right' }}>
@@ -411,7 +526,7 @@ export default function CartDrawer() {
                       lineHeight: 1,
                     }}
                   >
-                    ${grandTotal.toFixed(2)}
+                    ${grandTotalStandard.toFixed(2)}
                   </div>
                   <span style={{ fontSize: '0.7rem', color: 'var(--muted-color)', fontWeight: 600 }}>CAD</span>
                 </div>

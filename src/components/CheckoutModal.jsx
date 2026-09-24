@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   X,
   Calendar,
@@ -11,16 +11,82 @@ import {
   AlertCircle,
   Printer,
   ShieldCheck,
+  Send,
+  Banknote,
+  Clock,
+  Tag,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useCart } from '../context/CartContext';
+
+function getAvailableSlots(dateStr) {
+  if (!dateStr) return { slots: [], isSunday: false, isSaturday: false };
+  const [yyyy, mm, dd] = dateStr.split('-').map(Number);
+  const d = new Date(yyyy, mm - 1, dd);
+  const day = d.getDay(); // 0 = Sun, 6 = Sat
+
+  if (day === 0) {
+    return { slots: [], isSunday: true, isSaturday: false };
+  }
+
+  if (day === 6) {
+    return {
+      slots: [
+        '12:00 PM',
+        '1:00 PM',
+        '2:00 PM',
+        '3:00 PM',
+        '4:00 PM',
+        '5:00 PM',
+        '6:00 PM',
+      ],
+      isSunday: false,
+      isSaturday: true,
+    };
+  }
+
+  return {
+    slots: [
+      '9:00 AM',
+      '10:00 AM',
+      '11:00 AM',
+      '12:00 PM',
+      '1:00 PM',
+      '2:00 PM',
+      '3:00 PM',
+      '4:00 PM',
+      '5:00 PM',
+      '6:00 PM',
+    ],
+    isSunday: false,
+    isSaturday: false,
+  };
+}
+
+function getInitialBookingDate() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  if (d.getDay() === 0) {
+    d.setDate(d.getDate() + 1); // skip Sunday to Monday
+  }
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
 
 export default function CheckoutModal() {
   const {
     cart,
     subtotal,
+    discountAmount,
+    netSubtotal,
     hstTax,
+    cardFee,
+    grandTotalStandard,
+    grandTotalCard,
     grandTotal,
+    appliedCoupon,
     isCheckoutOpen,
     setIsCheckoutOpen,
     clearCart,
@@ -29,6 +95,9 @@ export default function CheckoutModal() {
   const [step, setStep] = useState('form'); // 'form' | 'verifying' | 'success'
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const initialDate = useMemo(() => getInitialBookingDate(), []);
+  const initialSlots = useMemo(() => getAvailableSlots(initialDate).slots, [initialDate]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -39,24 +108,27 @@ export default function CheckoutModal() {
     vehicleMake: '',
     vehicleModel: '',
     notes: '',
-    preferredDate: '',
-    preferredSlot: 'Morning (9 AM - 12 PM)',
-    paymentMethod: 'pay_at_dropoff', // 'card_stripe' | 'pay_at_dropoff'
+    preferredDate: initialDate,
+    preferredSlot: initialSlots[0] || '9:00 AM',
+    paymentMethod: 'etransfer', // 'etransfer' | 'cash' | 'card_stripe'
   });
 
   const [confirmedReservation, setConfirmedReservation] = useState(null);
 
-  // Set default appointment date to tomorrow if empty
-  useEffect(() => {
-    if (!formData.preferredDate) {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const yyyy = tomorrow.getFullYear();
-      const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-      const dd = String(tomorrow.getDate()).padStart(2, '0');
-      setFormData(prev => ({ ...prev, preferredDate: `${yyyy}-${mm}-${dd}` }));
-    }
-  }, [formData.preferredDate]);
+  const { slots: availableSlots, isSunday, isSaturday } = useMemo(
+    () => getAvailableSlots(formData.preferredDate),
+    [formData.preferredDate]
+  );
+
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    const { slots, isSunday: isSun } = getAvailableSlots(newDate);
+    setFormData(prev => ({
+      ...prev,
+      preferredDate: newDate,
+      preferredSlot: isSun ? '' : (slots.includes(prev.preferredSlot) ? prev.preferredSlot : (slots[0] || '')),
+    }));
+  };
 
   // Handle Stripe return URLs (?booking=success or ?booking=cancelled)
   useEffect(() => {
@@ -151,13 +223,25 @@ export default function CheckoutModal() {
     }
 
     if (!formData.preferredDate) {
-      setErrorMsg('Please select your preferred drop-off date.');
+      setErrorMsg('Please select your preferred appointment date.');
+      return;
+    }
+
+    if (isSunday) {
+      setErrorMsg('We are closed on Sundays. Please choose a date from Monday to Saturday.');
+      return;
+    }
+
+    if (!formData.preferredSlot) {
+      setErrorMsg('Please select an arrival time slot for your appointment.');
       return;
     }
 
     setSubmitting(true);
 
     try {
+      const activeTotal = formData.paymentMethod === 'card_stripe' ? grandTotalCard : grandTotalStandard;
+
       // 1. Stripe Hosted Checkout Flow (Cards, Apple Pay, Google Pay)
       if (formData.paymentMethod === 'card_stripe') {
         const sessionRes = await fetch('/api/create-checkout-session', {
@@ -165,6 +249,8 @@ export default function CheckoutModal() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             items: cart,
+            couponCode: appliedCoupon?.code || undefined,
+            discountAmount: discountAmount || 0,
             customer: {
               name: formData.name,
               phone: formData.phone,
@@ -196,12 +282,14 @@ export default function CheckoutModal() {
         }
       }
 
-      // 2. Pay at Drop-off (In Shop) Flow
+      // 2. Interac e-Transfer or Cash (In Shop) Flow
       const resvRes = await fetch('/api/reservations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: cart,
+          couponCode: appliedCoupon?.code || undefined,
+          discountAmount: discountAmount || 0,
           customer: {
             name: formData.name,
             phone: formData.phone,
@@ -215,9 +303,9 @@ export default function CheckoutModal() {
             date: formData.preferredDate,
             slot: formData.preferredSlot,
           },
-          paymentMethod: 'pay_at_dropoff',
-          paymentStatus: 'pending_at_dropoff',
-          total: grandTotal,
+          paymentMethod: formData.paymentMethod, // 'etransfer' | 'cash'
+          paymentStatus: formData.paymentMethod === 'etransfer' ? 'pending_etransfer' : 'pending_cash',
+          total: activeTotal,
         }),
       });
 
@@ -234,15 +322,16 @@ export default function CheckoutModal() {
       // Dispatch browser-level notification backup to guarantee delivery
       try {
         const itemSummary = cart.map(i => `${i.title} (${i.vehicleLabel}) - $${i.totalPrice} CAD`).join(', ');
+        const payLabel = formData.paymentMethod === 'etransfer' ? 'Interac e-Transfer (ktownautomobilespa@gmail.com)' : 'Cash in Shop (36 Joseph St)';
         fetch('https://api.web3forms.com/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
             access_key: '2e1c3132-7a7a-4c2c-80a5-f8510800fa26',
-            subject: `🚨 NEW BOOKING (Pay at Drop-off): ${formData.name} - ${resvData.reservation?.id} ($${grandTotal.toFixed(2)} CAD)`,
+            subject: `🚨 NEW BOOKING (${payLabel}): ${formData.name} - ${resvData.reservation?.id} ($${activeTotal.toFixed(2)} CAD)`,
             from_name: 'Ktown Auto Spa Bookings',
             replyto: formData.email,
-            message: `Booking Ref: ${resvData.reservation?.id}\nCustomer: ${formData.name} (${formData.phone}, ${formData.email})\nVehicle: ${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}\nDate: ${formData.preferredDate} (${formData.preferredSlot})\nServices: ${itemSummary}\nTotal: $${grandTotal.toFixed(2)} CAD\nPayment: Pay at Drop-off (In Shop)\nNotes: ${formData.notes || 'None'}`,
+            message: `Booking Ref: ${resvData.reservation?.id}\nCustomer: ${formData.name} (${formData.phone}, ${formData.email})\nVehicle: ${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}\nDate: ${formData.preferredDate} (${formData.preferredSlot})\nServices: ${itemSummary}\nTotal: $${activeTotal.toFixed(2)} CAD\nPayment Method: ${payLabel}\nCoupon: ${appliedCoupon?.code || 'None'}\nNotes: ${formData.notes || 'None'}`,
           }),
         }).catch(() => {});
       } catch {}
@@ -450,37 +539,67 @@ END:VCALENDAR`;
                   {/* Step A: Appointment Schedule */}
                   <div>
                     <label className="checkout-field-label">
-                      1. Preferred Date &amp; Drop-off Slot
+                      1. Preferred Date &amp; Arrival Slot
                     </label>
-                    <div className="checkout-row-date-slot">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                       <div>
-                        <span className="checkout-input-sublabel">Drop-off Date *</span>
+                        <span className="checkout-input-sublabel">Appointment Date *</span>
                         <input
                           type="date"
                           name="preferredDate"
+                          min={initialDate}
                           value={formData.preferredDate}
-                          onChange={handleChange}
+                          onChange={handleDateChange}
                           required
                           className="checkout-input"
                         />
                       </div>
-                      <div>
-                        <span className="checkout-input-sublabel">Arrival Window *</span>
-                        <select
-                          name="preferredSlot"
-                          value={formData.preferredSlot}
-                          onChange={handleChange}
-                          className="checkout-input"
-                          style={{ fontSize: '0.84rem' }}
-                        >
-                          <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
-                          <option value="Afternoon (12 PM - 3 PM)">Afternoon (12 PM - 3 PM)</option>
-                          <option value="Late Afternoon (3 PM - 6 PM)">Late Afternoon (3 PM - 6 PM)</option>
-                        </select>
-                      </div>
+
+                      {isSunday ? (
+                        <div style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: '8px', padding: '0.75rem 1rem', color: '#fca5a5', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <AlertCircle style={{ width: '1.2rem', height: '1.2rem', flexShrink: 0, color: '#ef4444' }} />
+                          <span>We are <strong>closed on Sundays</strong>. Please select Monday through Saturday for your appointment.</span>
+                        </div>
+                      ) : (
+                        <div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                            <span className="checkout-input-sublabel">Select Hourly Arrival Window *</span>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)' }}>
+                              {isSaturday ? 'Saturday: 12 PM - 6 PM' : 'Mon - Fri: 9 AM - 6 PM'}
+                            </span>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(88px, 1fr))', gap: '0.45rem' }}>
+                            {availableSlots.map((slot) => {
+                              const isSelected = formData.preferredSlot === slot;
+                              return (
+                                <button
+                                  key={slot}
+                                  type="button"
+                                  onClick={() => setFormData(prev => ({ ...prev, preferredSlot: slot }))}
+                                  style={{
+                                    padding: '0.55rem 0.35rem',
+                                    borderRadius: '6px',
+                                    border: isSelected ? '1.5px solid var(--gold)' : '1px solid var(--surface-border)',
+                                    background: isSelected ? 'rgba(201, 160, 60, 0.2)' : 'var(--bg-card)',
+                                    color: isSelected ? 'var(--gold-primary)' : 'var(--text-main)',
+                                    fontSize: '0.8rem',
+                                    fontWeight: isSelected ? 800 : 500,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.15s ease',
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  {slot}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem' }}>
-                      Open Saturdays &middot; Heated indoor bays year-round
+                    <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.35rem' }}>
+                      Heated indoor spa facility &middot; 36 Joseph St, Kingston
                     </span>
                   </div>
 
@@ -611,21 +730,42 @@ END:VCALENDAR`;
                       })}
                     </div>
 
-                    {/* Tax & Total */}
-                    <div style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.3rem', fontSize: '0.85rem' }}>
+                    {/* Tax & Total Breakdown */}
+                    <div style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.85rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--muted-color)' }}>
                         <span>Subtotal:</span>
                         <span>${subtotal.toFixed(2)} CAD</span>
                       </div>
+
+                      {discountAmount > 0 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10B981' }}>
+                          <span>Coupon Discount ({appliedCoupon?.code}):</span>
+                          <strong>-${discountAmount.toFixed(2)} CAD</strong>
+                        </div>
+                      )}
+
                       <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--muted-color)' }}>
                         <span>Ontario HST (13%):</span>
                         <span>${hstTax.toFixed(2)} CAD</span>
                       </div>
+
+                      {formData.paymentMethod === 'card_stripe' ? (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--gold-primary)' }}>
+                          <span>Card Processing Fee (3%):</span>
+                          <span>+${cardFee.toFixed(2)} CAD</span>
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10B981', fontSize: '0.78rem' }}>
+                          <span>Payment Fee:</span>
+                          <span>$0.00 (Waived for {formData.paymentMethod === 'etransfer' ? 'e-Transfer' : 'Cash'})</span>
+                        </div>
+                      )}
+
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '0.4rem', borderTop: '1px dashed var(--surface-border)' }}>
-                        <span style={{ fontWeight: 800, color: 'var(--heading-color)', fontSize: '0.92rem' }}>Grand Total:</span>
+                        <span style={{ fontWeight: 800, color: 'var(--heading-color)', fontSize: '0.92rem' }}>Total:</span>
                         <div style={{ textAlign: 'right' }}>
                           <span style={{ fontFamily: 'var(--display)', fontSize: '1.75rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
-                            ${grandTotal.toFixed(2)}
+                            ${formData.paymentMethod === 'card_stripe' ? grandTotalCard.toFixed(2) : grandTotalStandard.toFixed(2)}
                           </span>
                           <span style={{ fontSize: '0.7rem', color: 'var(--muted-color)', marginLeft: '0.3rem' }}>CAD</span>
                         </div>
@@ -639,8 +779,72 @@ END:VCALENDAR`;
                       4. Select Payment Option
                     </label>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                      {/* Option 1: Credit Card (Stripe) */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                      {/* Option 1: Interac e-Transfer */}
+                      <label className={`checkout-pay-option ${formData.paymentMethod === 'etransfer' ? 'is-selected' : 'not-selected'}`}>
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="etransfer"
+                          checked={formData.paymentMethod === 'etransfer'}
+                          onChange={handleChange}
+                          style={{ marginTop: '0.2rem', accentColor: 'var(--gold)' }}
+                        />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div className="checkout-pay-header">
+                            <strong style={{ fontSize: '0.92rem', color: 'var(--heading-color)' }}>
+                              Interac e-Transfer
+                            </strong>
+                            <span style={{ fontSize: '0.68rem', fontWeight: 800, padding: '2px 7px', borderRadius: '4px', background: 'rgba(16, 185, 129, 0.15)', color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                              0% Fee &middot; 13% HST Only
+                            </span>
+                          </div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem' }}>
+                            Send to <strong>ktownautomobilespa@gmail.com</strong>. Auto-deposit enabled. No card surcharge.
+                          </span>
+
+                          {formData.paymentMethod === 'etransfer' && (
+                            <div style={{ marginTop: '0.65rem', padding: '0.75rem 0.85rem', background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: '8px', fontSize: '0.76rem', color: 'var(--text-main)', lineHeight: 1.45 }}>
+                              <div style={{ fontWeight: 800, color: '#10B981', marginBottom: '0.2rem' }}>
+                                📱 Interac e-Transfer Instructions:
+                              </div>
+                              <div>&bull; Recipient: <strong>Ktown Auto Spa</strong></div>
+                              <div>&bull; Email: <strong>ktownautomobilespa@gmail.com</strong></div>
+                              <div>&bull; Amount: <strong>${grandTotalStandard.toFixed(2)} CAD</strong></div>
+                              <div style={{ color: 'var(--muted-color)', marginTop: '0.25rem', fontSize: '0.72rem' }}>
+                                Your appointment is booked instantly. Transfer receipt will be verified by our team.
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </label>
+
+                      {/* Option 2: Cash (In Shop) */}
+                      <label className={`checkout-pay-option ${formData.paymentMethod === 'cash' ? 'is-selected' : 'not-selected'}`}>
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="cash"
+                          checked={formData.paymentMethod === 'cash'}
+                          onChange={handleChange}
+                          style={{ marginTop: '0.2rem', accentColor: 'var(--gold)' }}
+                        />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div className="checkout-pay-header">
+                            <strong style={{ fontSize: '0.92rem', color: 'var(--heading-color)' }}>
+                              Cash (Pay in Shop)
+                            </strong>
+                            <span style={{ fontSize: '0.68rem', fontWeight: 800, padding: '2px 7px', borderRadius: '4px', background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+                              0% Fee &middot; 13% HST Only
+                            </span>
+                          </div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem' }}>
+                            Pay with cash when dropping off your vehicle at <strong>36 Joseph St, Kingston</strong>.
+                          </span>
+                        </div>
+                      </label>
+
+                      {/* Option 3: Credit Card / Apple Pay (Stripe) */}
                       <label className={`checkout-pay-option ${formData.paymentMethod === 'card_stripe' ? 'is-selected' : 'not-selected'}`}>
                         <input
                           type="radio"
@@ -652,19 +856,18 @@ END:VCALENDAR`;
                         />
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div className="checkout-pay-header">
-                            <strong style={{ fontSize: '0.9rem', color: 'var(--heading-color)' }}>
+                            <strong style={{ fontSize: '0.92rem', color: 'var(--heading-color)' }}>
                               Pay with Credit Card
                             </strong>
                             <div className="checkout-stripe-badge">
                               <Lock style={{ width: '0.65rem', height: '0.65rem' }} />
-                              <span>Powered by Stripe</span>
+                              <span>Stripe 256-Bit</span>
                             </div>
                           </div>
                           <span style={{ fontSize: '0.75rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem' }}>
-                            Official Stripe 256-bit encryption. Visa, Mastercard, Amex, Apple Pay, Google Pay.
+                            Official Stripe 256-bit encryption. +3% processing fee (${cardFee.toFixed(2)} CAD).
                           </span>
 
-                          {/* Official Stripe 256-bit Hosted Checkout Notice */}
                           {formData.paymentMethod === 'card_stripe' && (
                             <div
                               style={{
@@ -680,10 +883,10 @@ END:VCALENDAR`;
                             >
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--gold-primary)', fontWeight: 700, fontSize: '0.82rem' }}>
                                 <ShieldCheck style={{ width: '1.1rem', height: '1.1rem', flexShrink: 0 }} />
-                                <span>Official Stripe 256-Bit Hosted Checkout</span>
+                                <span>Official Stripe Hosted Checkout</span>
                               </div>
                               <p style={{ margin: 0, fontSize: '0.76rem', color: 'var(--muted-color)', lineHeight: 1.45 }}>
-                                You will be seamlessly redirected to Stripe’s secure gateway to complete your payment with instant bank authorization.
+                                Instant card authorization with 3D-Secure bank protection.
                               </p>
                               <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '0.2rem' }}>
                                 <span style={{ fontSize: '0.68rem', padding: '0.2rem 0.45rem', borderRadius: '4px', background: 'var(--surface-card)', border: '1px solid var(--surface-border)', color: 'var(--text-main)', fontWeight: 600 }}>💳 Cards (Visa, MC, Amex)</span>
@@ -694,48 +897,30 @@ END:VCALENDAR`;
                           )}
                         </div>
                       </label>
-
-                      {/* Option 2: Pay at Drop-off */}
-                      <label className={`checkout-pay-option ${formData.paymentMethod === 'pay_at_dropoff' ? 'is-selected' : 'not-selected'}`}>
-                        <input
-                          type="radio"
-                          name="paymentMethod"
-                          value="pay_at_dropoff"
-                          checked={formData.paymentMethod === 'pay_at_dropoff'}
-                          onChange={handleChange}
-                          style={{ marginTop: '0.2rem', accentColor: 'var(--gold)' }}
-                        />
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <strong style={{ fontSize: '0.9rem', color: 'var(--heading-color)', display: 'block' }}>
-                            Pay at Drop-off (In Shop)
-                          </strong>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem', lineHeight: 1.4 }}>
-                            Inspect your vehicle with our technician first. Pay by debit, credit card or e-transfer in the shop.
-                          </span>
-                        </div>
-                      </label>
                     </div>
                   </div>
 
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    disabled={submitting}
+                    disabled={submitting || isSunday || !formData.preferredSlot}
                     className="btn btn--gold checkout-submit-btn"
                   >
                     {submitting ? (
                       <>
                         <Loader2 style={{ width: '1.2rem', height: '1.2rem', animation: 'spin 1s linear infinite' }} />
                         <span>
-                          {formData.paymentMethod === 'card_stripe' ? 'Redirecting to Stripe...' : 'Confirming Appointment...'}
+                          {formData.paymentMethod === 'card_stripe' ? 'Redirecting to Stripe...' : 'Reserving Appointment...'}
                         </span>
                       </>
                     ) : (
                       <>
                         <span>
                           {formData.paymentMethod === 'card_stripe'
-                            ? `Proceed to Stripe Checkout ($${grandTotal.toFixed(2)} CAD)`
-                            : `Confirm Appointment ($${grandTotal.toFixed(2)} CAD)`}
+                            ? `Proceed to Stripe Checkout ($${grandTotalCard.toFixed(2)} CAD)`
+                            : formData.paymentMethod === 'etransfer'
+                            ? `Reserve with Interac e-Transfer ($${grandTotalStandard.toFixed(2)} CAD)`
+                            : `Reserve Appointment ($${grandTotalStandard.toFixed(2)} CAD)`}
                         </span>
                         <ArrowRight style={{ width: '1.1rem', height: '1.1rem', flexShrink: 0 }} />
                       </>
@@ -743,7 +928,7 @@ END:VCALENDAR`;
                   </button>
 
                   <div style={{ textAlign: 'center', fontSize: '0.72rem', color: 'var(--muted-color)', lineHeight: 1.4 }}>
-                    Appointment only &middot; Final price confirmed at drop-off, never after &middot; 36 Joseph St, Kingston
+                    Appointment only &middot; Final price confirmed before service &middot; 36 Joseph St, Kingston
                   </div>
 
                 </div>
@@ -813,7 +998,13 @@ END:VCALENDAR`;
                 <div className="checkout-receipt-row">
                   <span className="checkout-receipt-label">Payment Method:</span>
                   <strong className="checkout-receipt-value">
-                    {confirmedReservation?.payment?.method === 'card_stripe' ? 'Credit Card (Stripe - Paid Online)' : 'Pay at Drop-off (In-Store)'}
+                    {confirmedReservation?.payment?.method === 'card_stripe'
+                      ? 'Credit Card (Stripe - Paid Online)'
+                      : confirmedReservation?.payment?.method === 'etransfer'
+                      ? 'Interac e-Transfer'
+                      : confirmedReservation?.payment?.method === 'cash'
+                      ? 'Cash at Drop-off'
+                      : 'Pay at Drop-off (In-Store)'}
                   </strong>
                 </div>
 
@@ -823,6 +1014,35 @@ END:VCALENDAR`;
                     ${confirmedReservation?.pricing?.grandTotal?.toFixed(2)} CAD
                   </div>
                 </div>
+
+                {confirmedReservation?.payment?.method === 'etransfer' && (
+                  <div style={{ marginTop: '0.85rem', padding: '0.85rem 1rem', background: 'rgba(16, 185, 129, 0.1)', border: '1.5px solid rgba(16, 185, 129, 0.4)', borderRadius: '8px', textAlign: 'left', fontSize: '0.82rem', lineHeight: 1.5 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 800, color: '#10B981', marginBottom: '0.35rem' }}>
+                      <Send style={{ width: '1rem', height: '1rem' }} />
+                      <span>Next Step: Complete Your Interac e-Transfer</span>
+                    </div>
+                    <div>&bull; Recipient: <strong>Ktown Auto Spa</strong></div>
+                    <div>&bull; Send to Email: <strong>ktownautomobilespa@gmail.com</strong></div>
+                    <div>&bull; Transfer Amount: <strong>${confirmedReservation?.pricing?.grandTotal?.toFixed(2)} CAD</strong></div>
+                    <div style={{ fontSize: '0.74rem', color: 'var(--muted-color)', marginTop: '0.35rem' }}>
+                      Auto-deposit is enabled. Please include reference <strong>{confirmedReservation?.id}</strong> in your transfer note. Our shop team will mark your booking verified.
+                    </div>
+                  </div>
+                )}
+
+                {confirmedReservation?.payment?.method === 'cash' && (
+                  <div style={{ marginTop: '0.85rem', padding: '0.85rem 1rem', background: 'rgba(59, 130, 246, 0.1)', border: '1.5px solid rgba(59, 130, 246, 0.4)', borderRadius: '8px', textAlign: 'left', fontSize: '0.82rem', lineHeight: 1.5 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 800, color: '#60A5FA', marginBottom: '0.35rem' }}>
+                      <Banknote style={{ width: '1rem', height: '1rem' }} />
+                      <span>Cash Drop-off Instructions</span>
+                    </div>
+                    <div>&bull; Bring <strong>${confirmedReservation?.pricing?.grandTotal?.toFixed(2)} CAD</strong> in cash when dropping off your vehicle.</div>
+                    <div>&bull; Shop Location: <strong>36 Joseph St, Kingston, ON K7K 2H5</strong>.</div>
+                    <div style={{ fontSize: '0.74rem', color: 'var(--muted-color)', marginTop: '0.35rem' }}>
+                      Our technician will greet you, inspect the vehicle, and hand you your official paper receipt.
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons: Add to Calendar, iCal, Print */}

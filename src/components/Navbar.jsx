@@ -46,14 +46,16 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
   return (
     <header
       style={{
-        position: 'sticky',
+        position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 60,
+        zIndex: 1000,
         background: 'var(--header-bg)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
         borderBottom: '1px solid var(--header-border)',
-        boxShadow: scrolled ? '0 4px 20px rgba(10, 30, 66, 0.18)' : '0 2px 10px rgba(12, 34, 71, 0.05)',
+        boxShadow: scrolled ? '0 4px 20px rgba(10, 30, 66, 0.22)' : '0 2px 10px rgba(12, 34, 71, 0.08)',
         transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.25s ease',
       }}
     >
