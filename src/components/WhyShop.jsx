@@ -9,23 +9,23 @@ export default function WhyShop() {
     },
     {
       title: 'Dust-controlled indoor bay',
-      desc: 'Coatings cure without wind, pollen, airborne dirt or evening dew landing in wet product.',
+      desc: 'Coatings cure without wind, pollen or dew landing in wet product.',
     },
     {
       title: 'Professional inspection lighting',
-      desc: 'Micro-swirls and fine scratch imperfections you cannot see in natural sunlight cannot be corrected.',
+      desc: 'Swirls you cannot see cannot be corrected.',
     },
     {
       title: 'Paint depth measured first',
-      desc: 'Digital gauge readings ensure no aggressive compounding through thin or previously repainted clear coat.',
+      desc: 'No compounding through thin or previously repainted clear coat.',
     },
     {
       title: 'Open Saturdays, heated year-round',
-      desc: 'Eastern Ontario road salt season is exactly when your vehicle’s clear coat and undercarriage need us most.',
+      desc: 'Salt season is exactly when your paint needs us most.',
     },
     {
       title: 'Free pickup and delivery',
-      desc: 'Included on every ceramic coating package from $949. We collect your car and return it mirror-finished.',
+      desc: 'On every ceramic coating package from $949. We collect your car and bring it back.',
     },
   ];
 

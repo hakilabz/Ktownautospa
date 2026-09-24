@@ -7,6 +7,7 @@ export default function CartDrawer() {
     cart,
     cartCount,
     subtotal,
+    bundleSavings,
     discountAmount,
     netSubtotal,
     hstTax,
@@ -19,6 +20,7 @@ export default function CartDrawer() {
     isCartOpen,
     setIsCartOpen,
     addToCart,
+    toggleCartItemAddon,
     removeFromCart,
     clearCart,
     proceedToCheckout,
@@ -196,7 +198,7 @@ export default function CartDrawer() {
                 </span>
                 <button
                   type="button"
-                  onClick={() => addToCart({ title: 'Medium Package', vehicleType: 'c-sedan', basePrice: 100, subtitle: 'Interior vacuum & glass, mats, jambs, hand wash' }, false)}
+                  onClick={() => addToCart({ serviceId: 'medium-package', title: 'Medium Package', vehicleType: 'c-sedan', basePrice: 100, subtitle: 'Interior vacuum & glass, mats, jambs, hand wash' }, false)}
                   className="btn btn--outline"
                   style={{ minHeight: '38px', fontSize: '0.84rem', justifyContent: 'space-between', padding: '0 0.9rem' }}
                 >
@@ -205,7 +207,7 @@ export default function CartDrawer() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => addToCart({ title: 'Full Detail', vehicleType: 'c-sedan', basePrice: 200, subtitle: 'Medium Package + summer mats steamed, carpets & seats scrubbed' }, false)}
+                  onClick={() => addToCart({ serviceId: 'full-detail', title: 'Full Detail', vehicleType: 'c-sedan', basePrice: 200, subtitle: 'Medium Package + summer mats steamed, carpets & seats scrubbed' }, false)}
                   className="btn btn--outline"
                   style={{ minHeight: '38px', fontSize: '0.84rem', justifyContent: 'space-between', padding: '0 0.9rem' }}
                 >
@@ -214,7 +216,7 @@ export default function CartDrawer() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => addToCart({ title: 'Hand Car Wash', vehicleType: 'c-sedan', basePrice: 30, subtitle: 'Wash & wax soap, windows, blown dry' }, false)}
+                  onClick={() => addToCart({ serviceId: 'hand-car-wash', title: 'Hand Car Wash', vehicleType: 'c-sedan', basePrice: 30, subtitle: 'Wash & wax soap, windows, blown dry' }, false)}
                   className="btn btn--outline"
                   style={{ minHeight: '38px', fontSize: '0.84rem', justifyContent: 'space-between', padding: '0 0.9rem' }}
                 >
@@ -277,24 +279,62 @@ export default function CartDrawer() {
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem' }}>
                       <div>
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.3rem',
-                            background: 'var(--chip-inactive-bg)',
-                            color: 'var(--gold-primary)',
-                            border: '1px solid var(--surface-border-gold)',
-                            borderRadius: '6px',
-                            fontSize: '0.72rem',
-                            fontWeight: 700,
-                            padding: '0.15rem 0.55rem',
-                            marginBottom: '0.35rem',
-                          }}
-                        >
-                          <Car style={{ width: '0.75rem', height: '0.75rem' }} />
-                          {item.vehicleLabel}
-                        </span>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.35rem' }}>
+                          <span
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.3rem',
+                              background: 'var(--chip-inactive-bg)',
+                              color: 'var(--gold-primary)',
+                              border: '1px solid var(--surface-border-gold)',
+                              borderRadius: '6px',
+                              fontSize: '0.7rem',
+                              fontWeight: 700,
+                              padding: '0.15rem 0.5rem',
+                            }}
+                          >
+                            <Car style={{ width: '0.75rem', height: '0.75rem' }} />
+                            {item.vehicleLabel}
+                          </span>
+
+                          {item.lifespan && (
+                            <span
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                background: 'rgba(62, 155, 218, 0.16)',
+                                color: 'var(--water-dk)',
+                                border: '1px solid rgba(62, 155, 218, 0.35)',
+                                borderRadius: '6px',
+                                fontSize: '0.7rem',
+                                fontWeight: 800,
+                                padding: '0.15rem 0.5rem',
+                              }}
+                            >
+                              ⏱️ {item.lifespan}
+                            </span>
+                          )}
+
+                          {item.isCarfax && (
+                            <span
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                background: '#111827',
+                                color: '#F0D590',
+                                border: '1px solid var(--gold)',
+                                borderRadius: '6px',
+                                fontSize: '0.68rem',
+                                fontWeight: 900,
+                                padding: '0.15rem 0.5rem',
+                                letterSpacing: '0.04em',
+                              }}
+                            >
+                              📋 CARFAX REGISTERED
+                            </span>
+                          )}
+                        </div>
                         <h4
                           style={{
                             fontFamily: 'var(--display)',
@@ -308,8 +348,13 @@ export default function CartDrawer() {
                           {item.title}
                         </h4>
                         {item.subtitle && (
-                          <span style={{ fontSize: '0.78rem', color: 'var(--muted-color)' }}>
+                          <span style={{ fontSize: '0.78rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.15rem' }}>
                             {item.subtitle}
+                          </span>
+                        )}
+                        {item.isCarfax && (
+                          <span style={{ fontSize: '0.74rem', color: '#10B981', fontWeight: 700, display: 'block', marginTop: '0.2rem' }}>
+                            ✓ Added to your vehicle&apos;s CARFAX History Report
                           </span>
                         )}
                       </div>
@@ -361,6 +406,49 @@ export default function CartDrawer() {
                           </div>
                         ))}
                       </div>
+                    )}
+
+                    {/* Interior Complete $30 Hand Wash Option */}
+                    {item.serviceId === 'interior-complete' && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          toggleCartItemAddon(item.id, {
+                            id: 'interior-complete-wash',
+                            title: 'Add-on Hand Car Wash (with Interior Complete)',
+                            price: 30,
+                          })
+                        }
+                        style={{
+                          background: (item.addons || []).some((a) => a.id === 'interior-complete-wash')
+                            ? 'rgba(16, 185, 129, 0.12)'
+                            : 'rgba(201, 160, 60, 0.12)',
+                          border: `1px solid ${
+                            (item.addons || []).some((a) => a.id === 'interior-complete-wash')
+                              ? '#10B981'
+                              : 'var(--gold)'
+                          }`,
+                          borderRadius: '8px',
+                          padding: '0.45rem 0.75rem',
+                          fontSize: '0.76rem',
+                          fontWeight: 700,
+                          color: (item.addons || []).some((a) => a.id === 'interior-complete-wash')
+                            ? '#10B981'
+                            : 'var(--gold-primary)',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <span>
+                          {(item.addons || []).some((a) => a.id === 'interior-complete-wash')
+                            ? '✓ Exterior Hand Wash Added'
+                            : '+ Add Exterior Hand Wash (Rate Card Special)'}
+                        </span>
+                        <b>+$30</b>
+                      </button>
                     )}
 
                     {/* Bottom actions */}
@@ -482,6 +570,13 @@ export default function CartDrawer() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '0.9rem' }}>
+              {bundleSavings > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10B981', fontSize: '0.82rem' }}>
+                  <span>✓ &ldquo;With a Detail&rdquo; Bundle Savings:</span>
+                  <strong>Saved ${bundleSavings.toFixed(2)} CAD</strong>
+                </div>
+              )}
+
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--muted-color)' }}>
                 <span>Subtotal:</span>
                 <strong style={{ color: 'var(--text-main)' }}>${subtotal.toFixed(2)} CAD</strong>
