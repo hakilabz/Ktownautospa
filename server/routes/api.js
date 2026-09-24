@@ -180,7 +180,10 @@ router.post('/create-checkout-session', async (req, res) => {
         });
       }
 
-      const origin = req.headers.origin || 'http://localhost:5001';
+      const origin = req.headers.origin 
+        || (req.headers.host ? `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers.host}` : null) 
+        || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://www.ktownautospa.ca');
+
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items,
@@ -191,15 +194,54 @@ router.post('/create-checkout-session', async (req, res) => {
           reservationId,
           customerName: customer?.name || '',
           customerPhone: customer?.phone || '',
-          vehicle: `${customer?.vehicleYear || ''} ${customer?.vehicleMake || ''} ${customer?.vehicleModel || ''}`.trim(),
+          customerEmail: customer?.email || '',
+          vehicleYear: customer?.vehicleYear || '',
+          vehicleMake: customer?.vehicleMake || '',
+          vehicleModel: customer?.vehicleModel || '',
+          customerNotes: customer?.notes || '',
           appointmentDate: appointment?.date || '',
           appointmentSlot: appointment?.slot || '',
+          subtotal: String(totals.subtotal),
+          hstTax: String(totals.hstTax),
+          grandTotal: String(totals.grandTotal),
         },
         success_url: `${origin}/?booking=success&reservation_id=${reservationId}&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/?booking=cancelled`,
       }, {
         idempotencyKey: `cs_${reservationId}`,
       });
+
+      // Persist pending reservation before redirect
+      const pendingReservation = {
+        id: reservationId,
+        customer: {
+          name: customer?.name || '',
+          phone: customer?.phone || '',
+          email: customer?.email || '',
+          vehicleYear: customer?.vehicleYear || '',
+          vehicleMake: customer?.vehicleMake || '',
+          vehicleModel: customer?.vehicleModel || '',
+          notes: customer?.notes || '',
+        },
+        appointment: {
+          date: appointment?.date || '',
+          slot: appointment?.slot || 'Morning (9 AM - 12 PM)',
+        },
+        items: totals.items,
+        pricing: {
+          subtotal: totals.subtotal,
+          hstTax: totals.hstTax,
+          grandTotal: totals.grandTotal,
+          currency: 'CAD',
+        },
+        payment: {
+          method: 'card_stripe',
+          status: 'pending_payment',
+          stripeCheckoutSessionId: session.id,
+        },
+        status: 'pending_payment',
+      };
+      saveReservation(pendingReservation);
 
       return res.json({
         url: session.url,
@@ -219,6 +261,109 @@ router.post('/create-checkout-session', async (req, res) => {
   } catch (err) {
     console.error('Checkout session error:', err);
     res.status(500).json({ error: err.message || 'Failed to create checkout session' });
+  }
+});
+
+// 3c. Confirm Stripe Checkout Session and finalize booking
+router.get('/confirm-stripe-session', async (req, res) => {
+  try {
+    const { session_id, reservation_id } = req.query;
+
+    if (!session_id) {
+      return res.status(400).json({ error: 'Session ID is required.' });
+    }
+
+    if (!isStripeConfigured || !stripe) {
+      return res.status(500).json({ error: 'Stripe is not configured on this server.' });
+    }
+
+    // Retrieve the authoritative session directly from Stripe API
+    const session = await stripe.checkout.sessions.retrieve(session_id);
+
+    if (!session) {
+      return res.status(404).json({ error: 'Stripe checkout session not found.' });
+    }
+
+    if (session.payment_status !== 'paid') {
+      return res.status(400).json({
+        error: `Payment is not marked as paid by Stripe. Current status: ${session.payment_status}`,
+        paymentStatus: session.payment_status,
+      });
+    }
+
+    const resvId = reservation_id || session.client_reference_id || session.metadata?.reservationId;
+
+    // Retrieve or reconstruct reservation
+    const list = getReservations();
+    let resv = list.find(r => r.id === resvId || r.payment?.stripeCheckoutSessionId === session.id);
+
+    const isAlreadyPaid = resv && resv.payment?.status === 'paid';
+
+    if (!resv) {
+      // Reconstruct reservation if lambda container recycled
+      const metadata = session.metadata || {};
+      resv = {
+        id: resvId || ('KT-' + Math.floor(100000 + Math.random() * 900000)),
+        customer: {
+          name: metadata.customerName || session.customer_details?.name || 'Customer',
+          phone: metadata.customerPhone || session.customer_details?.phone || '',
+          email: metadata.customerEmail || session.customer_details?.email || '',
+          vehicleYear: metadata.vehicleYear || '',
+          vehicleMake: metadata.vehicleMake || '',
+          vehicleModel: metadata.vehicleModel || '',
+          notes: metadata.customerNotes || '',
+        },
+        appointment: {
+          date: metadata.appointmentDate || new Date().toISOString().split('T')[0],
+          slot: metadata.appointmentSlot || 'Morning (9 AM - 12 PM)',
+        },
+        items: [],
+        pricing: {
+          subtotal: parseFloat(metadata.subtotal || '0') || ((session.amount_total || 0) / 100 / 1.13),
+          hstTax: parseFloat(metadata.hstTax || '0') || (((session.amount_total || 0) / 100) - ((session.amount_total || 0) / 100 / 1.13)),
+          grandTotal: parseFloat(metadata.grandTotal || '0') || ((session.amount_total || 0) / 100),
+          currency: 'CAD',
+        },
+        payment: {
+          method: 'card_stripe',
+          status: 'paid',
+          stripeCheckoutSessionId: session.id,
+          stripePaymentIntentId: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,
+        },
+        status: 'confirmed',
+      };
+    } else {
+      resv.status = 'confirmed';
+      resv.payment = {
+        ...resv.payment,
+        method: 'card_stripe',
+        status: 'paid',
+        stripeCheckoutSessionId: session.id,
+        stripePaymentIntentId: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,
+      };
+    }
+
+    saveReservation(resv);
+
+    // Send email notifications if not already sent for this paid booking
+    let notificationResults = null;
+    if (!isAlreadyPaid) {
+      try {
+        notificationResults = await sendBookingNotifications(resv);
+        console.log(`[Stripe Checkout Confirmed] Notifications dispatched for ${resv.id}:`, notificationResults);
+      } catch (notifyErr) {
+        console.error('[Stripe Checkout Confirmed] Notification dispatch note:', notifyErr.message);
+      }
+    }
+
+    return res.json({
+      success: true,
+      reservation: resv,
+      notifications: notificationResults,
+    });
+  } catch (err) {
+    console.error('Confirm stripe session error:', err);
+    res.status(500).json({ error: err.message || 'Failed to verify Stripe checkout session' });
   }
 });
 

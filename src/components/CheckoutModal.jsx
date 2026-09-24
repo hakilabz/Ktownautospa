@@ -9,7 +9,8 @@ import {
   Loader2,
   Lock,
   AlertCircle,
-  Printer
+  Printer,
+  ShieldCheck,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useCart } from '../context/CartContext';
@@ -25,7 +26,7 @@ export default function CheckoutModal() {
     clearCart,
   } = useCart();
 
-  const [step, setStep] = useState('form'); // 'form' | 'success'
+  const [step, setStep] = useState('form'); // 'form' | 'verifying' | 'success'
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -41,10 +42,6 @@ export default function CheckoutModal() {
     preferredDate: '',
     preferredSlot: 'Morning (9 AM - 12 PM)',
     paymentMethod: 'pay_at_dropoff', // 'card_stripe' | 'pay_at_dropoff'
-    cardNumber: '',
-    cardExp: '',
-    cardCvc: '',
-    cardZip: '',
   });
 
   const [confirmedReservation, setConfirmedReservation] = useState(null);
@@ -60,6 +57,60 @@ export default function CheckoutModal() {
       setFormData(prev => ({ ...prev, preferredDate: `${yyyy}-${mm}-${dd}` }));
     }
   }, [formData.preferredDate]);
+
+  // Handle Stripe return URLs (?booking=success or ?booking=cancelled)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const bookingStatus = params.get('booking');
+    const sessionId = params.get('session_id');
+    const reservationId = params.get('reservation_id');
+
+    if (bookingStatus === 'success' && sessionId) {
+      setIsCheckoutOpen(true);
+      setStep('verifying');
+
+      fetch(`/api/confirm-stripe-session?session_id=${encodeURIComponent(sessionId)}&reservation_id=${encodeURIComponent(reservationId || '')}`)
+        .then(async (res) => {
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.error || 'Payment verification with Stripe was unsuccessful');
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data.reservation) {
+            setConfirmedReservation(data.reservation);
+            setStep('success');
+            clearCart();
+
+            // Confetti celebration for confirmed paid reservation
+            try {
+              confetti({
+                particleCount: 160,
+                spread: 85,
+                origin: { y: 0.6 },
+                colors: ['#F0D590', '#C9A03C', '#3E9BDA', '#12305F'],
+              });
+            } catch {}
+
+            // Clean query parameters from URL bar
+            window.history.replaceState(null, '', window.location.pathname);
+          } else {
+            throw new Error('No confirmed reservation details received');
+          }
+        })
+        .catch((err) => {
+          console.error('Session confirmation error:', err);
+          setStep('form');
+          setErrorMsg(err.message || 'Payment verification failed. Please contact us at (613) 484-8848 or ktownautomobilespa@gmail.com.');
+        });
+    } else if (bookingStatus === 'cancelled') {
+      setIsCheckoutOpen(true);
+      setStep('form');
+      setErrorMsg('Payment was cancelled or interrupted. Your selections are still saved—you can try again or select "Pay at Drop-off (In Shop)".');
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, [clearCart, setIsCheckoutOpen]);
 
   // Lock body scroll and listen for escape key when modal is open
   useEffect(() => {
@@ -85,19 +136,6 @@ export default function CheckoutModal() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleCardNumberChange = (e) => {
-    // Format card number with spaces
-    const val = e.target.value.replace(/\D/g, '').slice(0, 16);
-    const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
-    setFormData(prev => ({ ...prev, cardNumber: formatted }));
-  };
-
-  const handleExpChange = (e) => {
-    const val = e.target.value.replace(/\D/g, '').slice(0, 4);
-    const formatted = val.length >= 3 ? `${val.slice(0, 2)}/${val.slice(2)}` : val;
-    setFormData(prev => ({ ...prev, cardExp: formatted }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -117,20 +155,12 @@ export default function CheckoutModal() {
       return;
     }
 
-    if (formData.paymentMethod === 'card_stripe') {
-      if (!formData.cardNumber || !formData.cardExp || !formData.cardCvc) {
-        setErrorMsg('Please fill in your card details to complete payment with card.');
-        return;
-      }
-    }
-
     setSubmitting(true);
 
     try {
-      // 1. If card payment selected, initiate Payment Intent with backend
-      let paymentIntentData = null;
+      // 1. Stripe Hosted Checkout Flow (Cards, Apple Pay, Google Pay)
       if (formData.paymentMethod === 'card_stripe') {
-        const intentRes = await fetch('/api/create-payment-intent', {
+        const sessionRes = await fetch('/api/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -142,6 +172,7 @@ export default function CheckoutModal() {
               vehicleYear: formData.vehicleYear,
               vehicleMake: formData.vehicleMake,
               vehicleModel: formData.vehicleModel,
+              notes: formData.notes,
             },
             appointment: {
               date: formData.preferredDate,
@@ -150,20 +181,26 @@ export default function CheckoutModal() {
           }),
         });
 
-        if (!intentRes.ok) {
-          const err = await intentRes.json().catch(() => ({}));
-          throw new Error(err.error || 'Failed to prepare payment intent');
+        if (!sessionRes.ok) {
+          const err = await sessionRes.json().catch(() => ({}));
+          throw new Error(err.error || 'Failed to initialize secure checkout session');
         }
 
-        paymentIntentData = await intentRes.json();
+        const sessionData = await sessionRes.json();
+        if (sessionData.url) {
+          // Redirect directly to Stripe Hosted Checkout
+          window.location.href = sessionData.url;
+          return;
+        } else {
+          throw new Error(sessionData.message || 'Stripe checkout URL was not returned');
+        }
       }
 
-      // 2. Submit confirmed reservation to backend
+      // 2. Pay at Drop-off (In Shop) Flow
       const resvRes = await fetch('/api/reservations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          reservationId: paymentIntentData?.reservationId,
           items: cart,
           customer: {
             name: formData.name,
@@ -178,8 +215,8 @@ export default function CheckoutModal() {
             date: formData.preferredDate,
             slot: formData.preferredSlot,
           },
-          paymentMethod: formData.paymentMethod,
-          paymentStatus: formData.paymentMethod === 'card_stripe' ? 'paid' : 'pending_at_dropoff',
+          paymentMethod: 'pay_at_dropoff',
+          paymentStatus: 'pending_at_dropoff',
           total: grandTotal,
         }),
       });
@@ -202,15 +239,13 @@ export default function CheckoutModal() {
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
             access_key: '2e1c3132-7a7a-4c2c-80a5-f8510800fa26',
-            subject: `🚨 NEW BOOKING: ${formData.name} - ${resvData.reservation?.id} ($${grandTotal.toFixed(2)} CAD)`,
+            subject: `🚨 NEW BOOKING (Pay at Drop-off): ${formData.name} - ${resvData.reservation?.id} ($${grandTotal.toFixed(2)} CAD)`,
             from_name: 'Ktown Auto Spa Bookings',
             replyto: formData.email,
-            message: `Booking Ref: ${resvData.reservation?.id}\nCustomer: ${formData.name} (${formData.phone}, ${formData.email})\nVehicle: ${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}\nDate: ${formData.preferredDate} (${formData.preferredSlot})\nServices: ${itemSummary}\nTotal: $${grandTotal.toFixed(2)} CAD\nPayment: ${formData.paymentMethod}\nNotes: ${formData.notes || 'None'}`,
+            message: `Booking Ref: ${resvData.reservation?.id}\nCustomer: ${formData.name} (${formData.phone}, ${formData.email})\nVehicle: ${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}\nDate: ${formData.preferredDate} (${formData.preferredSlot})\nServices: ${itemSummary}\nTotal: $${grandTotal.toFixed(2)} CAD\nPayment: Pay at Drop-off (In Shop)\nNotes: ${formData.notes || 'None'}`,
           }),
         }).catch(() => {});
-      } catch {
-        // Non-blocking
-      }
+      } catch {}
 
       // Confetti celebration
       try {
@@ -220,9 +255,7 @@ export default function CheckoutModal() {
           origin: { y: 0.6 },
           colors: ['#F0D590', '#C9A03C', '#3E9BDA', '#12305F'],
         });
-      } catch {
-        // Confetti optional
-      }
+      } catch {}
     } catch (err) {
       console.error('Checkout error:', err);
       const friendlyMsg = err.message || 'An error occurred during booking. Please try again.';
@@ -249,9 +282,7 @@ export default function CheckoutModal() {
               attemptedPaymentMethod: 'card_stripe',
             }),
           }).catch(() => {});
-        } catch {
-          // Non-blocking
-        }
+        } catch {}
       }
     } finally {
       setSubmitting(false);
@@ -259,15 +290,15 @@ export default function CheckoutModal() {
   };
 
   const generateGoogleCalendarUrl = () => {
-    if (!confirmedReservation) return '#';
-    const dateStr = confirmedReservation.appointment.date.replace(/-/g, '');
+    if (!confirmedReservation || !confirmedReservation.appointment) return '#';
+    const dateStr = (confirmedReservation.appointment.date || '').replace(/-/g, '');
     let startHour = '090000';
     let endHour = '120000';
 
-    if (confirmedReservation.appointment.slot.includes('12 PM')) {
+    if (confirmedReservation.appointment.slot?.includes('12 PM')) {
       startHour = '120000';
       endHour = '150000';
-    } else if (confirmedReservation.appointment.slot.includes('3 PM')) {
+    } else if (confirmedReservation.appointment.slot?.includes('3 PM')) {
       startHour = '150000';
       endHour = '180000';
     }
@@ -275,8 +306,11 @@ export default function CheckoutModal() {
     const startFormatted = `${dateStr}T${startHour}`;
     const endFormatted = `${dateStr}T${endHour}`;
     const title = encodeURIComponent(`Ktown Auto Spa Appointment (${confirmedReservation.id})`);
+    const serviceTitles = confirmedReservation.items?.length
+      ? confirmedReservation.items.map(i => i.title).join(', ')
+      : 'Automotive Detailing';
     const details = encodeURIComponent(
-      `Appointment Ref: ${confirmedReservation.id}\nServices: ${confirmedReservation.items.map(i => i.title).join(', ')}\nTotal: $${confirmedReservation.pricing.grandTotal} CAD\nContact: 647-915-3530`
+      `Appointment Ref: ${confirmedReservation.id}\nServices: ${serviceTitles}\nTotal: $${confirmedReservation.pricing?.grandTotal?.toFixed(2)} CAD\nContact: 647-915-3530`
     );
     const location = encodeURIComponent('36 Joseph St, Kingston, ON K7K 2H5');
 
@@ -284,14 +318,17 @@ export default function CheckoutModal() {
   };
 
   const downloadIcs = () => {
-    if (!confirmedReservation) return;
-    const dateStr = confirmedReservation.appointment.date.replace(/-/g, '');
+    if (!confirmedReservation || !confirmedReservation.appointment) return;
+    const dateStr = (confirmedReservation.appointment.date || '').replace(/-/g, '');
+    const serviceTitles = confirmedReservation.items?.length
+      ? confirmedReservation.items.map(i => i.title).join(', ')
+      : 'Automotive Detailing';
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Ktown Auto Spa//Booking Engine//EN
 BEGIN:VEVENT
-SUMMARY:Ktown Auto Spa - ${confirmedReservation.items.map(i => i.title).join(', ')}
-DESCRIPTION:Booking Ref: ${confirmedReservation.id}\\nTotal: $${confirmedReservation.pricing.grandTotal} CAD\\nLocation: 36 Joseph St, Kingston, ON
+SUMMARY:Ktown Auto Spa - ${serviceTitles}
+DESCRIPTION:Booking Ref: ${confirmedReservation.id}\\nTotal: $${confirmedReservation.pricing?.grandTotal?.toFixed(2)} CAD\\nLocation: 36 Joseph St, Kingston, ON
 LOCATION:36 Joseph St, Kingston, ON K7K 2H5
 DTSTART:${dateStr}T090000
 DTEND:${dateStr}T120000
@@ -326,7 +363,7 @@ END:VCALENDAR`;
             <img src="/logo.png" alt="Ktown Auto Spa" className="checkout-header-logo" />
             <div style={{ minWidth: 0 }}>
               <h2 id="checkoutModalTitle" className="checkout-header-title">
-                {step === 'form' ? 'Checkout & Scheduling' : 'Booking Confirmed'}
+                {step === 'form' ? 'Checkout & Scheduling' : step === 'verifying' ? 'Verifying Payment' : 'Booking Confirmed'}
               </h2>
               <span className="checkout-header-sub">
                 36 Joseph St, Kingston ON &middot; 647-915-3530
@@ -345,7 +382,19 @@ END:VCALENDAR`;
 
         {/* Modal Content */}
         <div className="checkout-body">
-          {step === 'form' ? (
+          {step === 'verifying' ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3.5rem 1rem', textAlign: 'center', gap: '1.25rem' }}>
+              <Loader2 style={{ width: '3.2rem', height: '3.2rem', color: 'var(--gold-primary)', animation: 'spin 1s linear infinite' }} />
+              <div>
+                <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.5rem', fontWeight: 900, color: 'var(--heading-color)', margin: '0 0 0.5rem' }}>
+                  Verifying Secure Payment with Stripe...
+                </h3>
+                <p style={{ color: 'var(--muted-color)', fontSize: '0.9rem', maxWidth: '42ch', margin: '0 auto', lineHeight: 1.5 }}>
+                  Please hold on while we finalize your appointment and generate your official receipt.
+                </p>
+              </div>
+            </div>
+          ) : step === 'form' ? (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
               {errorMsg && (
                 <div
@@ -612,51 +661,34 @@ END:VCALENDAR`;
                             </div>
                           </div>
                           <span style={{ fontSize: '0.75rem', color: 'var(--muted-color)', display: 'block', marginTop: '0.2rem' }}>
-                            Secure 256-bit encryption. Visa, Mastercard, Amex.
+                            Official Stripe 256-bit encryption. Visa, Mastercard, Amex, Apple Pay, Google Pay.
                           </span>
 
-                          {/* Card input mockup fields */}
+                          {/* Official Stripe 256-bit Hosted Checkout Notice */}
                           {formData.paymentMethod === 'card_stripe' && (
-                            <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                              <div style={{ position: 'relative' }}>
-                                <input
-                                  type="text"
-                                  placeholder="Card number (0000 0000 0000 0000)"
-                                  value={formData.cardNumber}
-                                  onChange={handleCardNumberChange}
-                                  maxLength={19}
-                                  className="checkout-input"
-                                  style={{ paddingLeft: '2.2rem', fontFamily: 'monospace', fontSize: '0.85rem' }}
-                                />
-                                <CreditCard style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', width: '1rem', height: '1rem', color: 'var(--gold-primary)' }} />
+                            <div
+                              style={{
+                                marginTop: '0.75rem',
+                                padding: '0.85rem 1rem',
+                                background: 'rgba(201, 160, 60, 0.08)',
+                                border: '1px solid rgba(201, 160, 60, 0.25)',
+                                borderRadius: '8px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.45rem',
+                              }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--gold-primary)', fontWeight: 700, fontSize: '0.82rem' }}>
+                                <ShieldCheck style={{ width: '1.1rem', height: '1.1rem', flexShrink: 0 }} />
+                                <span>Official Stripe 256-Bit Hosted Checkout</span>
                               </div>
-                              <div className="checkout-row-card-details">
-                                <input
-                                  type="text"
-                                  placeholder="MM/YY"
-                                  value={formData.cardExp}
-                                  onChange={handleExpChange}
-                                  maxLength={5}
-                                  className="checkout-input checkout-input-center"
-                                />
-                                <input
-                                  type="password"
-                                  placeholder="CVC"
-                                  name="cardCvc"
-                                  value={formData.cardCvc}
-                                  onChange={handleChange}
-                                  maxLength={4}
-                                  className="checkout-input checkout-input-center"
-                                />
-                                <input
-                                  type="text"
-                                  placeholder="Postal Code"
-                                  name="cardZip"
-                                  value={formData.cardZip}
-                                  onChange={handleChange}
-                                  maxLength={7}
-                                  className="checkout-input checkout-input-center"
-                                />
+                              <p style={{ margin: 0, fontSize: '0.76rem', color: 'var(--muted-color)', lineHeight: 1.45 }}>
+                                You will be seamlessly redirected to Stripe’s secure gateway to complete your payment with instant bank authorization.
+                              </p>
+                              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '0.2rem' }}>
+                                <span style={{ fontSize: '0.68rem', padding: '0.2rem 0.45rem', borderRadius: '4px', background: 'var(--surface-card)', border: '1px solid var(--surface-border)', color: 'var(--text-main)', fontWeight: 600 }}>💳 Cards (Visa, MC, Amex)</span>
+                                <span style={{ fontSize: '0.68rem', padding: '0.2rem 0.45rem', borderRadius: '4px', background: 'var(--surface-card)', border: '1px solid var(--surface-border)', color: 'var(--text-main)', fontWeight: 600 }}>🍏 Apple Pay</span>
+                                <span style={{ fontSize: '0.68rem', padding: '0.2rem 0.45rem', borderRadius: '4px', background: 'var(--surface-card)', border: '1px solid var(--surface-border)', color: 'var(--text-main)', fontWeight: 600 }}>🤖 Google Pay</span>
                               </div>
                             </div>
                           )}
@@ -694,13 +726,15 @@ END:VCALENDAR`;
                     {submitting ? (
                       <>
                         <Loader2 style={{ width: '1.2rem', height: '1.2rem', animation: 'spin 1s linear infinite' }} />
-                        <span>Confirming Appointment...</span>
+                        <span>
+                          {formData.paymentMethod === 'card_stripe' ? 'Redirecting to Stripe...' : 'Confirming Appointment...'}
+                        </span>
                       </>
                     ) : (
                       <>
                         <span>
                           {formData.paymentMethod === 'card_stripe'
-                            ? `Pay $${grandTotal.toFixed(2)} CAD & Confirm Booking`
+                            ? `Proceed to Stripe Checkout ($${grandTotal.toFixed(2)} CAD)`
                             : `Confirm Appointment ($${grandTotal.toFixed(2)} CAD)`}
                         </span>
                         <ArrowRight style={{ width: '1.1rem', height: '1.1rem', flexShrink: 0 }} />
@@ -779,7 +813,7 @@ END:VCALENDAR`;
                 <div className="checkout-receipt-row">
                   <span className="checkout-receipt-label">Payment Method:</span>
                   <strong className="checkout-receipt-value">
-                    {confirmedReservation?.payment?.method === 'card_stripe' ? 'Credit Card (Stripe)' : 'Pay at Drop-off (In-Store)'}
+                    {confirmedReservation?.payment?.method === 'card_stripe' ? 'Credit Card (Stripe - Paid Online)' : 'Pay at Drop-off (In-Store)'}
                   </strong>
                 </div>
 
