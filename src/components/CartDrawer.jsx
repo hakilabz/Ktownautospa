@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Car, Tag, Check, Loader2 } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { useCart, PACKAGE_VEHICLE_PRICES, VEHICLE_OPTIONS } from '../context/CartContext';
 
 export default function CartDrawer() {
   const {
+    selectedVehicle,
     cart,
     cartCount,
     subtotal,
@@ -25,6 +26,8 @@ export default function CartDrawer() {
     clearCart,
     proceedToCheckout,
   } = useCart();
+
+  const activeVehicleLabel = (VEHICLE_OPTIONS.find((v) => v.id === selectedVehicle) || VEHICLE_OPTIONS[0]).label;
 
   const [inputCoupon, setInputCoupon] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
@@ -194,34 +197,34 @@ export default function CartDrawer() {
               {/* Popular quick add packages */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', maxWidth: '300px', margin: '0 auto 1.5rem', textAlign: 'left' }}>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.72rem', color: 'var(--gold-primary)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }}>
-                  Quick Add Popular Services:
+                  Quick Add ({activeVehicleLabel}):
                 </span>
                 <button
                   type="button"
-                  onClick={() => addToCart({ serviceId: 'medium-package', title: 'Medium Package', vehicleType: 'c-sedan', basePrice: 100, subtitle: 'Interior vacuum & glass, mats, jambs, hand wash' }, false)}
+                  onClick={() => addToCart({ serviceId: 'medium-package', title: 'Medium Package', vehicleType: selectedVehicle, basePrice: PACKAGE_VEHICLE_PRICES['medium-package'][selectedVehicle], subtitle: 'Interior vacuum & glass, mats, jambs, hand wash' }, false)}
                   className="btn btn--outline"
                   style={{ minHeight: '38px', fontSize: '0.84rem', justifyContent: 'space-between', padding: '0 0.9rem' }}
                 >
-                  <span>Medium Package (Sedan)</span>
-                  <b>$100</b>
+                  <span>Medium Package ({activeVehicleLabel})</span>
+                  <b>${PACKAGE_VEHICLE_PRICES['medium-package'][selectedVehicle]}</b>
                 </button>
                 <button
                   type="button"
-                  onClick={() => addToCart({ serviceId: 'full-detail', title: 'Full Detail', vehicleType: 'c-sedan', basePrice: 200, subtitle: 'Medium Package + summer mats steamed, carpets & seats scrubbed' }, false)}
+                  onClick={() => addToCart({ serviceId: 'full-detail', title: 'Full Detail', vehicleType: selectedVehicle, basePrice: PACKAGE_VEHICLE_PRICES['full-detail'][selectedVehicle], subtitle: 'Medium Package + summer mats steamed, carpets & seats scrubbed' }, false)}
                   className="btn btn--outline"
                   style={{ minHeight: '38px', fontSize: '0.84rem', justifyContent: 'space-between', padding: '0 0.9rem' }}
                 >
-                  <span>Full Detail (Sedan)</span>
-                  <b>$200</b>
+                  <span>Full Detail ({activeVehicleLabel})</span>
+                  <b>${PACKAGE_VEHICLE_PRICES['full-detail'][selectedVehicle]}</b>
                 </button>
                 <button
                   type="button"
-                  onClick={() => addToCart({ serviceId: 'hand-car-wash', title: 'Hand Car Wash', vehicleType: 'c-sedan', basePrice: 30, subtitle: 'Wash & wax soap, windows, blown dry' }, false)}
+                  onClick={() => addToCart({ serviceId: 'hand-car-wash', title: 'Hand Car Wash', vehicleType: selectedVehicle, basePrice: PACKAGE_VEHICLE_PRICES['hand-car-wash'][selectedVehicle], subtitle: 'Wash & wax soap, windows, blown dry' }, false)}
                   className="btn btn--outline"
                   style={{ minHeight: '38px', fontSize: '0.84rem', justifyContent: 'space-between', padding: '0 0.9rem' }}
                 >
-                  <span>Hand Car Wash (Sedan)</span>
-                  <b>$30</b>
+                  <span>Hand Car Wash ({activeVehicleLabel})</span>
+                  <b>${PACKAGE_VEHICLE_PRICES['hand-car-wash'][selectedVehicle]}</b>
                 </button>
               </div>
 

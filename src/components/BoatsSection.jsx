@@ -6,7 +6,7 @@ export default function BoatsSection() {
     <section className="band band--deep" id="boats">
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2.5rem', alignItems: 'center' }}>
           
           <div>
             <p className="kicker">Boats &amp; marine</p>
@@ -62,7 +62,7 @@ export default function BoatsSection() {
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 130px), 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
               {[
                 'Portsmouth Olympic Harbour',
                 'Kingston Marina',
@@ -92,7 +92,7 @@ export default function BoatsSection() {
             Cruiser Foredeck Scrub &amp; Gel-Coat Restoration
           </h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.5rem' }}>
             <figure className="frame" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(240,213,144,0.3)', padding: '0.85rem', margin: 0 }}>
               <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(240,213,144,0.3)', aspectRatio: '16/10', background: '#000' }}>
                 <img 

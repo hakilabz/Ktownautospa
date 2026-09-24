@@ -77,7 +77,7 @@ export default function Gallery() {
         </div>
 
         {/* 2 Comparison Before & After Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.75rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem', marginBottom: '1.75rem' }}>
           {comparisonCards.map((card, idx) => (
             <figure key={idx} className="frame" style={{ padding: '1rem', margin: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
@@ -111,7 +111,7 @@ export default function Gallery() {
         </div>
 
         {/* 4-Photo Real Fleet Detail Strip */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
           {fleetPhotos.map((photo, idx) => (
             <figure key={idx} className="frame" style={{ padding: '0.65rem', margin: 0 }}>
               <div style={{ borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--surface-border)', aspectRatio: '4/3', background: '#000' }}>
@@ -125,7 +125,7 @@ export default function Gallery() {
         </div>
 
         {/* Detail Specialties Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginTop: '2.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.25rem', marginTop: '2.5rem', marginBottom: '1.5rem' }}>
           {workCards.map((item, idx) => (
             <div key={idx} className="frame" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.4rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

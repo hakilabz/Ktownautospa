@@ -6,7 +6,7 @@ export default function LocationHours({ onOpenBooking }) {
     <section className="band band--deep" id="book">
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3rem', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '3rem', alignItems: 'start' }}>
           
           {/* Left Column: Contact & Hours */}
           <div>

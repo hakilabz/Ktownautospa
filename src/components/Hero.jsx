@@ -1,114 +1,124 @@
 import React from 'react';
-import { Phone, Calendar, ArrowRight, MessageCircle } from 'lucide-react';
+import { Phone, Calendar, ArrowRight, MessageCircle, ShieldCheck, Sparkles, MapPin } from 'lucide-react';
 
 export default function Hero({ onOpenBooking }) {
   return (
-    <section 
-      id="hero"
-      style={{
-        position: 'relative',
-        color: '#FFFFFF',
-        padding: 'clamp(3rem, 6vw, 5rem) 0 clamp(3.5rem, 6vw, 5.5rem)',
-        backgroundImage: `
-          linear-gradient(96deg, rgba(10, 30, 66, 0.96) 0%, rgba(10, 30, 66, 0.88) 45%, rgba(18, 48, 95, 0.62) 100%),
-          url('/hero-car.jpg')
-        `,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center right',
-        backgroundColor: 'var(--navy-deep)',
-        overflow: 'hidden',
-      }}
-    >
-      <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 1rem', position: 'relative', zIndex: 2 }}>
-        <div style={{ maxWidth: '48rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <section id="hero" className="hero-section">
+      {/* Subtle Ambient Studio Backdrop */}
+      <div className="hero-ambient-bg" aria-hidden="true" />
+
+      <div className="hero-container">
+        <div className="hero-layout">
           
-          {/* Eyebrow */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{
-              fontFamily: 'var(--mono)', fontSize: '0.8rem',
-              letterSpacing: '0.14em', textTransform: 'uppercase',
-              color: 'var(--gold-lt)', fontWeight: 800,
-              background: 'rgba(201, 160, 60, 0.16)',
-              border: '1px solid rgba(240, 213, 144, 0.35)',
-              padding: '0.25rem 0.65rem', borderRadius: '4px',
-            }}>
-              Kingston · Amherstview · Loyalist
-            </span>
-          </div>
-
-          {/* Main Headline */}
-          <h1 style={{
-            fontFamily: 'var(--display)', fontWeight: 800,
-            fontSize: 'clamp(2.6rem, 6.5vw, 4.4rem)', lineHeight: 0.98,
-            textTransform: 'uppercase', margin: 0,
-            textShadow: '0 2px 20px rgba(0,0,0,0.5)',
-          }}>
-            Hand Car Wash, Detailing &amp; <span style={{ color: 'var(--gold-lt)' }}>Ceramic Coating</span>
-          </h1>
-
-          {/* Lede Subtitle */}
-          <p style={{
-            fontSize: 'clamp(1rem, 2vw, 1.18rem)',
-            color: '#E4EDF7', maxWidth: '46ch', margin: 0,
-            lineHeight: 1.6, textShadow: '0 1px 10px rgba(0,0,0,0.5)',
-          }}>
-            Hand car wash from $30, full detailing from $200, ceramic coating from $449. 
-            Authorized System X &amp; Nano-Brite installer, Auto-Brite certified. 
-            36 Joseph St, Kingston.
-          </p>
-
-          {/* Primary Action Buttons */}
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', paddingTop: '0.25rem' }}>
-            <a href="tel:+16479153530" className="btn btn--gold">
-              <Phone style={{ width: '1rem', height: '1rem' }} />
-              <span>Call 647-915-3530</span>
-            </a>
-
-            <a href="#packages" className="btn btn--cream">
-              <span>View Packages &amp; Rates</span>
-              <ArrowRight style={{ width: '0.95rem', height: '0.95rem' }} />
-            </a>
-
-            <button onClick={onOpenBooking} className="btn btn--navy">
-              <Calendar style={{ width: '1rem', height: '1rem' }} />
-              <span>Book Appointment</span>
-            </button>
-          </div>
-
-          {/* Signature CARFAX Highlight Box */}
-          <div style={{
-            display: 'flex', gap: '1rem', alignItems: 'center',
-            background: 'rgba(255, 255, 255, 0.97)', color: 'var(--ink)',
-            border: '1.5px solid var(--gold)', borderRadius: '10px',
-            padding: '0.85rem 1.15rem', marginTop: '0.5rem',
-            boxShadow: '0 8px 28px rgba(0,0,0,0.3)',
-            flexWrap: 'wrap',
-          }}>
-            <div style={{ flexShrink: 0, width: '130px', background: '#111827', padding: '0.45rem 0.65rem', borderRadius: '6px', textAlign: 'center' }}>
-              <span style={{ color: '#FFFFFF', fontWeight: 900, fontSize: '1.05rem', letterSpacing: '0.05em', display: 'block', lineHeight: 1 }}>CARFAX</span>
-              <span style={{ color: '#60A5FA', fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Canada</span>
-            </div>
-            <div style={{ flex: '1 1 280px' }}>
-              <strong style={{ display: 'block', color: 'var(--navy-deep)', fontSize: '0.95rem', lineHeight: 1.35, marginBottom: '0.15rem' }}>
-                Every System X coating we install is registered on your CARFAX Canada report.
-              </strong>
-              <span style={{ display: 'block', color: 'var(--slate)', fontSize: '0.86rem', lineHeight: 1.4 }}>
-                Documented permanent service record on your vehicle history — verifiable resale proof.
+          {/* Left Column: Headline, Value Proposition, CTAs & CARFAX */}
+          <div className="hero-copy-col">
+            {/* Eyebrow */}
+            <div className="hero-eyebrow-row">
+              <span className="hero-eyebrow-pill">
+                <Sparkles style={{ width: '0.8rem', height: '0.8rem', flexShrink: 0 }} />
+                <span>Kingston &middot; Amherstview &middot; Loyalist</span>
+              </span>
+              <span className="hero-eyebrow-sub">
+                Heated Indoor Studio &middot; Open Saturdays
               </span>
             </div>
+
+            {/* Main Headline */}
+            <h1 className="hero-headline">
+              Hand Car Wash, Detailing &amp;{' '}
+              <span className="hero-headline-accent">Ceramic Coating</span>
+            </h1>
+
+            {/* Lede Subtitle */}
+            <p className="hero-lede">
+              Hand car wash from <strong>$30</strong>, full detailing from <strong>$200</strong>, ceramic coating from <strong>$449</strong>.
+              Authorized System X &amp; Nano-Brite installer, Auto-Brite certified.
+              36 Joseph St, Kingston.
+            </p>
+
+            {/* Primary Action Buttons */}
+            <div className="hero-cta-group">
+              <a href="tel:+16479153530" className="btn btn--gold hero-btn">
+                <Phone style={{ width: '1rem', height: '1rem', flexShrink: 0 }} />
+                <span>Call 647-915-3530</span>
+              </a>
+
+              <a href="#packages" className="btn btn--cream hero-btn">
+                <span>View Packages &amp; Rates</span>
+                <ArrowRight style={{ width: '0.95rem', height: '0.95rem', flexShrink: 0 }} />
+              </a>
+
+              <button type="button" onClick={onOpenBooking} className="btn btn--navy hero-btn">
+                <Calendar style={{ width: '1rem', height: '1rem', flexShrink: 0 }} />
+                <span>Book Appointment</span>
+              </button>
+            </div>
+
+            {/* Signature CARFAX Highlight Box */}
+            <div className="hero-carfax-card">
+              <div className="hero-carfax-badge">
+                <span className="hero-carfax-logo">CARFAX</span>
+                <span className="hero-carfax-country">Canada</span>
+              </div>
+              <div className="hero-carfax-copy">
+                <strong>
+                  Every System X coating we install is registered on your CARFAX Canada report.
+                </strong>
+                <span>
+                  Documented permanent service record on your vehicle history — verifiable resale proof.
+                </span>
+              </div>
+            </div>
+
+            {/* Quick WhatsApp Note */}
+            <p className="hero-wa-note">
+              <MessageCircle style={{ width: '1rem', height: '1rem', color: '#25D366', flexShrink: 0 }} />
+              <span>
+                Prefer WhatsApp? Send us car photos on{' '}
+                <a
+                  href="https://wa.me/16479153530"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#25D366', fontWeight: 700, textDecoration: 'underline' }}
+                >
+                  647-915-3530
+                </a>
+                .
+              </span>
+            </p>
           </div>
 
-          {/* Quick WhatsApp Note */}
-          <p style={{
-            fontFamily: 'var(--mono)', fontSize: '0.84rem',
-            color: '#C0D4EC', margin: 0,
-            display: 'flex', alignItems: 'center', gap: '0.45rem',
-          }}>
-            <MessageCircle style={{ width: '1rem', height: '1rem', color: '#25D366' }} />
-            <span>
-              Prefer WhatsApp? Send us car photos on <a href="https://wa.me/16479153530" target="_blank" rel="noopener" style={{ color: '#25D366', fontWeight: 700, textDecoration: 'underline' }}>647-915-3530</a>.
-            </span>
-          </p>
+          {/* Right / Mobile-Top Column: Responsive Full-Vehicle Showcase Image */}
+          <div className="hero-visual-col">
+            <div className="hero-image-card">
+              <picture>
+                <img
+                  src="/hero-car.jpg"
+                  alt="Luxury gold sports car receiving a foam hand wash and ceramic coating preparation inside Ktown Auto Spa's heated Kingston studio bay"
+                  className="hero-showcase-img"
+                  width="1280"
+                  height="720"
+                  fetchPriority="high"
+                  decoding="async"
+                />
+              </picture>
+
+              {/* Top-left floating credential pill */}
+              <div className="hero-img-badge-top">
+                <ShieldCheck style={{ width: '0.9rem', height: '0.9rem', color: '#F0D590', flexShrink: 0 }} />
+                <span>System X &amp; Nano-Brite Accredited</span>
+              </div>
+
+              {/* Bottom gradient bar with studio info */}
+              <div className="hero-img-caption-bar">
+                <div className="hero-img-caption-item">
+                  <MapPin style={{ width: '0.85rem', height: '0.85rem', color: '#F0D590', flexShrink: 0 }} />
+                  <span>36 Joseph St, Kingston &middot; Heated Indoor Bays</span>
+                </div>
+                <span className="hero-img-rate-pill">Wash from $30 &middot; Detail from $200</span>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>

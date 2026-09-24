@@ -3,8 +3,6 @@ import {
   Car,
   Sparkles,
   ShieldCheck,
-  Check,
-  Clock,
   ArrowRight,
   Plus,
   ShoppingBag,
@@ -14,13 +12,13 @@ import {
   CheckCircle2,
   Info,
   X,
-  LayoutGrid,
-  FileCheck2,
 } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { useCart, VEHICLE_OPTIONS } from '../context/CartContext';
 
 export default function QuoteBuilder({ onProceedToBooking }) {
   const {
+    selectedVehicle,
+    setSelectedVehicle,
     cart,
     addToCart,
     commitAddToCart,
@@ -33,9 +31,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
     getInclusionStatus,
   } = useCart();
 
-  // Vehicle selector state
-  const [selectedVehicle, setSelectedVehicle] = useState('c-sedan'); // 'c-sedan' | 'c-cross' | 'c-suv' | 'c-van'
-  const [activeTab, setActiveTab] = useState('wash'); // 'wash' | 'polish' | 'coat' | 'interior' | 'addons' | 'all'
+  const [activeTab, setActiveTab] = useState('wash'); // 'wash' | 'polish' | 'coat' | 'interior' | 'addons'
   const [addWashWithInteriorComplete, setAddWashWithInteriorComplete] = useState(false);
 
   // Listen for navigation events from other sections (e.g. Coating section click)
@@ -54,12 +50,8 @@ export default function QuoteBuilder({ onProceedToBooking }) {
     return () => window.removeEventListener('select-quote-tab', handleTabChange);
   }, []);
 
-  const vehicles = [
-    { id: 'c-sedan', label: 'Sedan', shortLabel: 'Sedan', sub: '2-Door Coupe or 4-Door Sedan' },
-    { id: 'c-cross', label: 'Crossover (5 seat)', shortLabel: 'Crossover (5 seat)', sub: '5-Seat Compact SUV' },
-    { id: 'c-suv', label: 'SUV (3rd row)', shortLabel: 'SUV (3rd row)', sub: '3rd Row / 7-Seat / Pickup' },
-    { id: 'c-van', label: 'Van', shortLabel: 'Van', sub: 'Minivan, Passenger or Cargo Van' },
-  ];
+  const vehicles = VEHICLE_OPTIONS;
+  const activeVehicleObj = vehicles.find((v) => v.id === selectedVehicle) || vehicles[0];
 
   const tabs = [
     { id: 'wash', label: 'Wash & Detail', icon: Droplets, count: 5 },
@@ -67,7 +59,6 @@ export default function QuoteBuilder({ onProceedToBooking }) {
     { id: 'coat', label: 'Ceramic Coating', icon: ShieldCheck, badge: '9 Packages', count: 9 },
     { id: 'interior', label: 'Interior, Glass, Wheel & Trim', icon: Layers, count: 9 },
     { id: 'addons', label: 'Add-Ons & Surcharge', icon: Plus, count: 9 },
-    { id: 'all', label: 'Full Rate Card View', icon: LayoutGrid },
   ];
 
   // ============================================================================
@@ -88,7 +79,12 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       desc: 'Doors, jambs, panels and dashboard wiped down, full blow-out and vacuum, rubber mats washed or carpet mats dry-cleaned. No steam, no scrubbing — the quick tidy-up · approx 1 hr',
       duration: 'Approx. 1 hr',
       prices: { 'c-sedan': 70, 'c-cross': 85, 'c-suv': 95, 'c-van': 105 },
-      includedBadges: ['Quick Tidy-Up (No Steam/Scrubbing)', 'Full Blow-Out & Vacuum', 'Doors, Jambs, Panels & Dash Wiped', 'Rubber Mats Washed / Carpet Mats Dry-Cleaned'],
+      includedBadges: [
+        'Quick Tidy-Up (No Steam/Scrubbing)',
+        'Full Blow-Out & Vacuum',
+        'Doors, Jambs, Panels & Dash Wiped',
+        'Rubber Mats Washed / Carpet Mats Dry-Cleaned',
+      ],
     },
     {
       id: 'medium-package',
@@ -106,7 +102,12 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       desc: 'Everything we do inside — 305°F steam extraction through the whole car, seats and carpets shampooed, vinyl and trim cleaned and dressed. The only thing it leaves out is the exterior wash — add a hand wash for $30 · approx 3 hrs',
       duration: 'Approx. 3 hrs',
       prices: { 'c-sedan': 175, 'c-cross': 199, 'c-suv': 229, 'c-van': 249 },
-      includedBadges: ['305°F Steam Extraction (Whole Car)', 'Seats & Carpets Shampooed', 'Vinyl & Trim Cleaned & Dressed', 'Interior Only (Add Hand Wash for $30)'],
+      includedBadges: [
+        '305°F Steam Extraction (Whole Car)',
+        'Seats & Carpets Shampooed',
+        'Vinyl & Trim Cleaned & Dressed',
+        'Interior Only (Add Hand Wash for $30)',
+      ],
       canAddFlatWash: true,
     },
     {
@@ -135,7 +136,12 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       duration: 'Approx. 3 hrs',
       prices: { 'c-sedan': 200, 'c-cross': 230, 'c-suv': 260, 'c-van': 290 },
       includesWash: true,
-      includedBadges: ['✓ Exterior Wash Included', '✓ Clay Bar Decon Included', '1-Step All-In-One Polish & Wax', 'Takes Out Light Swirls'],
+      includedBadges: [
+        '✓ Exterior Wash Included',
+        '✓ Clay Bar Decon Included',
+        '1-Step All-In-One Polish & Wax',
+        'Takes Out Light Swirls',
+      ],
     },
     {
       id: '1-step-correction',
@@ -144,7 +150,12 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       duration: 'Approx. 6 hrs',
       prices: { 'c-sedan': 350, 'c-cross': 400, 'c-suv': 450, 'c-van': 500 },
       includesWash: true,
-      includedBadges: ['✓ Wash & Decon Prep Included', 'Removes 50–70% of Defects', 'Machine Polish & Sealant', 'Paint Depth Measured First'],
+      includedBadges: [
+        '✓ Wash & Decon Prep Included',
+        'Removes 50–70% of Defects',
+        'Machine Polish & Sealant',
+        'Paint Depth Measured First',
+      ],
     },
     {
       id: '2-step-correction',
@@ -154,7 +165,12 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       duration: 'Approx. 11 hrs',
       prices: { 'c-sedan': 650, 'c-cross': 750, 'c-suv': 850, 'c-van': 950 },
       includesWash: true,
-      includedBadges: ['✓ Wash & Decon Prep Included', 'Compound & Polish Stages', 'Removes 80–90% of Defects', 'Paint Depth Measured First'],
+      includedBadges: [
+        '✓ Wash & Decon Prep Included',
+        'Compound & Polish Stages',
+        'Removes 80–90% of Defects',
+        'Paint Depth Measured First',
+      ],
     },
   ];
 
@@ -503,59 +519,8 @@ export default function QuoteBuilder({ onProceedToBooking }) {
   };
 
   const isServiceInCart = (serviceId) => {
-    return cart.some((c) => c.serviceId === serviceId && c.vehicleType === selectedVehicle);
+    return cart.some((c) => c.serviceId === serviceId);
   };
-
-  // Render 4-column mini vehicle rate bar on each card (Sedan | Crossover | SUV | Van)
-  const renderVehiclePriceGrid = (prices, extraFlat = 0) => (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: '0.35rem',
-        marginBottom: '0.85rem',
-        background: 'rgba(0, 0, 0, 0.15)',
-        padding: '0.4rem',
-        borderRadius: '8px',
-        border: '1px solid var(--surface-border)',
-      }}
-    >
-      {[
-        { id: 'c-sedan', name: 'SEDAN', sub: '' },
-        { id: 'c-cross', name: 'CROSSOVER', sub: '5 seat' },
-        { id: 'c-suv', name: 'SUV', sub: '3rd row' },
-        { id: 'c-van', name: 'VAN', sub: '' },
-      ].map((col) => {
-        const isSel = selectedVehicle === col.id;
-        const val = prices[col.id] + extraFlat;
-        return (
-          <button
-            key={col.id}
-            type="button"
-            onClick={() => setSelectedVehicle(col.id)}
-            style={{
-              background: isSel ? 'rgba(201, 160, 60, 0.22)' : 'transparent',
-              border: isSel ? '1.5px solid var(--gold, #C9A03C)' : '1px solid transparent',
-              borderRadius: '6px',
-              padding: '0.3rem 0.2rem',
-              cursor: 'pointer',
-              textAlign: 'center',
-              color: isSel ? 'var(--gold-primary)' : 'var(--muted-color)',
-              transition: 'all 0.15s ease',
-            }}
-          >
-            <div style={{ fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.04em', lineHeight: 1.1 }}>
-              {col.name}
-              {col.sub && <span style={{ display: 'block', fontSize: '0.54rem', fontWeight: 600, opacity: 0.85 }}>{col.sub}</span>}
-            </div>
-            <div style={{ fontFamily: 'var(--display)', fontSize: '1.05rem', fontWeight: 900, color: isSel ? 'var(--heading-color)' : 'inherit', marginTop: '0.1rem' }}>
-              ${val}
-            </div>
-          </button>
-        );
-      })}
-    </div>
-  );
 
   const renderWashAndDetailSection = () => (
     <div style={{ marginBottom: '2.5rem' }}>
@@ -566,28 +531,29 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '0.5rem',
-          padding: '0.85rem 1.25rem',
+          padding: '0.9rem 1.25rem',
           background: 'linear-gradient(90deg, #0A1E42, #153263)',
           borderRadius: '12px',
           borderLeft: '4px solid var(--gold, #C9A03C)',
           marginBottom: '1.25rem',
           color: '#FFFFFF',
+          boxShadow: '0 8px 24px rgba(5, 16, 35, 0.25)',
         }}
       >
         <div>
           <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.4rem', fontWeight: 800, margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Wash &amp; Detail
           </h3>
-          <span style={{ fontSize: '0.8rem', color: '#A9C4E2' }}>
+          <span style={{ fontSize: '0.82rem', color: '#A9C4E2' }}>
             Medium Package &amp; Full Detail include an exterior Hand Car Wash. Interior Complete is interior-only (add a hand wash for $30).
           </span>
         </div>
-        <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', color: 'var(--gold-lt)', fontWeight: 700 }}>
-          Active Vehicle: {vehicles.find((v) => v.id === selectedVehicle)?.label}
+        <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', color: 'var(--gold-lt)', fontWeight: 700, background: 'rgba(201,160,60,0.15)', padding: '0.25rem 0.65rem', borderRadius: '6px', border: '1px solid rgba(240,213,144,0.3)' }}>
+          Showing Rates for: {activeVehicleObj.label}
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '1.35rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))', gap: '1.35rem' }}>
         {washPackages.map((pkg) => {
           const price = pkg.prices[selectedVehicle];
           const inCart = isServiceInCart(pkg.id);
@@ -648,19 +614,19 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                   {pkg.title}
                 </h4>
 
-                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', lineHeight: 1.5, margin: '0 0 0.9rem' }}>
+                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', lineHeight: 1.55, margin: '0 0 0.9rem' }}>
                   {pkg.desc}
                 </p>
 
                 {/* What's Included Pills */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.9rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.95rem' }}>
                   {pkg.includedBadges.map((b, i) => (
                     <span
                       key={i}
                       style={{
                         fontSize: '0.72rem',
                         fontWeight: 700,
-                        padding: '0.2rem 0.55rem',
+                        padding: '0.22rem 0.55rem',
                         borderRadius: '6px',
                         background: b.startsWith('✓') ? 'rgba(16, 185, 129, 0.14)' : 'var(--chip-inactive-bg)',
                         color: b.startsWith('✓') ? '#10B981' : 'var(--text-main)',
@@ -701,34 +667,30 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                 )}
               </div>
 
-              <div>
-                {renderVehiclePriceGrid(pkg.prices, extraWash)}
-
-                <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.85rem', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-                  <div>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', display: 'block' }}>
-                      {vehicles.find((v) => v.id === selectedVehicle)?.label}:
-                    </span>
-                    <div style={{ fontFamily: 'var(--display)', fontSize: '1.85rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
-                      ${price + extraWash} <span style={{ fontSize: '0.74rem', color: 'var(--muted-color)' }}>CAD</span>
-                    </div>
+              <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.9rem', marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <div>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block' }}>
+                    {activeVehicleObj.label} Rate
+                  </span>
+                  <div style={{ fontFamily: 'var(--display)', fontSize: '1.95rem', fontWeight: 900, color: 'var(--gold-primary)', lineHeight: 1.05 }}>
+                    ${price + extraWash} <span style={{ fontSize: '0.74rem', color: 'var(--muted-color)' }}>CAD</span>
                   </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const extra =
-                        pkg.canAddFlatWash && addWashWithInteriorComplete
-                          ? [{ id: 'interior-complete-wash', title: 'Add-on Hand Car Wash (with Interior Complete)', price: 30 }]
-                          : [];
-                      handleAddService(pkg.title, price, pkg.desc, pkg.id, extra);
-                    }}
-                    className={inCart || inclusion.isIncluded ? 'btn btn--navy' : 'btn btn--gold'}
-                    style={{ minHeight: '42px', padding: '0 1.15rem', fontSize: '0.84rem' }}
-                  >
-                    {inCart ? 'In Cart ✓' : inclusion.isIncluded ? 'Already Included ✓' : '+ Add to Cart'}
-                  </button>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const extra =
+                      pkg.canAddFlatWash && addWashWithInteriorComplete
+                        ? [{ id: 'interior-complete-wash', title: 'Add-on Hand Car Wash (with Interior Complete)', price: 30 }]
+                        : [];
+                    handleAddService(pkg.title, price, pkg.desc, pkg.id, extra);
+                  }}
+                  className={inCart || inclusion.isIncluded ? 'btn btn--navy' : 'btn btn--gold'}
+                  style={{ minHeight: '42px', padding: '0 1.15rem', fontSize: '0.84rem' }}
+                >
+                  {inCart ? 'In Cart ✓' : inclusion.isIncluded ? 'Already Included ✓' : '+ Add to Cart'}
+                </button>
               </div>
             </div>
           );
@@ -746,25 +708,29 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '0.5rem',
-          padding: '0.85rem 1.25rem',
+          padding: '0.9rem 1.25rem',
           background: 'linear-gradient(90deg, #0A1E42, #153263)',
           borderRadius: '12px',
           borderLeft: '4px solid var(--gold, #C9A03C)',
-          marginBottom: '1rem',
+          marginBottom: '1.25rem',
           color: '#FFFFFF',
+          boxShadow: '0 8px 24px rgba(5, 16, 35, 0.25)',
         }}
       >
         <div>
           <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.4rem', fontWeight: 800, margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Polish &amp; Protect
           </h3>
-          <span style={{ fontSize: '0.8rem', color: '#A9C4E2' }}>
+          <span style={{ fontSize: '0.82rem', color: '#A9C4E2' }}>
             Deep scratches that catch a fingernail cannot be fully removed. We measure paint depth before any correction begins.
           </span>
         </div>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', color: 'var(--gold-lt)', fontWeight: 700, background: 'rgba(201,160,60,0.15)', padding: '0.25rem 0.65rem', borderRadius: '6px', border: '1px solid rgba(240,213,144,0.3)' }}>
+          Showing Rates for: {activeVehicleObj.label}
+        </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '1.35rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))', gap: '1.35rem' }}>
         {polishPackages.map((pkg) => {
           const price = pkg.prices[selectedVehicle];
           const inCart = isServiceInCart(pkg.id);
@@ -810,7 +776,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                   {pkg.title}
                 </h4>
 
-                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', lineHeight: 1.5, margin: '0 0 0.9rem' }}>
+                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', lineHeight: 1.55, margin: '0 0 0.9rem' }}>
                   {pkg.desc}
                 </p>
 
@@ -821,7 +787,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                       style={{
                         fontSize: '0.72rem',
                         fontWeight: 700,
-                        padding: '0.2rem 0.55rem',
+                        padding: '0.22rem 0.55rem',
                         borderRadius: '6px',
                         background: b.startsWith('✓') ? 'rgba(16, 185, 129, 0.14)' : 'var(--chip-inactive-bg)',
                         color: b.startsWith('✓') ? '#10B981' : 'var(--text-main)',
@@ -834,28 +800,24 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                 </div>
               </div>
 
-              <div>
-                {renderVehiclePriceGrid(pkg.prices)}
-
-                <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.85rem', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-                  <div>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', display: 'block' }}>
-                      {vehicles.find((v) => v.id === selectedVehicle)?.label}:
-                    </span>
-                    <div style={{ fontFamily: 'var(--display)', fontSize: '1.85rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
-                      ${price} <span style={{ fontSize: '0.74rem', color: 'var(--muted-color)' }}>CAD</span>
-                    </div>
+              <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.9rem', marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <div>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block' }}>
+                    {activeVehicleObj.label} Rate
+                  </span>
+                  <div style={{ fontFamily: 'var(--display)', fontSize: '1.95rem', fontWeight: 900, color: 'var(--gold-primary)', lineHeight: 1.05 }}>
+                    ${price} <span style={{ fontSize: '0.74rem', color: 'var(--muted-color)' }}>CAD</span>
                   </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleAddService(pkg.title, price, pkg.desc, pkg.id)}
-                    className={inCart || inclusion.isIncluded ? 'btn btn--navy' : 'btn btn--gold'}
-                    style={{ minHeight: '42px', padding: '0 1.15rem', fontSize: '0.84rem' }}
-                  >
-                    {inCart ? 'In Cart ✓' : inclusion.isIncluded ? 'Already Included ✓' : '+ Add to Cart'}
-                  </button>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleAddService(pkg.title, price, pkg.desc, pkg.id)}
+                  className={inCart || inclusion.isIncluded ? 'btn btn--navy' : 'btn btn--gold'}
+                  style={{ minHeight: '42px', padding: '0 1.15rem', fontSize: '0.84rem' }}
+                >
+                  {inCart ? 'In Cart ✓' : inclusion.isIncluded ? 'Already Included ✓' : '+ Add to Cart'}
+                </button>
               </div>
             </div>
           );
@@ -912,12 +874,13 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '0.5rem',
-          padding: '0.85rem 1.25rem',
+          padding: '0.9rem 1.25rem',
           background: 'linear-gradient(90deg, #0A1E42, #153263)',
           borderRadius: '12px',
           borderLeft: '4px solid var(--gold, #C9A03C)',
           marginBottom: '1.25rem',
           color: '#FFFFFF',
+          boxShadow: '0 8px 24px rgba(5, 16, 35, 0.25)',
         }}
       >
         <div>
@@ -925,15 +888,15 @@ export default function QuoteBuilder({ onProceedToBooking }) {
             Ceramic Coating Packages
           </h3>
           <span style={{ fontSize: '0.82rem', color: 'var(--gold-lt)', fontWeight: 700 }}>
-            Includes wash, iron decon, clay bar, paint correction &amp; coating
+            Includes wash, iron decon, clay bar, paint correction &amp; coating &middot; Every System X coating is registered with CARFAX
           </span>
         </div>
-        <span style={{ fontSize: '0.76rem', color: '#A9C4E2' }}>
-          📋 Every System X coating is registered with CARFAX &amp; appears on your vehicle history report
+        <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', color: 'var(--gold-lt)', fontWeight: 700, background: 'rgba(201,160,60,0.15)', padding: '0.25rem 0.65rem', borderRadius: '6px', border: '1px solid rgba(240,213,144,0.3)' }}>
+          Showing Rates for: {activeVehicleObj.label}
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '1.35rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))', gap: '1.35rem' }}>
         {ceramicPackages.map((pkg) => {
           const price = pkg.prices[selectedVehicle];
           const inCart = isServiceInCart(pkg.id);
@@ -953,7 +916,6 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                 {/* Top Row: Duration + Rate Card Pills (e.g. 1 YEAR, 2 YEAR + CARFAX) */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.4rem', marginBottom: '0.65rem', flexWrap: 'wrap' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                    {/* Blue Lifespan Pill exactly like the Rate Card */}
                     <span
                       style={{
                         fontFamily: 'var(--mono)',
@@ -970,7 +932,6 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                       {pkg.warrantyBadge}
                     </span>
 
-                    {/* Black CARFAX Pill exactly like the Rate Card */}
                     {pkg.isCarfax && (
                       <span
                         style={{
@@ -996,7 +957,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                   {pkg.title}
                 </h4>
 
-                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', lineHeight: 1.5, margin: '0 0 0.75rem' }}>
+                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', lineHeight: 1.55, margin: '0 0 0.75rem' }}>
                   {pkg.desc}
                 </p>
 
@@ -1030,14 +991,14 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.9rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.95rem' }}>
                   {pkg.includedBadges.map((b, i) => (
                     <span
                       key={i}
                       style={{
                         fontSize: '0.72rem',
                         fontWeight: 700,
-                        padding: '0.2rem 0.55rem',
+                        padding: '0.22rem 0.55rem',
                         borderRadius: '6px',
                         background: b.startsWith('✓')
                           ? 'rgba(16, 185, 129, 0.14)'
@@ -1062,39 +1023,35 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                 </div>
               </div>
 
-              <div>
-                {renderVehiclePriceGrid(pkg.prices)}
-
-                <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.85rem', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-                  <div>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', display: 'block' }}>
-                      {vehicles.find((v) => v.id === selectedVehicle)?.label}:
-                    </span>
-                    <div style={{ fontFamily: 'var(--display)', fontSize: '1.85rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
-                      ${price} <span style={{ fontSize: '0.74rem', color: 'var(--muted-color)' }}>CAD</span>
-                    </div>
+              <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.9rem', marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <div>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)', fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block' }}>
+                    {activeVehicleObj.label} Rate
+                  </span>
+                  <div style={{ fontFamily: 'var(--display)', fontSize: '1.95rem', fontWeight: 900, color: 'var(--gold-primary)', lineHeight: 1.05 }}>
+                    ${price} <span style={{ fontSize: '0.74rem', color: 'var(--muted-color)' }}>CAD</span>
                   </div>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleAddService(
-                        `${pkg.title} (${pkg.warrantyBadge})`,
-                        price,
-                        pkg.desc,
-                        pkg.id,
-                        [],
-                        pkg.lifespanText,
-                        pkg.isCarfax,
-                        pkg.carfaxExplanation
-                      )
-                    }
-                    className={inCart ? 'btn btn--navy' : 'btn btn--gold'}
-                    style={{ minHeight: '42px', padding: '0 1.15rem', fontSize: '0.84rem' }}
-                  >
-                    {inCart ? 'In Cart ✓' : '+ Add to Cart'}
-                  </button>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleAddService(
+                      `${pkg.title} (${pkg.warrantyBadge})`,
+                      price,
+                      pkg.desc,
+                      pkg.id,
+                      [],
+                      pkg.lifespanText,
+                      pkg.isCarfax,
+                      pkg.carfaxExplanation
+                    )
+                  }
+                  className={inCart ? 'btn btn--navy' : 'btn btn--gold'}
+                  style={{ minHeight: '42px', padding: '0 1.15rem', fontSize: '0.84rem' }}
+                >
+                  {inCart ? 'In Cart ✓' : '+ Add to Cart'}
+                </button>
               </div>
             </div>
           );
@@ -1105,7 +1062,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       <div
         style={{
           marginTop: '1.15rem',
-          padding: '0.9rem 1.2rem',
+          padding: '0.95rem 1.25rem',
           borderRadius: '10px',
           background: 'var(--surface-card)',
           border: '1px solid var(--surface-border)',
@@ -1142,19 +1099,20 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '0.5rem',
-          padding: '0.85rem 1.25rem',
+          padding: '0.9rem 1.25rem',
           background: 'linear-gradient(90deg, #0A1E42, #153263)',
           borderRadius: '12px',
           borderLeft: '4px solid var(--gold, #C9A03C)',
           marginBottom: '1rem',
           color: '#FFFFFF',
+          boxShadow: '0 8px 24px rgba(5, 16, 35, 0.25)',
         }}
       >
         <div>
           <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.4rem', fontWeight: 800, margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Interior, Glass, Wheel &amp; Trim
           </h3>
-          <span style={{ fontSize: '0.8rem', color: '#A9C4E2' }}>
+          <span style={{ fontSize: '0.82rem', color: '#A9C4E2' }}>
             &ldquo;With a detail&rdquo; pricing applies when booked alongside any detail or ceramic package. Standalone pricing includes the interior preparation that has to happen first.
           </span>
         </div>
@@ -1193,7 +1151,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
         )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '1.35rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))', gap: '1.35rem' }}>
         {interiorPackages.map((pkg) => {
           const inCart = cart.some((c) => c.serviceId === pkg.id);
           const inclusion = getInclusionStatus(pkg.id);
@@ -1275,7 +1233,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                   {pkg.title}
                 </h4>
 
-                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', lineHeight: 1.5, margin: '0 0 0.75rem' }}>
+                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', lineHeight: 1.55, margin: '0 0 0.75rem' }}>
                   {pkg.desc}
                 </p>
 
@@ -1308,7 +1266,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.9rem', marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
                   <div
                     style={{
@@ -1383,25 +1341,26 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '0.5rem',
-          padding: '0.85rem 1.25rem',
+          padding: '0.9rem 1.25rem',
           background: 'linear-gradient(90deg, #0A1E42, #153263)',
           borderRadius: '12px',
           borderLeft: '4px solid var(--gold, #C9A03C)',
           marginBottom: '1.25rem',
           color: '#FFFFFF',
+          boxShadow: '0 8px 24px rgba(5, 16, 35, 0.25)',
         }}
       >
         <div>
           <h3 style={{ fontFamily: 'var(--display)', fontSize: '1.4rem', fontWeight: 800, margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Add-Ons &amp; Surcharge
           </h3>
-          <span style={{ fontSize: '0.8rem', color: '#A9C4E2' }}>
+          <span style={{ fontSize: '0.82rem', color: '#A9C4E2' }}>
             Overlapping add-ons (such as Clay Bar or Summer Mats) will automatically alert you if already included in your selected package.
           </span>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.2rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.2rem', marginBottom: '1.5rem' }}>
         {addonList.map((addon) => {
           const inCart = cart.some((c) => c.serviceId === addon.id);
           const inclusion = getInclusionStatus(addon.id);
@@ -1446,8 +1405,8 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                 </p>
               </div>
 
-              <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.85rem', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-                <div style={{ fontFamily: 'var(--display)', fontSize: '1.7rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
+              <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.85rem', marginTop: 'auto', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+                <div style={{ fontFamily: 'var(--display)', fontSize: '1.75rem', fontWeight: 900, color: 'var(--gold-primary)' }}>
                   {addon.priceDisplay || `$${addon.price}`} <span style={{ fontSize: '0.72rem', color: 'var(--muted-color)' }}>CAD</span>
                 </div>
 
@@ -1478,6 +1437,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1.25rem',
+          boxShadow: '0 12px 30px rgba(5, 16, 35, 0.3)',
         }}
       >
         <div style={{ maxWidth: '720px' }}>
@@ -1554,27 +1514,27 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           </div>
         </div>
 
-        {/* Step 1: Vehicle Size Selector */}
+        {/* Step 1: Single Top Vehicle Size Selector */}
         <div
           style={{
             background: 'var(--surface-card, #0d1b2e)',
             border: '2px solid var(--surface-border-gold, #C9A03C)',
             borderRadius: '16px',
-            padding: '1.25rem',
+            padding: 'clamp(1rem, 2.5vw, 1.4rem)',
             marginBottom: '1.75rem',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
+            boxShadow: '0 14px 36px rgba(0, 0, 0, 0.28)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
             <span style={{ fontFamily: 'var(--mono)', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-primary)' }}>
-              1. Select Your Vehicle Size (Updates All Rates Instantly)
+              1. Select Your Vehicle Size (Updates All Prices Automatically)
             </span>
             <span style={{ fontSize: '0.78rem', color: 'var(--muted-color)' }}>
-              🛡️ Smart Overlap Protection Active — We prevent paying twice for included services
+              🛡️ Smart Overlap Protection Active — Prevents paying twice for included services
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 210px), 1fr))', gap: '0.75rem' }}>
             {vehicles.map((v) => {
               const isSelected = selectedVehicle === v.id;
               return (
@@ -1582,6 +1542,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                   key={v.id}
                   type="button"
                   onClick={() => setSelectedVehicle(v.id)}
+                  aria-pressed={isSelected}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -1592,11 +1553,11 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                     background: isSelected
-                      ? 'linear-gradient(135deg, rgba(201, 160, 60, 0.25) 0%, rgba(201, 160, 60, 0.1) 100%)'
+                      ? 'linear-gradient(135deg, rgba(201, 160, 60, 0.26) 0%, rgba(201, 160, 60, 0.1) 100%)'
                       : 'var(--chip-inactive-bg, rgba(255, 255, 255, 0.05))',
                     border: `2px solid ${isSelected ? 'var(--gold, #C9A03C)' : 'var(--surface-border, rgba(255, 255, 255, 0.1))'}`,
                     color: isSelected ? 'var(--heading-color, #FFFFFF)' : 'var(--text-main)',
-                    boxShadow: isSelected ? '0 4px 18px rgba(201, 160, 60, 0.25)' : 'none',
+                    boxShadow: isSelected ? '0 6px 20px rgba(201, 160, 60, 0.28)' : 'none',
                   }}
                 >
                   <div
@@ -1630,10 +1591,13 @@ export default function QuoteBuilder({ onProceedToBooking }) {
 
         {/* Step 2: Category Tabs */}
         <div
+          role="tablist"
+          aria-label="Service Categories"
           style={{
             display: 'flex',
-            gap: '0.5rem',
+            gap: '0.55rem',
             overflowX: 'auto',
+            WebkitOverflowScrolling: 'touch',
             paddingBottom: '0.5rem',
             marginBottom: '2rem',
             scrollbarWidth: 'none',
@@ -1645,12 +1609,14 @@ export default function QuoteBuilder({ onProceedToBooking }) {
               <button
                 key={tab.id}
                 type="button"
+                role="tab"
+                aria-selected={isActive}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  padding: '0.75rem 1.15rem',
+                  padding: '0.75rem 1.2rem',
                   borderRadius: '999px',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
@@ -1660,7 +1626,7 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                   background: isActive ? 'var(--gold, #C9A03C)' : 'var(--surface-card, #0d1b2e)',
                   color: isActive ? '#0A1E42' : 'var(--heading-color)',
                   border: `1.5px solid ${isActive ? 'var(--gold, #C9A03C)' : 'var(--surface-border)'}`,
-                  boxShadow: isActive ? '0 4px 15px rgba(201, 160, 60, 0.3)' : 'none',
+                  boxShadow: isActive ? '0 4px 16px rgba(201, 160, 60, 0.35)' : 'none',
                 }}
               >
                 <tab.icon style={{ width: '1rem', height: '1rem' }} />
@@ -1684,90 +1650,20 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           })}
         </div>
 
-        {/* Render Active Category or Full Rate Card View */}
-        {(activeTab === 'wash' || activeTab === 'all') && renderWashAndDetailSection()}
-        {(activeTab === 'polish' || activeTab === 'all') && renderPolishSection()}
-        {(activeTab === 'coat' || activeTab === 'all') && renderCeramicSection()}
-        {(activeTab === 'interior' || activeTab === 'all') && renderInteriorGlassSection()}
-        {(activeTab === 'addons' || activeTab === 'all') && renderAddonsSection()}
+        {/* Render Active Category */}
+        {activeTab === 'wash' && renderWashAndDetailSection()}
+        {activeTab === 'polish' && renderPolishSection()}
+        {activeTab === 'coat' && renderCeramicSection()}
+        {activeTab === 'interior' && renderInteriorGlassSection()}
+        {activeTab === 'addons' && renderAddonsSection()}
 
-        {/* Rate Card: WHY A SHOP, NOT A DRIVEWAY (Verbatim from Page 1 of 2026 Rate Card) */}
+        {/* Rate Card Bottom Contact & Appointment Bar */}
         <div
           style={{
-            marginTop: '1.5rem',
-            marginBottom: '1.5rem',
-            padding: '1.5rem',
-            borderRadius: '16px',
-            background: 'var(--surface-card, #0d1b2e)',
-            border: '1.5px solid var(--surface-border)',
-          }}
-        >
-          <h3
-            style={{
-              fontFamily: 'var(--display)',
-              fontSize: '1.45rem',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-              color: 'var(--heading-color)',
-              margin: '0 0 1.25rem',
-            }}
-          >
-            Why a Shop, Not a Driveway
-          </h3>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', gap: '1.25rem' }}>
-            {[
-              {
-                title: 'Hospital-grade steam cleaner',
-                desc: 'Italian-made, 305°F dry steam with vacuum extraction. It sanitizes seats, carpets and vents without soaking them or leaving chemical residue — the class of machine Canadian hospitals use for disinfection. We don’t know of another detailer in Kingston running one.',
-              },
-              {
-                title: 'Dust-controlled indoor bay',
-                desc: 'Coatings cure without wind, pollen or dew landing in wet product.',
-              },
-              {
-                title: 'Professional inspection lighting',
-                desc: 'Swirls you cannot see cannot be corrected.',
-              },
-              {
-                title: 'Paint depth measured first',
-                desc: 'No compounding through thin or previously repainted clear coat.',
-              },
-              {
-                title: 'Open Saturdays, heated year-round',
-                desc: 'Salt season is exactly when your paint needs us most.',
-              },
-              {
-                title: 'Free pickup and delivery',
-                desc: 'On every ceramic coating package from $949. We collect your car and bring it back.',
-              },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  borderLeft: '3px solid var(--gold, #C9A03C)',
-                  paddingLeft: '0.85rem',
-                }}
-              >
-                <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--heading-color)', marginBottom: '0.2rem' }}>
-                  {item.title}
-                </strong>
-                <span style={{ fontSize: '0.82rem', color: 'var(--muted-color)', lineHeight: 1.5, display: 'block' }}>
-                  {item.desc}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Rate Card Bottom Contact & Appointment Bar (Verbatim from Page 1 & Page 2) */}
-        <div
-          style={{
-            background: '#0A1E42',
+            background: 'linear-gradient(135deg, #0A1E42 0%, #132F61 100%)',
             border: '1.5px solid var(--gold, #C9A03C)',
             borderRadius: '14px',
-            padding: '1.15rem 1.5rem',
+            padding: '1.2rem 1.5rem',
             marginBottom: '2rem',
             color: '#FFFFFF',
             display: 'flex',
@@ -1775,12 +1671,13 @@ export default function QuoteBuilder({ onProceedToBooking }) {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '1rem',
+            boxShadow: '0 10px 28px rgba(5, 16, 35, 0.3)',
           }}
         >
           <div style={{ fontFamily: 'var(--display)', fontSize: '1.5rem', fontWeight: 900, color: 'var(--gold-lt)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Book Your Appointment
           </div>
-          <div style={{ textAlign: 'right', fontSize: '0.84rem', lineHeight: 1.5, color: '#E2E8F0' }}>
+          <div style={{ fontSize: '0.84rem', lineHeight: 1.5, color: '#E2E8F0' }}>
             <div>
               <strong>647-915-3530 (call, text or WhatsApp)</strong> &middot; ktownautomobilespa@gmail.com
             </div>
@@ -1823,22 +1720,23 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                   justifyContent: 'center',
                   fontWeight: 900,
                   fontSize: '1.2rem',
+                  flexShrink: 0,
                 }}
               >
                 {cart.length}
               </div>
               <div>
                 <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--gold-lt, #F0D590)' }}>
-                  Selected Vehicle: {vehicles.find((v) => v.id === selectedVehicle)?.label}
+                  Selected Vehicle: {activeVehicleObj.label}
                   {bundleSavings > 0 && ` · Saved $${bundleSavings} with Detail Bundle!`}
                 </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 900 }}>
+                <div style={{ fontSize: 'clamp(1.05rem, 2.5vw, 1.25rem)', fontWeight: 900 }}>
                   Estimated Subtotal: <span style={{ color: 'var(--gold-lt)' }}>${subtotal.toFixed(2)} CAD</span>
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
                 type="button"
                 onClick={() => setIsCartOpen(true)}
@@ -1873,9 +1771,10 @@ export default function QuoteBuilder({ onProceedToBooking }) {
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 9999,
-            background: 'rgba(5, 17, 36, 0.82)',
+            zIndex: 10000,
+            background: 'rgba(5, 17, 36, 0.84)',
             backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

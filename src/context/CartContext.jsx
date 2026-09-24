@@ -3,11 +3,42 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from '
 const CartContext = createContext(null);
 
 export const VEHICLE_OPTIONS = [
-  { id: 'c-sedan', label: 'Sedan' },
-  { id: 'c-cross', label: 'Crossover (5 seat)' },
-  { id: 'c-suv', label: 'SUV (3rd row)' },
-  { id: 'c-van', label: 'Van' },
+  { id: 'c-sedan', label: 'Sedan', shortLabel: 'Sedan', sub: '2-Door Coupe or 4-Door Sedan' },
+  { id: 'c-cross', label: 'Crossover (5 seat)', shortLabel: 'Crossover (5 seat)', sub: '5-Seat Compact SUV' },
+  { id: 'c-suv', label: 'SUV (3rd row)', shortLabel: 'SUV (3rd row)', sub: '3rd Row / 7-Seat / Pickup' },
+  { id: 'c-van', label: 'Van', shortLabel: 'Van', sub: 'Minivan, Passenger or Cargo Van' },
 ];
+
+// Official 2026 Rate Card Vehicle-Sized Package Prices
+export const PACKAGE_VEHICLE_PRICES = {
+  'hand-car-wash': { 'c-sedan': 30, 'c-cross': 40, 'c-suv': 45, 'c-van': 50 },
+  'interior-refresh': { 'c-sedan': 70, 'c-cross': 85, 'c-suv': 95, 'c-van': 105 },
+  'medium-package': { 'c-sedan': 100, 'c-cross': 130, 'c-suv': 150, 'c-van': 160 },
+  'interior-complete': { 'c-sedan': 175, 'c-cross': 199, 'c-suv': 229, 'c-van': 249 },
+  'full-detail': { 'c-sedan': 200, 'c-cross': 230, 'c-suv': 250, 'c-van': 270 },
+  'gloss-enhancement': { 'c-sedan': 200, 'c-cross': 230, 'c-suv': 260, 'c-van': 290 },
+  '1-step-correction': { 'c-sedan': 350, 'c-cross': 400, 'c-suv': 450, 'c-van': 500 },
+  '2-step-correction': { 'c-sedan': 650, 'c-cross': 750, 'c-suv': 850, 'c-van': 950 },
+  'nanobrite-rejuvenate': { 'c-sedan': 449, 'c-cross': 499, 'c-suv': 549, 'c-van': 599 },
+  'nanobrite-ultra': { 'c-sedan': 649, 'c-cross': 749, 'c-suv': 849, 'c-van': 899 },
+  'nanobrite-evo': { 'c-sedan': 1199, 'c-cross': 1299, 'c-suv': 1399, 'c-van': 1499 },
+  'systemx-crystal': { 'c-sedan': 949, 'c-cross': 1049, 'c-suv': 1149, 'c-van': 1249 },
+  'systemx-pro': { 'c-sedan': 1299, 'c-cross': 1449, 'c-suv': 1599, 'c-van': 1749 },
+  'systemx-maxg': { 'c-sedan': 1699, 'c-cross': 1849, 'c-suv': 1999, 'c-van': 2149 },
+  'systemx-diamond': { 'c-sedan': 1799, 'c-cross': 1949, 'c-suv': 2099, 'c-van': 2249 },
+  'ceramic-maint-wash': { 'c-sedan': 55, 'c-cross': 65, 'c-suv': 75, 'c-van': 85 },
+  'maint-plan': { 'c-sedan': 45, 'c-cross': 55, 'c-suv': 65, 'c-van': 75 },
+};
+
+export const FULL_CERAMIC_COATING_IDS = new Set([
+  'nanobrite-rejuvenate',
+  'nanobrite-ultra',
+  'nanobrite-evo',
+  'systemx-crystal',
+  'systemx-pro',
+  'systemx-maxg',
+  'systemx-diamond',
+]);
 
 export const ADDON_CATALOG = [
   { id: 'engine-bay', title: 'Engine Bay Cleaning', price: 40 },
@@ -293,6 +324,15 @@ export const SERVICE_INCLUSIONS = {
 };
 
 export function CartProvider({ children }) {
+  const [selectedVehicle, setSelectedVehicleState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ktown_vehicle_v1');
+      return saved && VEHICLE_OPTIONS.some((v) => v.id === saved) ? saved : 'c-sedan';
+    } catch {
+      return 'c-sedan';
+    }
+  });
+
   const [cart, setCart] = useState(() => {
     try {
       const saved = localStorage.getItem('ktown_cart_v1');
@@ -314,6 +354,37 @@ export function CartProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [overlapAlert, setOverlapAlert] = useState(null);
+
+  // Persist selected vehicle size and automatically update vehicle-dependent items in cart
+  const setSelectedVehicle = (newVehicleId) => {
+    if (!VEHICLE_OPTIONS.some((v) => v.id === newVehicleId)) return;
+    setSelectedVehicleState(newVehicleId);
+    try {
+      localStorage.setItem('ktown_vehicle_v1', newVehicleId);
+    } catch (err) {
+      console.error('Failed to persist vehicle size:', err);
+    }
+
+    const opt = VEHICLE_OPTIONS.find((v) => v.id === newVehicleId) || VEHICLE_OPTIONS[0];
+    setCart((prevCart) =>
+      prevCart.map((item) => {
+        const priceTable = PACKAGE_VEHICLE_PRICES[item.serviceId];
+        if (!priceTable) {
+          return {
+            ...item,
+            vehicleType: newVehicleId,
+            vehicleLabel: opt.label,
+          };
+        }
+        return {
+          ...item,
+          vehicleType: newVehicleId,
+          vehicleLabel: opt.label,
+          basePrice: priceTable[newVehicleId] ?? item.basePrice,
+        };
+      })
+    );
+  };
 
   useEffect(() => {
     try {
@@ -438,6 +509,19 @@ export function CartProvider({ children }) {
   // Check if a serviceId is already included by any item currently in the cart
   const getInclusionStatus = (serviceId) => {
     for (const item of cart) {
+      // Special check: If user has Interior Complete with +$30 Hand Wash addon, Hand Car Wash is included!
+      if (
+        serviceId === 'hand-car-wash' &&
+        item.serviceId === 'interior-complete' &&
+        (item.addons || []).some((a) => a.id === 'interior-complete-wash')
+      ) {
+        return {
+          isIncluded: true,
+          parentItem: item,
+          reason: 'Your Interior Complete package already has the +$30 Exterior Hand Car Wash add-on attached.',
+        };
+      }
+
       const inc = SERVICE_INCLUSIONS[item.serviceId];
       if (inc && inc.includes.includes(serviceId)) {
         return {
@@ -451,10 +535,23 @@ export function CartProvider({ children }) {
   };
 
   // Check if adding `serviceId` would make existing items in the cart redundant
-  const getSupersededCartItems = (serviceId) => {
+  const getSupersededCartItems = (serviceId, incomingAddons = []) => {
     const inc = SERVICE_INCLUSIONS[serviceId];
-    if (!inc) return [];
-    return cart.filter((item) => inc.includes.includes(item.serviceId));
+    const incList = inc ? [...inc.includes] : [];
+
+    // If user is adding Interior Complete with the +$30 Hand Wash addon, it also supersedes a standalone Hand Car Wash
+    if (
+      serviceId === 'interior-complete' &&
+      Array.isArray(incomingAddons) &&
+      incomingAddons.some((a) => a.id === 'interior-complete-wash')
+    ) {
+      if (!incList.includes('hand-car-wash')) {
+        incList.push('hand-car-wash');
+      }
+    }
+
+    if (incList.length === 0) return [];
+    return cart.filter((item) => incList.includes(item.serviceId));
   };
 
   const applyCoupon = async (code) => {
@@ -481,14 +578,42 @@ export function CartProvider({ children }) {
         ? prevCart.filter((i) => !removeIds.includes(i.id))
         : prevCart;
 
-      const vehicleType = newItem.vehicleType || 'c-sedan';
+      const vehicleType = newItem.vehicleType || selectedVehicle || 'c-sedan';
       const vehicleOption = VEHICLE_OPTIONS.find((v) => v.id === vehicleType) || VEHICLE_OPTIONS[0];
       const qualifies =
         filtered.some((item) => QUALIFYING_DETAIL_OR_CERAMIC_IDS.has(item.serviceId)) ||
         QUALIFYING_DETAIL_OR_CERAMIC_IDS.has(newItem.serviceId);
 
+      // Strip +$30 interior-complete-wash addon if another package in cart already includes an exterior wash
+      const cartAlreadyHasExteriorWash = filtered.some(
+        (item) => SERVICE_INCLUSIONS[item.serviceId]?.includes?.includes('hand-car-wash')
+      );
+      let sanitizedAddons = Array.isArray(newItem.addons) ? [...newItem.addons] : [];
+      if (cartAlreadyHasExteriorWash) {
+        sanitizedAddons = sanitizedAddons.filter((a) => a.id !== 'interior-complete-wash');
+      }
+
+      // Also if the new package includes an exterior wash, strip any +$30 interior-complete-wash addon from existing cart items
+      const newPkgIncludesExteriorWash = Boolean(
+        SERVICE_INCLUSIONS[newItem.serviceId]?.includes?.includes('hand-car-wash')
+      );
+      const cleanedExisting = filtered.map((item) => {
+        if (newPkgIncludesExteriorWash && (item.addons || []).some((a) => a.id === 'interior-complete-wash')) {
+          return {
+            ...item,
+            addons: item.addons.filter((a) => a.id !== 'interior-complete-wash'),
+          };
+        }
+        return item;
+      });
+
       const dualDef = INTERIOR_GLASS_PRICES[newItem.serviceId];
+      const vehiclePriceTable = PACKAGE_VEHICLE_PRICES[newItem.serviceId];
       let finalPrice = Number(newItem.basePrice || newItem.total || 0);
+      if (vehiclePriceTable && vehiclePriceTable[vehicleType] !== undefined) {
+        finalPrice = vehiclePriceTable[vehicleType];
+      }
+
       let finalSubtitle = newItem.subtitle || newItem.duration || '';
       let isStandalone = newItem.isStandalone;
 
@@ -513,11 +638,11 @@ export function CartProvider({ children }) {
         vehicleLabel: vehicleOption.label,
         basePrice: finalPrice,
         isStandalone,
-        addons: Array.isArray(newItem.addons) ? newItem.addons : [],
+        addons: sanitizedAddons,
         quantity: 1,
       };
 
-      return [...filtered, cartItem];
+      return [...cleanedExisting, cartItem];
     });
 
     if (openDrawer) {
@@ -528,20 +653,19 @@ export function CartProvider({ children }) {
   // Smart addToCart that checks for overlaps so customers never accidentally pay twice
   const addToCart = (newItem, openDrawer = true, bypassOverlapCheck = false) => {
     const sid = newItem.serviceId || 'custom';
+    const targetVehicle = newItem.vehicleType || selectedVehicle || 'c-sedan';
 
     if (!bypassOverlapCheck && sid !== 'custom') {
-      // Case 1: Exact same service is already in the cart for the same vehicle
-      const exactDuplicate = cart.find(
-        (c) => c.serviceId === sid && c.vehicleType === (newItem.vehicleType || 'c-sedan')
-      );
+      // Case 1: Exact same service is already in the cart
+      const exactDuplicate = cart.find((c) => c.serviceId === sid);
       if (exactDuplicate) {
         setOverlapAlert({
           type: 'exact_duplicate',
-          newItem,
+          newItem: { ...newItem, vehicleType: targetVehicle },
           openDrawer,
           existingItem: exactDuplicate,
           title: 'Already in Your Cart',
-          message: `${newItem.title} is already in your cart for your ${exactDuplicate.vehicleLabel}. Would you like to view your cart, or add another one for a second vehicle?`,
+          message: `${newItem.title} is already in your cart (${exactDuplicate.vehicleLabel}). Would you like to view your cart, or add another one for a second vehicle?`,
         });
         return false;
       }
@@ -551,7 +675,7 @@ export function CartProvider({ children }) {
       if (inclusion.isIncluded) {
         setOverlapAlert({
           type: 'already_included',
-          newItem,
+          newItem: { ...newItem, vehicleType: targetVehicle },
           openDrawer,
           parentItem: inclusion.parentItem,
           reason: inclusion.reason,
@@ -561,17 +685,124 @@ export function CartProvider({ children }) {
         return false;
       }
 
-      // Case 3: The user is adding a larger package that ALREADY INCLUDES smaller item(s) currently in their cart!
-      const superseded = getSupersededCartItems(sid);
+      // Case 3: Smart Bundle Suggestion for Interior Leather + Fabric (System X or Nano-Brite)
+      if (
+        (sid === 'systemx-textile' && cart.some((c) => c.serviceId === 'systemx-lvp')) ||
+        (sid === 'systemx-lvp' && cart.some((c) => c.serviceId === 'systemx-textile'))
+      ) {
+        const existingItem = cart.find((c) => c.serviceId === 'systemx-lvp' || c.serviceId === 'systemx-textile');
+        const bundleDef = INTERIOR_GLASS_PRICES['systemx-lvp-textile'];
+        const bundlePrice = hasQualifyingDetail ? bundleDef.withDetail : bundleDef.standalone;
+        const separateTotal = hasQualifyingDetail
+          ? INTERIOR_GLASS_PRICES['systemx-lvp'].withDetail + INTERIOR_GLASS_PRICES['systemx-textile'].withDetail
+          : INTERIOR_GLASS_PRICES['systemx-lvp'].standalone + INTERIOR_GLASS_PRICES['systemx-textile'].standalone;
+        const bundleSave = separateTotal - bundlePrice;
+
+        setOverlapAlert({
+          type: 'supersedes_existing',
+          newItem: {
+            serviceId: 'systemx-lvp-textile',
+            title: bundleDef.title,
+            vehicleType: targetVehicle,
+            basePrice: bundlePrice,
+            lifespan: bundleDef.lifespan,
+            isCarfax: true,
+            carfaxNote: bundleDef.carfaxNote,
+          },
+          openDrawer,
+          supersededItems: [existingItem],
+          savedAmount: bundleSave,
+          reasonsList: [
+            `Combining System X LVP + System X Textile into the Complete Interior Package saves you $${bundleSave} CAD ($${bundlePrice} vs $${separateTotal} separately).`,
+          ],
+          title: `Complete Interior Bundle — Save $${bundleSave} CAD!`,
+          message: `You already have ${existingItem.title} in your cart. Upgrading to the System X LVP + Textile Complete Interior Package covers both leather/vinyl and fabric/carpet while saving you $${bundleSave} CAD!`,
+        });
+        return false;
+      }
+
+      if (
+        (sid === 'nanobrite-fabric' && cart.some((c) => c.serviceId === 'nanobrite-leather')) ||
+        (sid === 'nanobrite-leather' && cart.some((c) => c.serviceId === 'nanobrite-fabric'))
+      ) {
+        const existingItem = cart.find((c) => c.serviceId === 'nanobrite-leather' || c.serviceId === 'nanobrite-fabric');
+        const bundleDef = INTERIOR_GLASS_PRICES['nanobrite-leather-fabric'];
+        const bundlePrice = hasQualifyingDetail ? bundleDef.withDetail : bundleDef.standalone;
+        const separateTotal = hasQualifyingDetail
+          ? INTERIOR_GLASS_PRICES['nanobrite-leather'].withDetail + INTERIOR_GLASS_PRICES['nanobrite-fabric'].withDetail
+          : INTERIOR_GLASS_PRICES['nanobrite-leather'].standalone + INTERIOR_GLASS_PRICES['nanobrite-fabric'].standalone;
+        const bundleSave = separateTotal - bundlePrice;
+
+        setOverlapAlert({
+          type: 'supersedes_existing',
+          newItem: {
+            serviceId: 'nanobrite-leather-fabric',
+            title: bundleDef.title,
+            vehicleType: targetVehicle,
+            basePrice: bundlePrice,
+            lifespan: bundleDef.lifespan,
+            isCarfax: false,
+            carfaxNote: bundleDef.carfaxNote,
+          },
+          openDrawer,
+          supersededItems: [existingItem],
+          savedAmount: bundleSave,
+          reasonsList: [
+            `Combining Nano-Brite Leather Guard + Fabric Guard into the Complete Interior Package saves you $${bundleSave} CAD ($${bundlePrice} vs $${separateTotal} separately).`,
+          ],
+          title: `Complete Interior Bundle — Save $${bundleSave} CAD!`,
+          message: `You already have ${existingItem.title} in your cart. Switching to the Nano-Brite Leather + Fabric Complete Interior Package covers both for $${bundleSave} less!`,
+        });
+        return false;
+      }
+
+      // Case 4: Switching between two Full-Car Ceramic Coating packages
+      if (FULL_CERAMIC_COATING_IDS.has(sid)) {
+        const existingCoating = cart.find((c) => FULL_CERAMIC_COATING_IDS.has(c.serviceId));
+        if (existingCoating) {
+          const alsoSuperseded = getSupersededCartItems(sid, newItem.addons).filter(
+            (i) => i.id !== existingCoating.id
+          );
+          const allReplaced = [existingCoating, ...alsoSuperseded];
+          const savedAmount = allReplaced.reduce(
+            (sum, item) => sum + (item.basePrice || 0) + (item.addons || []).reduce((a, b) => a + (b.price || 0), 0),
+            0
+          );
+          setOverlapAlert({
+            type: 'supersedes_existing',
+            newItem: { ...newItem, vehicleType: targetVehicle },
+            openDrawer,
+            supersededItems: allReplaced,
+            savedAmount,
+            reasonsList: [
+              `Replaces ${existingCoating.title} ($${existingCoating.basePrice}) with ${newItem.title} ($${newItem.basePrice}) so you aren't billed for two full-car ceramic coatings.`,
+              ...alsoSuperseded.map(
+                (i) => SERVICE_INCLUSIONS[sid]?.reasons?.[i.serviceId] || `${newItem.title} already includes ${i.title}.`
+              ),
+            ],
+            title: 'Switch Ceramic Coating Package?',
+            message: `You already have ${existingCoating.title} in your cart. Would you like to switch your coating package to ${newItem.title}?`,
+          });
+          return false;
+        }
+      }
+
+      // Case 5: The user is adding a larger package that ALREADY INCLUDES smaller item(s) currently in their cart!
+      const superseded = getSupersededCartItems(sid, newItem.addons);
       if (superseded.length > 0) {
-        const savedAmount = superseded.reduce((sum, item) => sum + (item.basePrice || 0), 0);
+        const savedAmount = superseded.reduce(
+          (sum, item) => sum + (item.basePrice || 0) + (item.addons || []).reduce((a, b) => a + (b.price || 0), 0),
+          0
+        );
         const names = superseded.map((i) => i.title).join(', ');
         const reasonsList = superseded.map(
-          (i) => SERVICE_INCLUSIONS[sid]?.reasons?.[i.serviceId] || `${newItem.title} already includes ${i.title}.`
+          (i) =>
+            SERVICE_INCLUSIONS[sid]?.reasons?.[i.serviceId] ||
+            `${newItem.title} already includes ${i.title}.`
         );
         setOverlapAlert({
           type: 'supersedes_existing',
-          newItem,
+          newItem: { ...newItem, vehicleType: targetVehicle },
           openDrawer,
           supersededItems: superseded,
           savedAmount,
@@ -583,7 +814,7 @@ export function CartProvider({ children }) {
       }
     }
 
-    commitAddToCart(newItem, openDrawer);
+    commitAddToCart({ ...newItem, vehicleType: targetVehicle }, openDrawer);
     return true;
   };
 
@@ -592,31 +823,57 @@ export function CartProvider({ children }) {
   };
 
   const updateCartItemVehicle = (itemId, newVehicleType, newBasePrice) => {
-    setCart((prev) =>
-      prev.map((item) => {
-        if (item.id !== itemId) return item;
-        const opt = VEHICLE_OPTIONS.find((v) => v.id === newVehicleType) || VEHICLE_OPTIONS[0];
-        return {
-          ...item,
-          vehicleType: newVehicleType,
-          vehicleLabel: opt.label,
-          basePrice: newBasePrice !== undefined ? newBasePrice : item.basePrice,
-        };
-      })
-    );
+    setSelectedVehicle(newVehicleType);
+    if (newBasePrice !== undefined) {
+      setCart((prev) =>
+        prev.map((item) => (item.id === itemId ? { ...item, basePrice: newBasePrice } : item))
+      );
+    }
   };
 
   const toggleCartItemAddon = (itemId, addon) => {
-    setCart((prev) =>
-      prev.map((item) => {
+    // If user tries to toggle on the +$30 wash addon for Interior Complete when another item in cart already includes a wash
+    if (addon.id === 'interior-complete-wash') {
+      const targetItem = cart.find((i) => i.id === itemId);
+      const isCurrentlyOn = (targetItem?.addons || []).some((a) => a.id === 'interior-complete-wash');
+      if (!isCurrentlyOn) {
+        const washInclusion = getInclusionStatus('hand-car-wash');
+        if (washInclusion.isIncluded) {
+          setOverlapAlert({
+            type: 'already_included',
+            newItem: { title: 'Exterior Hand Car Wash (+$30)', vehicleType: selectedVehicle },
+            openDrawer: true,
+            parentItem: washInclusion.parentItem,
+            reason: washInclusion.reason,
+            title: 'Hand Car Wash Already Included!',
+            message: washInclusion.reason,
+          });
+          return;
+        }
+      }
+    }
+
+    setCart((prev) => {
+      // If toggling on interior-complete-wash and standalone hand-car-wash is in cart, remove standalone hand-car-wash
+      let nextCart = prev;
+      const targetItem = prev.find((i) => i.id === itemId);
+      const isAddingWash =
+        addon.id === 'interior-complete-wash' &&
+        !(targetItem?.addons || []).some((a) => a.id === 'interior-complete-wash');
+
+      if (isAddingWash) {
+        nextCart = prev.filter((i) => i.serviceId !== 'hand-car-wash');
+      }
+
+      return nextCart.map((item) => {
         if (item.id !== itemId) return item;
         const exists = (item.addons || []).some((a) => a.id === addon.id);
         const nextAddons = exists
           ? item.addons.filter((a) => a.id !== addon.id)
           : [...(item.addons || []), addon];
         return { ...item, addons: nextAddons };
-      })
-    );
+      });
+    });
   };
 
   const clearCart = () => {
@@ -635,6 +892,8 @@ export function CartProvider({ children }) {
   return (
     <CartContext.Provider
       value={{
+        selectedVehicle,
+        setSelectedVehicle,
         cart,
         cartCount,
         subtotal,

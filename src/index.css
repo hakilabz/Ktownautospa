@@ -1355,3 +1355,387 @@ body.modal-open {
   max-width: 220px;
 }
 
+/* ==========================================================================
+   Responsive Hero Section (All Screen Sizes: 320px Mobile -> 2560px+ 4K)
+   Cross-Browser Compatible (Safari iOS/macOS, Chrome, Firefox, Edge)
+   ========================================================================== */
+.hero-section {
+  position: relative;
+  color: #FFFFFF;
+  background-color: #07142B;
+  background-image:
+    radial-gradient(circle at 80% 35%, rgba(201, 160, 60, 0.16) 0%, transparent 55%),
+    radial-gradient(circle at 15% 20%, rgba(62, 155, 218, 0.14) 0%, transparent 50%),
+    linear-gradient(135deg, #061226 0%, #0A1E42 52%, #102A58 100%);
+  padding: clamp(2.2rem, 4.8vw, 4.5rem) 0 clamp(2.6rem, 5.2vw, 5rem);
+  overflow: hidden;
+  border-bottom: 2px solid rgba(201, 160, 60, 0.35);
+}
+
+.hero-ambient-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/hero-car.jpg');
+  background-size: cover;
+  background-position: center 60%;
+  opacity: 0.14;
+  filter: blur(18px) saturate(1.2);
+  -webkit-filter: blur(18px) saturate(1.2);
+  transform: scale(1.08);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 1600px) {
+  .hero-container {
+    max-width: 1440px;
+  }
+}
+
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1.06fr 0.94fr;
+  gap: clamp(1.75rem, 3.5vw, 3.25rem);
+  align-items: center;
+}
+
+.hero-copy-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  min-width: 0;
+}
+
+.hero-eyebrow-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.hero-eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+  font-weight: 800;
+  background: rgba(201, 160, 60, 0.18);
+  border: 1px solid rgba(240, 213, 144, 0.45);
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+}
+
+.hero-eyebrow-sub {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: #A9C4E2;
+  letter-spacing: 0.04em;
+}
+
+.hero-headline {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.35rem, 5.4vw, 4.25rem);
+  line-height: 0.98;
+  text-transform: uppercase;
+  margin: 0;
+  color: #FFFFFF;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.01em;
+}
+
+.hero-headline-accent {
+  color: var(--gold-lt);
+  background: linear-gradient(180deg, #FFF3C4 0%, #F0D590 45%, #C9A03C 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-lede {
+  font-size: clamp(0.98rem, 1.7vw, 1.14rem);
+  color: #DCE8F7;
+  max-width: 50ch;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.hero-lede strong {
+  color: var(--gold-lt);
+  font-weight: 800;
+}
+
+.hero-cta-group {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding-top: 0.2rem;
+}
+
+.hero-carfax-card {
+  display: flex;
+  gap: 0.95rem;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.97);
+  color: var(--ink);
+  border: 1.5px solid var(--gold);
+  border-radius: 12px;
+  padding: 0.85rem 1.1rem;
+  margin-top: 0.25rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32);
+}
+
+.hero-carfax-badge {
+  flex-shrink: 0;
+  width: 118px;
+  background: #111827;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid rgba(201, 160, 60, 0.4);
+}
+
+.hero-carfax-logo {
+  color: #FFFFFF;
+  font-weight: 900;
+  font-size: 1.02rem;
+  letter-spacing: 0.06em;
+  display: block;
+  line-height: 1;
+}
+
+.hero-carfax-country {
+  color: #60A5FA;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.hero-carfax-copy {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.hero-carfax-copy strong {
+  display: block;
+  color: var(--navy-deep);
+  font-size: 0.92rem;
+  line-height: 1.35;
+  margin-bottom: 0.15rem;
+}
+
+.hero-carfax-copy span {
+  display: block;
+  color: var(--slate);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.hero-wa-note {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: #C0D4EC;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+/* Right / Top Vehicle Showcase Card */
+.hero-visual-col {
+  width: 100%;
+  min-width: 0;
+}
+
+.hero-image-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid rgba(240, 213, 144, 0.55);
+  background: #050B16;
+  box-shadow:
+    0 24px 55px rgba(0, 0, 0, 0.65),
+    0 0 35px rgba(201, 160, 60, 0.15);
+}
+
+.hero-showcase-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-image-card:hover .hero-showcase-img {
+  transform: scale(1.02);
+}
+
+.hero-img-badge-top {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(7, 17, 36, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(240, 213, 144, 0.45);
+  color: #FFFFFF;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  z-index: 2;
+}
+
+.hero-img-caption-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.8rem 0.95rem 0.75rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 12, 26, 0.86) 55%, rgba(5, 12, 26, 0.96) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.hero-img-caption-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #E4EDF7;
+}
+
+.hero-img-rate-pill {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #0A1E42;
+  background: linear-gradient(180deg, #F0D590, #C9A03C);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+/* Tablet & Mobile Responsive Adaptations (<= 960px) */
+@media (max-width: 960px) {
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+
+  /* Place the resized 16:9 vehicle showcase right at the top on mobile/tablet so the car is 100% visible */
+  .hero-visual-col {
+    order: -1;
+  }
+
+  .hero-image-card {
+    aspect-ratio: 16 / 9;
+    border-radius: 14px;
+  }
+
+  .hero-showcase-img {
+    object-position: center 60%;
+  }
+}
+
+/* Small Phones (<= 560px) */
+@media (max-width: 560px) {
+  .hero-section {
+    padding: 1.15rem 0 2.1rem;
+  }
+
+  .hero-image-card {
+    aspect-ratio: 16 / 9.5;
+    border-radius: 12px;
+  }
+
+  .hero-img-badge-top {
+    top: 0.55rem;
+    left: 0.55rem;
+    font-size: 0.62rem;
+    padding: 0.22rem 0.55rem;
+  }
+
+  .hero-img-caption-bar {
+    padding: 1.2rem 0.65rem 0.55rem;
+  }
+
+  .hero-img-caption-item {
+    font-size: 0.68rem;
+  }
+
+  .hero-img-rate-pill {
+    font-size: 0.64rem;
+    padding: 0.15rem 0.45rem;
+  }
+
+  .hero-cta-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+  }
+
+  .hero-cta-group .hero-btn:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .hero-cta-group .hero-btn {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 0.75rem;
+    font-size: 0.86rem;
+  }
+
+  .hero-carfax-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.85rem 0.95rem;
+  }
+}
+
+/* Extra-Small Screens (320px - 375px) */
+@media (max-width: 380px) {
+  .hero-cta-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Premium Card Hover & Elevation Polish */
+.frame:hover {
+  border-color: var(--gold);
+  box-shadow: 0 10px 28px rgba(10, 30, 66, 0.14);
+}
+
+:root[data-theme="dark"] .frame:hover {
+  border-color: rgba(240, 213, 144, 0.75);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 20px rgba(201, 160, 60, 0.08);
+}
+
+

@@ -27,7 +27,7 @@ export default function CoatingSection() {
         </div>
 
         {/* 3 Protection Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
           
           {/* Paint Correction */}
           <article className="frame" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -223,7 +223,7 @@ export default function CoatingSection() {
             </h3>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2rem' }}>
             
             {/* Left Column */}
             <div style={{ display: 'grid', gap: '1.25rem' }}>
