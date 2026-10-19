@@ -400,53 +400,28 @@ export default function QuoteBuilder({ onProceedToBooking }) {
   return (
     <section className="quote-builder-wrapper" id="packages" style={{ maxWidth: '1240px', margin: '0 auto', padding: '1rem' }}>
       
-      {/* Step Indicator Header */}
+      {/* Header */}
       <div 
         style={{ 
           textAlign: 'center', 
-          marginBottom: '2.5rem', 
-          background: 'var(--surface-card)', 
-          padding: '2rem 1.5rem', 
-          borderRadius: '16px', 
-          border: '1px solid var(--surface-border)',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
+          marginBottom: '2rem', 
+          padding: '1rem 1rem 0.5rem', 
         }}
       >
-        <span className="hero-kicker-badge" style={{ marginBottom: '0.6rem' }}>
-          ✨ Step-by-Step Selection
-        </span>
-        <h2 style={{ fontSize: 'clamp(1.9rem, 3.8vw, 2.7rem)', fontWeight: 900, color: 'var(--heading-color)', margin: '0 0 0.5rem' }}>
-          Select Your Vehicle &amp; Detailing Package
-        </h2>
-        <p style={{ maxWidth: '680px', margin: '0 auto', color: 'var(--muted-color)', fontSize: '1rem', lineHeight: 1.55 }}>
-          Pick your vehicle size below. All prices instantly update for your exact model. Choose a package, add any treatments you need, and book online in 60 seconds.
+        <h1 style={{ fontSize: 'clamp(1.8rem, 3.2vw, 2.4rem)', fontWeight: 900, color: 'var(--heading-color)', margin: '0 0 0.4rem' }}>
+          Services &amp; Instant Quote Builder
+        </h1>
+        <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--muted-color)', fontSize: '0.95rem', lineHeight: 1.5 }}>
+          Select your vehicle size below to update all package prices, choose treatments, and book online.
         </p>
-
-        {/* 3-Step Breadcrumb Bar */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: 'var(--gold-primary)', fontWeight: 800 }}>
-            <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--gold)', color: '#0A1E42', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>1</span>
-            <span>Vehicle Size</span>
-          </div>
-          <ChevronRight style={{ width: '1rem', height: '1rem', color: 'var(--muted-color)' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: 'var(--heading-color)', fontWeight: 800 }}>
-            <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(201, 160, 60, 0.2)', color: 'var(--gold-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>2</span>
-            <span>Choose Service</span>
-          </div>
-          <ChevronRight style={{ width: '1rem', height: '1rem', color: 'var(--muted-color)' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: 'var(--muted-color)', fontWeight: 700 }}>
-            <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--chip-inactive-bg)', color: 'var(--muted-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>3</span>
-            <span>Add-Ons &amp; Booking</span>
-          </div>
-        </div>
       </div>
 
       {/* STEP 1: VEHICLE SIZE SELECTOR CARDS */}
       <div style={{ marginBottom: '2.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--heading-color)', margin: 0 }}>
-            Step 1: Choose Your Vehicle Size
-          </h3>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--heading-color)', margin: 0 }}>
+            1. Select Vehicle Size
+          </h2>
           <span style={{ fontSize: '0.82rem', fontFamily: 'var(--mono)', color: 'var(--gold-primary)' }}>
             Selected: <strong>{activeVehicle.label}</strong>
           </span>
