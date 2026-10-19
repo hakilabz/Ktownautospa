@@ -334,7 +334,10 @@ export default function CartDrawer() {
                                 letterSpacing: '0.04em',
                               }}
                             >
-                              📋 CARFAX REGISTERED
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                <ShieldCheck style={{ width: '0.75rem', height: '0.75rem' }} />
+                                CARFAX REGISTERED
+                              </span>
                             </span>
                           )}
                         </div>

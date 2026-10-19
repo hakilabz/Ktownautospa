@@ -30,8 +30,9 @@ export default function ReviewsPage({ onOpenBooking }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5rem' }}>
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <span className="hero-kicker-badge" style={{ background: 'rgba(201, 160, 60, 0.15)', color: 'var(--gold-primary)' }}>
-                  ⭐ 4.9 Average Rating &middot; 16 Pickup Logs
+                <span className="hero-kicker-badge" style={{ background: 'rgba(201, 160, 60, 0.15)', color: 'var(--gold-primary)', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <Star style={{ width: '0.85rem', height: '0.85rem', fill: 'var(--gold-primary)', color: 'var(--gold-primary)' }} />
+                  <span>4.9 Average Rating &middot; 16 Verified Pickup Logs</span>
                 </span>
               </div>
               <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: 'var(--heading-color)', margin: '0 0 0.5rem' }}>

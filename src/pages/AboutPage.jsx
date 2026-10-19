@@ -40,7 +40,7 @@ export default function AboutPage({ onOpenBooking }) {
                 Why K-Town Auto Spa
               </h1>
               <p style={{ maxWidth: '780px', color: 'var(--muted-color)', fontSize: '1.05rem', margin: 0, lineHeight: 1.55 }}>
-                Our 36 Joseph St studio features climate-controlled wash bays, hospital-grade 305°F thermal extraction, and multi-angle LED inspection lighting. Here is why proper indoor detailing protects your vehicle where driveways cannot.
+                Our 36 Joseph St studio features climate-controlled wash bays, commercial-grade 305°F thermal extraction, and multi-angle LED inspection lighting. Here is why proper indoor detailing protects your vehicle where driveways cannot.
               </p>
             </div>
 

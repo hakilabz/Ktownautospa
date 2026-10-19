@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MessageCircle, MapPin, Clock, Calendar, ArrowRight } from 'lucide-react';
+import { Phone, Mail, MessageCircle, MapPin, Clock, Calendar, ArrowRight, Star } from 'lucide-react';
 import { useRouter } from '../context/RouterContext';
 
 export default function Footer({ onOpenBooking }) {
@@ -33,9 +33,10 @@ export default function Footer({ onOpenBooking }) {
             <p style={{ fontSize: '0.88rem', color: '#B0C4DE', lineHeight: 1.6, margin: '0 0 1.25rem' }}>
               Kingston’s dedicated indoor detailing studio. Specializing in two-bucket scratch-free hand washes, multi-stage paint correction, and CARFAX-registered System X ceramic coatings in heated bays at 36 Joseph St.
             </p>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(201, 160, 60, 0.15)', padding: '0.3rem 0.65rem', borderRadius: '6px', border: '1px solid var(--gold)' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', background: 'rgba(201, 160, 60, 0.15)', padding: '0.35rem 0.7rem', borderRadius: '6px', border: '1px solid var(--gold)' }}>
+              <Star style={{ width: '0.85rem', height: '0.85rem', fill: 'var(--gold-lt)', color: 'var(--gold-lt)' }} />
               <span style={{ fontSize: '0.78rem', color: 'var(--gold-lt)', fontWeight: 800, fontFamily: 'var(--mono)' }}>
-                ⭐ 4.9 Rating &middot; Auto-Brite Certified
+                4.9 / 5.0 Rating &middot; Auto-Brite Certified
               </span>
             </div>
           </div>

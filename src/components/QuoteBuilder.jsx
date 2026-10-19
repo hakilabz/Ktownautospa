@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Car,
+  Truck,
+  Bus,
   Sparkles,
   ShieldCheck,
   ArrowRight,
@@ -16,7 +18,12 @@ import {
   Calendar,
   Flame,
   Clock,
-  ChevronRight
+  ChevronRight,
+  Wind,
+  Sun,
+  Wrench,
+  Disc,
+  CloudRain
 } from 'lucide-react';
 import { useCart, VEHICLE_OPTIONS } from '../context/CartContext';
 
@@ -68,25 +75,25 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       id: 'c-sedan',
       label: 'Sedan / Coupe',
       examples: 'Civic, Model 3, Corolla, Camry, Elantra',
-      icon: '🚗',
+      type: 'sedan',
     },
     {
       id: 'c-cross',
       label: 'Small SUV / Crossover',
       examples: 'RAV4, CR-V, Model Y, CX-5, Tucson, Q5',
-      icon: '🚙',
+      type: 'crossover',
     },
     {
       id: 'c-suv',
       label: 'Large SUV / Truck',
       examples: 'F-150, RAM 1500, Silverado, Highlander',
-      icon: '🛻',
+      type: 'truck',
     },
     {
       id: 'c-van',
       label: 'XL / 7-Seater / Van',
       examples: 'Suburban, Escalade, Sienna, 3-Row, Odyssey',
-      icon: '🚐',
+      type: 'van',
     },
   ];
 
@@ -138,19 +145,19 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       notIncluded: [
         'Hot-water shampoo carpet & seat extraction',
         'Road salt stain neutralization',
-        'Hospital-grade 305°F steam sanitation',
+        'Commercial 305°F dry steam sanitization',
       ],
     },
     {
       id: 'full-detail',
-      badge: '⭐ MOST POPULAR PICK',
+      badge: 'STUDIO SIGNATURE',
       title: 'Gold Package',
       tagline: 'Deep sanitization, hot-water seat shampoo & road salt removal',
       duration: 'Approx. 3.5 – 4.5 hrs',
       prices: { 'c-sedan': 220, 'c-cross': 250, 'c-suv': 270, 'c-van': 300 },
       isPopular: true,
       features: [
-        '✓ Everything in the Silver Package',
+        'Everything in the Silver Package',
         '305°F dry steam sanitation through whole cabin',
         'Deep hot-water carpet & fabric seat shampoo extraction',
         'Ontario winter road salt stain neutralization',
@@ -166,14 +173,14 @@ export default function QuoteBuilder({ onProceedToBooking }) {
     },
     {
       id: 'diamond-package',
-      badge: '👑 FULL RESTORATION',
+      badge: 'FULL RESTORATION',
       title: 'Diamond Package',
       tagline: 'Showroom restoration inside & out with 6-month ceramic protection',
       duration: 'Approx. 5.0 – 6.5 hrs',
       prices: { 'c-sedan': 320, 'c-cross': 350, 'c-suv': 375, 'c-van': 400 },
       isPopular: false,
       features: [
-        '✓ Everything in the Gold Package',
+        'Everything in the Gold Package',
         'Clay bar paint mechanical decontamination',
         'Machine paint gloss enhancement polish & wax',
         'Engine bay steam degreased & satin UV dressed',
@@ -300,6 +307,22 @@ export default function QuoteBuilder({ onProceedToBooking }) {
     },
   ];
 
+  // Helper to render crisp SVG icons for add-ons (no emoji slop)
+  const renderAddonIcon = (id) => {
+    const iconStyle = { width: '1.15rem', height: '1.15rem', color: 'var(--gold-primary)' };
+    switch (id) {
+      case 'odour': return <Wind style={iconStyle} />;
+      case 'headlights': return <Sun style={iconStyle} />;
+      case 'engine-bay': return <Wrench style={iconStyle} />;
+      case 'pet-hair': return <Sparkles style={iconStyle} />;
+      case 'salt-stain': return <Droplets style={iconStyle} />;
+      case 'tire-shine': return <Disc style={iconStyle} />;
+      case 'systemx-glass': return <CloudRain style={iconStyle} />;
+      case 'systemx-wheel': return <ShieldCheck style={iconStyle} />;
+      default: return <Sparkles style={iconStyle} />;
+    }
+  };
+
   // 4. ADD-ONS WITH SMART OVERLAP DETECTION
   const addOnList = [
     {
@@ -307,21 +330,18 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       title: 'Ozone & Odor Elimination',
       price: 50,
       desc: 'Neutralizes smoke, dog smell, mildew & organic cabin odors.',
-      icon: '🌬️',
     },
     {
       id: 'headlights',
       title: 'Headlight Restoration (Pair)',
       price: 60,
       desc: 'Wet sand, compound & ceramic UV barrier to clear cloudy lenses.',
-      icon: '💡',
     },
     {
       id: 'engine-bay',
       title: 'Engine Bay Detailing',
       price: 40,
       desc: 'Degrease, steam clean, and satin dress engine bay plastics.',
-      icon: '⚙️',
       freeIn: ['diamond-package'],
     },
     {
@@ -329,7 +349,6 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       title: 'Pet Hair & Sand Extraction',
       price: 50,
       desc: 'Specialized rubber squeegee and deep vacuum for pet fur.',
-      icon: '🐾',
       freeIn: ['diamond-package'],
     },
     {
@@ -337,7 +356,6 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       title: 'Winter Road Salt Removal',
       price: 50,
       desc: 'Enzyme neutralization and heated extraction for salt crusts.',
-      icon: '🧂',
       freeIn: ['full-detail', 'diamond-package'],
     },
     {
@@ -345,7 +363,6 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       title: 'High-Gloss Tire Sidewall Dressing',
       price: 10,
       desc: 'No-sling satin silicone protection for all 4 tires.',
-      icon: '🛞',
       freeIn: ['medium-package', 'full-detail', 'diamond-package'],
     },
     {
@@ -353,7 +370,6 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       title: 'Windshield Hydrophobic Ceramic',
       price: 125,
       desc: 'Extreme water repellency in heavy rain. Improves visibility.',
-      icon: '🌧️',
       freeIn: ['systemx-crystal', 'systemx-pro', 'systemx-maxg'],
     },
     {
@@ -361,7 +377,6 @@ export default function QuoteBuilder({ onProceedToBooking }) {
       title: 'Wheel Faces Ceramic Coating',
       price: 249,
       desc: 'Shields wheels from hot corrosive brake dust and road salt.',
-      icon: '✨',
       freeIn: ['systemx-pro', 'systemx-maxg'],
     },
   ];
@@ -451,10 +466,48 @@ export default function QuoteBuilder({ onProceedToBooking }) {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.8rem', lineHeight: 1 }}>{v.icon}</span>
-                  {isSelected && (
-                    <span style={{ background: 'var(--gold)', color: '#0A1E42', fontSize: '0.7rem', fontWeight: 900, padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
-                      ACTIVE
+                  <div
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '8px',
+                      background: isSelected ? 'var(--gold)' : 'rgba(201, 160, 60, 0.12)',
+                      color: isSelected ? '#0A1E42' : 'var(--gold-primary)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {v.type === 'truck' ? (
+                      <Truck style={{ width: '1.25rem', height: '1.25rem' }} />
+                    ) : v.type === 'van' ? (
+                      <Bus style={{ width: '1.25rem', height: '1.25rem' }} />
+                    ) : (
+                      <Car style={{ width: '1.25rem', height: '1.25rem' }} />
+                    )}
+                  </div>
+                  {isSelected ? (
+                    <span 
+                      style={{ 
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'rgba(201, 160, 60, 0.18)', 
+                        color: 'var(--gold-primary)', 
+                        fontSize: '0.72rem', 
+                        fontWeight: 800, 
+                        fontFamily: 'var(--mono)',
+                        padding: '0.2rem 0.55rem', 
+                        borderRadius: '4px',
+                        border: '1px solid var(--gold)'
+                      }}
+                    >
+                      <Check style={{ width: '0.75rem', height: '0.75rem' }} />
+                      SELECTED
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: '0.72rem', fontFamily: 'var(--mono)', color: 'var(--muted-color)', fontWeight: 600 }}>
+                      SELECT
                     </span>
                   )}
                 </div>
@@ -927,7 +980,19 @@ export default function QuoteBuilder({ onProceedToBooking }) {
               >
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <span style={{ fontSize: '1.3rem' }}>{addon.icon}</span>
+                    <div
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '6px',
+                        background: isFree ? 'rgba(16, 185, 129, 0.15)' : 'rgba(201, 160, 60, 0.12)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {renderAddonIcon(addon.id)}
+                    </div>
                     {isFree ? (
                       <span style={{ fontSize: '0.7rem', color: '#10B981', fontWeight: 800, background: 'rgba(16, 185, 129, 0.18)', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
                         ✓ INCLUDED FREE
