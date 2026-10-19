@@ -60,7 +60,7 @@ export default function ReviewsPage({ onOpenBooking }) {
 
       {/* Main Reviews Component */}
       <main>
-        <ReviewsSection />
+        <ReviewsSection isStandalone={true} defaultExpanded={true} />
       </main>
 
     </div>

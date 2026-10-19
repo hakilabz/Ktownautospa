@@ -17,32 +17,11 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import Hero from '../components/Hero';
+import ReviewsSection from '../components/ReviewsSection';
 import { useRouter } from '../context/RouterContext';
 
 export default function HomePage({ onOpenBooking }) {
   const { navigate } = useRouter();
-
-  // 3 authentic, verified customer reviews transcribed from physical pickup slips
-  const featuredReviews = [
-    {
-      quote: 'Very helpful and excellent work. Thank you! Gleaming after 5 years of neglect.',
-      vehicle: 'Subaru Crosstrek',
-      service: 'Gold Deep Clean & Salt Extraction',
-      logId: 'Slip #104',
-    },
-    {
-      quote: 'Best car wash in town! Sparkle everywhere, mirror finish on black paint.',
-      vehicle: 'Kia Seltos & Mitsubishi RVR',
-      service: 'Full In & Out Detail',
-      logId: 'Slip #112',
-    },
-    {
-      quote: 'Excellent! Great job on tough Ontario road salt stains. Seats and carpets look brand new.',
-      vehicle: 'Toyota Sienna',
-      service: 'Winter Salt Extraction',
-      logId: 'Slip #108',
-    },
-  ];
 
   // 3 core detailing tiers (Silver, Gold, Diamond) with transparent features
   const coreTiers = [
@@ -374,93 +353,8 @@ export default function HomePage({ onOpenBooking }) {
         </div>
       </section>
 
-      {/* 4. Verified Driver Reviews */}
-      <section 
-        style={{ 
-          background: 'var(--surface-card)', 
-          borderTop: '1px solid var(--surface-border)', 
-          borderBottom: '1px solid var(--surface-border)', 
-          padding: '4rem 1rem' 
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1.25rem', marginBottom: '2.5rem' }}>
-            <div>
-              <p className="kicker" style={{ margin: '0 0 0.35rem' }}>VERIFIED PICKUP REVIEWS</p>
-              <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.5rem)', fontWeight: 900, color: 'var(--heading-color)', margin: '0 0 0.35rem' }}>
-                Authentic Words from Kingston Drivers
-              </h2>
-              <p style={{ color: 'var(--muted-color)', fontSize: '0.96rem', margin: 0 }}>
-                Transcribed from our physical in-studio pickup slips at 36 Joseph St.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => navigate('/reviews')}
-              className="btn btn--cream"
-              style={{ fontSize: '0.86rem', padding: '0.45rem 1rem' }}
-            >
-              <span>View All 16 Handwritten Logs</span>
-              <ArrowRight style={{ width: '0.85rem', height: '0.85rem' }} />
-            </button>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 310px), 1fr))', gap: '1.5rem' }}>
-            {featuredReviews.map((r, idx) => (
-              <div
-                key={idx}
-                style={{
-                  background: 'var(--bg-page)',
-                  border: '1px solid var(--surface-border)',
-                  borderRadius: '12px',
-                  padding: '1.6rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
-                }}
-              >
-                <div>
-                  {/* Rating Stars & Slip ID */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', gap: '3px' }}>
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} style={{ width: '0.95rem', height: '0.95rem', fill: 'var(--gold-primary)', color: 'var(--gold-primary)' }} />
-                      ))}
-                    </div>
-                    <span style={{ fontSize: '0.72rem', fontFamily: 'var(--mono)', color: 'var(--muted-color)', fontWeight: 600 }}>
-                      {r.logId}
-                    </span>
-                  </div>
-
-                  {/* Customer Quote */}
-                  <blockquote style={{ margin: '0 0 1.25rem', fontSize: '0.96rem', color: 'var(--heading-color)', lineHeight: 1.55, fontStyle: 'italic' }}>
-                    &ldquo;{r.quote}&rdquo;
-                  </blockquote>
-                </div>
-
-                {/* Vehicle & Verification Footprint */}
-                <div style={{ borderTop: '1px dashed var(--surface-border)', paddingTop: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
-                  <div>
-                    <strong style={{ fontSize: '0.88rem', color: 'var(--heading-color)', display: 'block' }}>
-                      {r.vehicle}
-                    </strong>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--gold-primary)', fontFamily: 'var(--mono)' }}>
-                      {r.service}
-                    </span>
-                  </div>
-                  <span style={{ fontSize: '0.72rem', color: '#10B981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px', background: 'rgba(16, 185, 129, 0.1)', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
-                    <CheckCircle2 style={{ width: '0.72rem', height: '0.72rem' }} />
-                    Verified Pickup
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
+      {/* 4. Verified Driver Reviews (Integrated In-Shop Logs & Sheets) */}
+      <ReviewsSection isStandalone={false} defaultExpanded={false} />
 
       {/* 5. The Studio Advantage */}
       <section style={{ padding: '4rem 1rem' }}>
