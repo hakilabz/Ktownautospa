@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Calendar, Moon, Sun, ShoppingBag, Menu, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useRouter } from '../context/RouterContext';
 
 export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
   const { cartCount, subtotal, setIsCartOpen } = useCart();
+  const { currentRoute, navigate } = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -17,31 +19,21 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
 
   const isLight = theme !== 'dark';
 
-  const primaryLinks = [
-    { href: '#packages', label: 'Rates & Packages' },
-    { href: '#coating', label: 'Ceramic Coating' },
-    { href: '#fleets', label: 'Fleet Service' },
-    { href: '#boats', label: 'Boats' },
-    { href: '#shop', label: 'Why Us' },
-    { href: '#reviews', label: 'Reviews' },
-    { href: '#book', label: 'Location' },
+  const navLinks = [
+    { route: 'home', path: '/', label: 'Home' },
+    { route: 'services', path: '/services', label: 'Services & Rates' },
+    { route: 'ceramic-coating', path: '/ceramic-coating', label: 'Ceramic Coating' },
+    { route: 'fleets-marine', path: '/fleets-marine', label: 'Fleet & Marine' },
+    { route: 'about', path: '/about', label: 'Why Us' },
+    { route: 'reviews', path: '/reviews', label: 'Reviews' },
+    { route: 'contact', path: '/contact', label: 'Contact & FAQ' },
   ];
 
-  const allSectionLinks = [
-    { href: '#packages', label: 'Rates & Packages' },
-    { href: '#coating', label: 'Ceramic Coating' },
-    { href: '#fleets', label: 'Fleet & Commercial' },
-    { href: '#boats', label: 'Boats & Marine' },
-    { href: '#shop', label: 'Why a Shop' },
-    { href: '#credentials', label: 'Credentials & Certs' },
-    { href: '#work', label: 'Our Work Gallery' },
-    { href: '#process', label: 'System X 5-Step Process' },
-    { href: '#why', label: 'Coating Facts' },
-    { href: '#carfax', label: 'CARFAX Canada Records' },
-    { href: '#how', label: 'How It Works' },
-    { href: '#reviews', label: 'Customer Reviews' },
-    { href: '#book', label: 'Hours & Location' },
-  ];
+  const handleLinkClick = (e, path) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    navigate(path);
+  };
 
   return (
     <header
@@ -63,7 +55,11 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
           
           {/* Brand Logo */}
-          <a href="#" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
+          <a 
+            href="/" 
+            onClick={(e) => handleLinkClick(e, '/')}
+            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}
+          >
             <img
               src="/logo.png"
               alt="Ktown Auto Spa"
@@ -78,33 +74,43 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
 
           {/* Desktop Navigation Links */}
           <nav className="desktop-nav" aria-label="Main Navigation" style={{ display: 'none', alignItems: 'center', gap: '0.2rem' }}>
-            {primaryLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                style={{
-                  color: 'var(--heading-color)',
-                  textDecoration: 'none',
-                  fontSize: '0.88rem',
-                  fontWeight: 700,
-                  padding: '0.4rem 0.65rem',
-                  borderRadius: '6px',
-                  transition: 'all 0.18s ease',
-                  letterSpacing: '0.01em',
-                  whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--gold-primary)';
-                  e.currentTarget.style.background = 'rgba(201, 160, 60, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--heading-color)';
-                  e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = currentRoute === link.route;
+              return (
+                <a
+                  key={link.path}
+                  href={link.path}
+                  onClick={(e) => handleLinkClick(e, link.path)}
+                  style={{
+                    color: isActive ? 'var(--gold-primary)' : 'var(--heading-color)',
+                    background: isActive ? 'rgba(201, 160, 60, 0.12)' : 'transparent',
+                    textDecoration: 'none',
+                    fontSize: '0.88rem',
+                    fontWeight: isActive ? 800 : 700,
+                    padding: '0.4rem 0.65rem',
+                    borderRadius: '6px',
+                    borderBottom: isActive ? '2px solid var(--gold)' : '2px solid transparent',
+                    transition: 'all 0.18s ease',
+                    letterSpacing: '0.01em',
+                    whiteSpace: 'nowrap',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.color = 'var(--gold-primary)';
+                      e.currentTarget.style.background = 'rgba(201, 160, 60, 0.08)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.color = 'var(--heading-color)';
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
 
           {/* Header Action Controls */}
@@ -225,24 +231,29 @@ export default function Navbar({ onOpenBooking, theme, onToggleTheme }) {
       {mobileMenuOpen && (
         <div style={{ background: 'var(--surface-card)', borderBottom: '2px solid var(--gold)', padding: '1.25rem 1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.25)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.6rem', marginBottom: '1.25rem' }}>
-            {allSectionLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  color: 'var(--heading-color)',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  fontWeight: 700,
-                  padding: '0.4rem 0.5rem',
-                  borderRadius: '6px',
-                  borderBottom: '1px dashed var(--surface-border)',
-                }}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = currentRoute === link.route;
+              return (
+                <a
+                  key={link.path}
+                  href={link.path}
+                  onClick={(e) => handleLinkClick(e, link.path)}
+                  style={{
+                    color: isActive ? 'var(--gold-primary)' : 'var(--heading-color)',
+                    background: isActive ? 'rgba(201, 160, 60, 0.12)' : 'transparent',
+                    textDecoration: 'none',
+                    fontSize: '0.95rem',
+                    fontWeight: isActive ? 800 : 700,
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '6px',
+                    borderLeft: isActive ? '3px solid var(--gold)' : '3px solid transparent',
+                    borderBottom: '1px dashed var(--surface-border)',
+                  }}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', borderTop: '1px solid var(--surface-border)', paddingTop: '0.9rem' }}>

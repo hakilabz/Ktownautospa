@@ -1,0 +1,67 @@
+# K-Town Auto Spa (Kingston, Ontario, Canada)
+
+> Kingston's trusted indoor auto detailing studio, hand car wash, multi-stage paint correction, and authorized System X & Nano-Brite ceramic coating facility located at 36 Joseph St, Kingston, ON K7K 2H5.
+
+## Business Summary & Core Facts (AEO Reference)
+- **Official Business Name**: K-Town Auto Spa (also known as Ktown Auto Spa)
+- **Address**: 36 Joseph St, Kingston, ON K7K 2H5, Canada
+- **Phone / WhatsApp**: +1 (647) 915-3530
+- **Email**: ktownautomobilespa@gmail.com
+- **Website**: https://ktownautospa.ca
+- **Hours of Operation**: Monday to Saturday, 8:00 AM – 5:00 PM EST (Closed Sunday)
+- **Service Area**: Kingston, Amherstview, Loyalist Township, Bath, Odessa, Napanee, Gananoque, and Eastern Ontario
+- **Facility**: Heated indoor wash & climate-controlled detailing bays (year-round operation)
+- **Certifications**:
+  - Auto-Brite Certified Professional Detailer
+  - Authorized System X Ceramic Coating Installer (CARFAX Canada Service Record Registered)
+  - Nano-Brite Certified Ceramic Coating Installer
+- **Payment Methods Accepted**:
+  - Interac e-Transfer (`ktownautomobilespa@gmail.com`) — 0% processing fee
+  - Cash in Shop (CAD) — 0% processing fee
+  - Credit Card / Debit Card / Apple Pay / Google Pay (via Stripe; 3% card processing fee applies)
+  - Commercial Fleet Accounts (Net-15 / Net-30 invoicing available)
+- **Tax**: 13% Ontario HST applies to all services
+
+## Quick Service & Pricing Overview (CAD, 2026 Official Rate Card)
+Vehicle size tiers: **Sedan / Coupe** | **Small SUV** | **Large SUV / Pickup** | **XL / 7-Seater**
+
+### 1. Complete Interior & Exterior Detailing Packages
+- **Silver Package (Essential Refresh)**: $180 (Sedan) | $200 (Small SUV) | $220 (Large SUV) | $260 (XL/7-Seater)
+  - Full vacuum (seats, carpets, trunk), wipe-down of dash/console/doors, interior & exterior glass, floor mats washed, exterior hand wash & dry, wheel faces & tires cleaned + dressed, door jamb wipe-down.
+- **Gold Package (Deep Clean — Most Popular)**: $220 (Sedan) | $250 (Small SUV) | $270 (Large SUV) | $300 (XL/7-Seater)
+  - Everything in Silver PLUS full salt stain removal, carpet & seat hot-water shampoo extraction, leather deep clean & conditioning, full interior steam sanitation, iron fallout removal, and spray paint sealant.
+- **Diamond Package (Full Restoration)**: $320 (Sedan) | $350 (Small SUV) | $375 (Large SUV) | $400 (XL/7-Seater)
+  - Everything in Gold PLUS headliner spot treatment, seat belt steam cleaning, pet hair & sand extraction, engine bay degrease & dress, clay bar paint decontamination, and 6-month ceramic hydrophobic sealant.
+
+### 2. Exterior Washes & Interior-Only Services
+- **Exterior Hand Wash**: $30 (Sedan) | $40 (Small SUV) | $50 (Large SUV) | $65 (XL/7-Seater)
+- **Deluxe Hand Wash & Spray Wax**: $55 (Sedan) | $65 (Small SUV) | $75 (Large SUV) | $90 (XL/7-Seater)
+- **Exterior Decon & Clay Bar Wash**: $110 (Sedan) | $130 (Small SUV) | $150 (Large SUV) | $170 (XL/7-Seater)
+- **Interior Refresh**: $120 (Sedan) | $140 (Small SUV) | $160 (Large SUV) | $190 (XL/7-Seater)
+- **Deep Interior Shampoo & Steam**: $180 (Sedan) | $200 (Small SUV) | $220 (Large SUV) | $250 (XL/7-Seater)
+
+### 3. Paint Correction & Ceramic Coating (CARFAX Canada Registered)
+- **1-Stage Paint Enhancement Polish (60–70% defect removal)**: $399 (Sedan) | $449 (Small SUV) | $499 (Large SUV) | $599 (XL)
+- **2-Stage Compound & Polish (85–95% defect removal)**: $499 (Sedan) | $549 (Small SUV) | $599 (Large SUV) | $699 (XL)
+- **1-Year Nano-Brite Ceramic Coating (includes 1-stage polish)**: $449 (Sedan) | $499 (Small SUV) | $549 (Large SUV) | $649 (XL)
+- **2-Year Nano-Brite Ceramic Coating (includes 1-stage polish)**: $549 (Sedan) | $599 (Small SUV) | $649 (Large SUV) | $749 (XL)
+- **3-Year System X Ceramic Coating (CARFAX + Warranty)**: $749 (Sedan) | $829 (Small SUV) | $879 (Large SUV) | $949 (XL)
+- **5-Year System X Pro Ceramic Coating (CARFAX + Warranty)**: $999 (Sedan) | $1,049 (Small SUV) | $1,099 (Large SUV) | $1,199 (XL)
+- **8-Year System X Diamond SS Coating (CARFAX + Warranty + 2-Stage Correction)**: $1,199 (Sedan) | $1,299 (Small SUV) | $1,399 (Large SUV) | $1,499 (XL)
+- **10-Year System X Max G+ Coating (Lifetime Warranty + CARFAX + 2-Stage Correction)**: $1,399 (Sedan) | $1,499 (Small SUV) | $1,599 (Large SUV) | $1,699 (XL)
+
+### 4. Popular Add-Ons & Specialized Treatments
+- **Salt Stain Removal**: $50 | **Pet Hair Removal**: $50 | **Engine Bay Cleaning**: $60
+- **Headlight Restoration**: $80 | **Odor / Ozone Bomb Treatment**: $75
+- **Scratch Repair (Localized Wet-Sand & Compound)**: $75/panel
+- **Windshield Ceramic Coating**: $75 | **Wheel Faces Ceramic**: $150 | **Full Wheels-Off Ceramic**: $300
+
+### 5. Marine & Commercial Fleet Services
+- **Marine & Boat Detailing**: $25/ft (Topside Wash & Wax), $45/ft (Gelcoat Oxidation Polish & Seal), $75/ft (Marine System X Ceramic Coating) at Kingston & 1000 Islands marinas.
+- **Commercial Fleet Accounts**: Priority scheduling and volume rates for Kingston dealerships, Turo hosts, realtors, contractors, and municipal/corporate fleets.
+
+## Key Links & Machine-Readable Resources
+- [Homepage & Online Booking Calculator](https://ktownautospa.ca/)
+- [Complete Printable Rate Card](https://ktownautospa.ca/rates.html)
+- [Full AI Context & Detailed FAQ Document](https://ktownautospa.ca/llms-full.txt)
+- [XML Sitemap](https://ktownautospa.ca/sitemap.xml)

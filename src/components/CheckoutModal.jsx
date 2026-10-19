@@ -319,22 +319,35 @@ export default function CheckoutModal() {
       setStep('success');
       clearCart();
 
-      // Dispatch browser-level notification backup to guarantee delivery
-      try {
-        const itemSummary = cart.map(i => `${i.title} (${i.vehicleLabel}) - $${i.totalPrice} CAD`).join(', ');
-        const payLabel = formData.paymentMethod === 'etransfer' ? 'Interac e-Transfer (ktownautomobilespa@gmail.com)' : 'Cash in Shop (36 Joseph St)';
-        fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            access_key: '2e1c3132-7a7a-4c2c-80a5-f8510800fa26',
-            subject: `🚨 NEW BOOKING (${payLabel}): ${formData.name} - ${resvData.reservation?.id} ($${activeTotal.toFixed(2)} CAD)`,
-            from_name: 'Ktown Auto Spa Bookings',
-            replyto: formData.email,
-            message: `Booking Ref: ${resvData.reservation?.id}\nCustomer: ${formData.name} (${formData.phone}, ${formData.email})\nVehicle: ${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}\nDate: ${formData.preferredDate} (${formData.preferredSlot})\nServices: ${itemSummary}\nTotal: $${activeTotal.toFixed(2)} CAD\nPayment Method: ${payLabel}\nCoupon: ${appliedCoupon?.code || 'None'}\nNotes: ${formData.notes || 'None'}`,
-          }),
-        }).catch(() => {});
-      } catch {}
+      // If backend SMTP/Resend was not yet configured, trigger browser-level fallback notification
+      if (!resvData.notifications?.smtp) {
+        try {
+          const itemSummary = cart.map(i => `${i.title} (${i.vehicleLabel}) - $${i.totalPrice} CAD`).join(', ');
+          const payLabel = formData.paymentMethod === 'etransfer' ? 'Interac e-Transfer (ktownautomobilespa@gmail.com)' : 'Cash in Shop (36 Joseph St)';
+          fetch('https://formsubmit.co/ajax/ktownautomobilespa@gmail.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              _subject: `🚨 NEW BOOKING (${payLabel}): ${formData.name} - ${resvData.reservation?.id} ($${activeTotal.toFixed(2)} CAD)`,
+              _cc: 'gud4notin@hotmail.com',
+              _replyto: formData.email,
+              _autoresponse: `Thank you for booking with K-Town Auto Spa! Your appointment (Ref: ${resvData.reservation?.id}) is scheduled for ${formData.preferredDate} at ${formData.preferredSlot} at 36 Joseph St, Kingston, ON. Total: $${activeTotal.toFixed(2)} CAD (${payLabel}). Questions? Call or WhatsApp 647-915-3530.`,
+              _template: 'table',
+              Booking_Reference: resvData.reservation?.id,
+              Customer_Name: formData.name,
+              Phone: formData.phone,
+              email: formData.email,
+              Vehicle: `${formData.vehicleYear || ''} ${formData.vehicleMake || ''} ${formData.vehicleModel || ''}`.trim() || 'Not specified',
+              Appointment_Date: `${formData.preferredDate} (${formData.preferredSlot})`,
+              Services_Booked: itemSummary,
+              Total_CAD: `$${activeTotal.toFixed(2)} CAD`,
+              Payment_Method: payLabel,
+              Promo_Coupon: appliedCoupon?.code || 'None',
+              Notes: formData.notes || 'None',
+            }),
+          }).catch(() => {});
+        } catch {}
+      }
 
       // Confetti celebration
       try {

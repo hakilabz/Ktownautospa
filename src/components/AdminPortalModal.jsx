@@ -33,8 +33,24 @@ export default function AdminPortalModal({ isOpen, onClose }) {
   const [toastMsg, setToastMsg] = useState('');
   const [data, setData] = useState({ stats: null, confirmed: [], failedAttempts: [], cancelled: [] });
   const [coupons, setCoupons] = useState([]);
+  const [emailSettings, setEmailSettings] = useState({
+    smtpHost: 'smtp.gmail.com',
+    smtpPort: 465,
+    smtpUser: 'ktownautomobilespa@gmail.com',
+    smtpPass: '',
+    smtpConfigured: false,
+    resendApiKey: '',
+    resendConfigured: false,
+    shopNotificationEmails: 'ktownautomobilespa@gmail.com, gud4notin@hotmail.com',
+    recipients: ['ktownautomobilespa@gmail.com', 'gud4notin@hotmail.com'],
+    emailReady: false,
+  });
+  const [emailSaving, setEmailSaving] = useState(false);
+  const [emailTesting, setEmailTesting] = useState(false);
+  const [testCustomerEmail, setTestCustomerEmail] = useState('');
+  const [emailTestResult, setEmailTestResult] = useState(null);
   
-  // Navigation Tabs: 'confirmed' | 'calendar' | 'coupons' | 'failed'
+  // Navigation Tabs: 'confirmed' | 'calendar' | 'coupons' | 'email' | 'failed'
   const [activeTab, setActiveTab] = useState('confirmed');
   const [bookingFilter, setBookingFilter] = useState('all'); // 'all' | 'pending_etransfer' | 'pending_cash' | 'paid' | 'cancelled'
 
@@ -72,6 +88,7 @@ export default function AdminPortalModal({ isOpen, onClose }) {
       setPin(savedPin);
       fetchData(savedPin);
       fetchCoupons(savedPin);
+      fetchEmailSettings(savedPin);
     }
   }, [isOpen]);
 
@@ -124,11 +141,114 @@ export default function AdminPortalModal({ isOpen, onClose }) {
     }
   };
 
+  const fetchEmailSettings = async (pinToUse) => {
+    try {
+      const res = await fetch('/api/admin/email-settings', {
+        headers: { 'x-admin-pin': pinToUse },
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setEmailSettings(prev => ({
+          ...prev,
+          ...json,
+          smtpPass: '',
+          resendApiKey: '',
+          shopNotificationEmails: (json.recipients || ['ktownautomobilespa@gmail.com', 'gud4notin@hotmail.com']).join(', '),
+        }));
+      }
+    } catch (err) {
+      console.warn('Email settings fetch note:', err.message);
+    }
+  };
+
+  const handleSaveEmailSettings = async (e) => {
+    e.preventDefault();
+    setEmailSaving(true);
+    setEmailTestResult(null);
+    try {
+      const res = await fetch('/api/admin/email-settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-pin': pin,
+        },
+        body: JSON.stringify({
+          smtpHost: emailSettings.smtpHost,
+          smtpPort: emailSettings.smtpPort,
+          smtpUser: emailSettings.smtpUser,
+          smtpPass: emailSettings.smtpPass,
+          resendApiKey: emailSettings.resendApiKey,
+          shopNotificationEmails: emailSettings.shopNotificationEmails,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to save email settings');
+      setEmailSettings(prev => ({
+        ...prev,
+        ...json,
+        smtpPass: '',
+        resendApiKey: '',
+      }));
+      showToast('✓ Email notification settings saved!');
+      await fetchData(pin);
+    } catch (err) {
+      alert(err.message || 'Failed to save email settings');
+    } finally {
+      setEmailSaving(false);
+    }
+  };
+
+  const handleTestEmail = async () => {
+    setEmailTesting(true);
+    setEmailTestResult(null);
+    try {
+      const res = await fetch('/api/admin/test-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-pin': pin,
+        },
+        body: JSON.stringify({ testCustomerEmail: testCustomerEmail.trim() }),
+      });
+      const json = await res.json();
+      setEmailTestResult(json);
+      if (json.success) {
+        showToast('✓ Test emails delivered to Owner & Customer inboxes!');
+      }
+    } catch (err) {
+      setEmailTestResult({ success: false, error: err.message });
+    } finally {
+      setEmailTesting(false);
+    }
+  };
+
+  const handleResendBookingEmail = async (resvId) => {
+    setActionLoadingId(resvId);
+    try {
+      const res = await fetch(`/api/admin/reservations/${resvId}/resend-email`, {
+        method: 'POST',
+        headers: { 'x-admin-pin': pin },
+      });
+      const json = await res.json();
+      if (json.notifications?.smtp) {
+        showToast(`✓ Sent confirmation & owner emails for ${resvId}!`);
+      } else {
+        alert(json.notifications?.configurationWarning || 'Email credentials not configured yet. Open the "Email & Alerts" tab to enter your Gmail App Password.');
+        setActiveTab('email');
+      }
+    } catch (err) {
+      alert(err.message || 'Failed to resend email');
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
     if (!pin.trim()) return;
     fetchData(pin.trim());
     fetchCoupons(pin.trim());
+    fetchEmailSettings(pin.trim());
   };
 
   const handleLogout = () => {
@@ -668,6 +788,36 @@ export default function AdminPortalModal({ isOpen, onClose }) {
                 </button>
 
                 <button
+                  onClick={() => setActiveTab('email')}
+                  style={{
+                    padding: '0.5rem 0.85rem',
+                    background: activeTab === 'email' ? 'var(--gold, #c9a03c)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'email' ? '#0a1e42' : '#cbd5e1',
+                    fontWeight: 700,
+                    borderRadius: '8px',
+                    border: emailSettings.emailReady ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(245, 158, 11, 0.5)',
+                    cursor: 'pointer',
+                    fontSize: '0.82rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <Mail style={{ width: '13px', height: '13px' }} />
+                  <span>Email &amp; Alerts</span>
+                  <span
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      borderRadius: '50%',
+                      background: emailSettings.emailReady ? '#10b981' : '#f59e0b',
+                      display: 'inline-block',
+                    }}
+                  />
+                </button>
+
+                <button
                   onClick={() => setActiveTab('failed')}
                   style={{
                     padding: '0.5rem 0.85rem',
@@ -914,6 +1064,28 @@ export default function AdminPortalModal({ isOpen, onClose }) {
                             >
                               <Edit2 style={{ width: '12px', height: '12px' }} />
                               <span>Reschedule</span>
+                            </button>
+
+                            {/* Resend Confirmation Email */}
+                            <button
+                              onClick={() => handleResendBookingEmail(resv.id)}
+                              disabled={isLoadingThis}
+                              style={{
+                                background: 'rgba(201, 160, 60, 0.15)',
+                                border: '1px solid rgba(201, 160, 60, 0.4)',
+                                color: '#f0d590',
+                                borderRadius: '6px',
+                                padding: '0.35rem 0.65rem',
+                                fontSize: '0.78rem',
+                                fontWeight: 700,
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.3rem',
+                              }}
+                            >
+                              <Send style={{ width: '12px', height: '12px' }} />
+                              <span>Resend Email</span>
                             </button>
 
                             {/* Cancel Booking */}
@@ -1258,7 +1430,226 @@ export default function AdminPortalModal({ isOpen, onClose }) {
                 </div>
               )}
 
-              {/* TAB 4: FAILED / ABANDONED LEADS */}
+              {/* TAB 4: EMAIL & ALERTS CONFIGURATION */}
+              {activeTab === 'email' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  {/* Live Status Banner */}
+                  <div
+                    style={{
+                      background: emailSettings.emailReady ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)',
+                      border: emailSettings.emailReady ? '1.5px solid rgba(16, 185, 129, 0.4)' : '1.5px solid rgba(245, 158, 11, 0.45)',
+                      borderRadius: '12px',
+                      padding: '1rem 1.25rem',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '1rem',
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800, fontSize: '0.95rem', color: emailSettings.emailReady ? '#34d399' : '#fbbf24' }}>
+                        {emailSettings.emailReady ? (
+                          <>
+                            <CheckCircle2 style={{ width: '18px', height: '18px' }} />
+                            <span>Automated Customer &amp; Owner Emails: ACTIVE</span>
+                          </>
+                        ) : (
+                          <>
+                            <AlertTriangle style={{ width: '18px', height: '18px' }} />
+                            <span>Action Required: Add Gmail App Password or Resend API Key</span>
+                          </>
+                        )}
+                      </div>
+                      <p style={{ margin: '0.35rem 0 0', fontSize: '0.8rem', color: '#cbd5e1', lineHeight: 1.5, maxWidth: '64ch' }}>
+                        {emailSettings.emailReady
+                          ? `Outgoing booking confirmations are automatically sent to the customer's email address and to shop owners (${(emailSettings.recipients || []).join(', ')}).`
+                          : 'To automatically deliver booking confirmations to any customer email address and to your shop inboxes, enter your 16-character Gmail App Password for ktownautomobilespa@gmail.com (or Resend API Key) below.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* SMTP / Resend Configuration Form */}
+                  <form
+                    onSubmit={handleSaveEmailSettings}
+                    style={{
+                      background: 'rgba(15, 23, 42, 0.8)',
+                      border: '1px solid rgba(201, 160, 60, 0.3)',
+                      borderRadius: '12px',
+                      padding: '1.25rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem',
+                    }}
+                  >
+                    <div>
+                      <h4 style={{ margin: '0 0 0.25rem', fontSize: '1rem', fontWeight: 800, color: '#f8fafc' }}>
+                        1. Gmail / SMTP Outgoing Mail Setup (Recommended — Free)
+                      </h4>
+                      <span style={{ fontSize: '0.76rem', color: '#94a3b8' }}>
+                        How to get your 16-character Gmail App Password: Sign in to <strong>ktownautomobilespa@gmail.com</strong> &rarr; visit{' '}
+                        <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" style={{ color: '#38bdf8', textDecoration: 'underline' }}>
+                          myaccount.google.com/apppasswords
+                        </a>{' '}
+                        &rarr; create an App Password named &ldquo;Ktown Auto Spa&rdquo; and paste the 16 letters below.
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '0.85rem' }}>
+                      <div>
+                        <label style={{ fontSize: '0.74rem', color: '#94a3b8', display: 'block', marginBottom: '0.25rem' }}>
+                          Sender Email (Gmail / SMTP User)
+                        </label>
+                        <input
+                          type="email"
+                          value={emailSettings.smtpUser}
+                          onChange={(e) => setEmailSettings({ ...emailSettings, smtpUser: e.target.value })}
+                          placeholder="ktownautomobilespa@gmail.com"
+                          style={{ width: '100%', padding: '0.5rem 0.75rem', background: '#0a1628', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px', color: '#ffffff', fontSize: '0.85rem' }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ fontSize: '0.74rem', color: '#94a3b8', display: 'block', marginBottom: '0.25rem' }}>
+                          16-Char Gmail App Password {emailSettings.smtpConfigured && <span style={{ color: '#34d399' }}>(Saved ✓)</span>}
+                        </label>
+                        <input
+                          type="password"
+                          value={emailSettings.smtpPass}
+                          onChange={(e) => setEmailSettings({ ...emailSettings, smtpPass: e.target.value })}
+                          placeholder={emailSettings.smtpConfigured ? '•••••••••••••••• (Enter new to replace)' : 'e.g. abcd efgh ijkl mnop'}
+                          style={{ width: '100%', padding: '0.5rem 0.75rem', background: '#0a1628', border: '1px solid rgba(201, 160, 60, 0.4)', borderRadius: '6px', color: '#ffffff', fontSize: '0.85rem' }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ fontSize: '0.74rem', color: '#94a3b8', display: 'block', marginBottom: '0.25rem' }}>
+                          Owner Alert Recipients (Comma-separated)
+                        </label>
+                        <input
+                          type="text"
+                          value={emailSettings.shopNotificationEmails}
+                          onChange={(e) => setEmailSettings({ ...emailSettings, shopNotificationEmails: e.target.value })}
+                          placeholder="ktownautomobilespa@gmail.com, gud4notin@hotmail.com"
+                          style={{ width: '100%', padding: '0.5rem 0.75rem', background: '#0a1628', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px', color: '#ffffff', fontSize: '0.85rem' }}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.85rem' }}>
+                      <label style={{ fontSize: '0.74rem', color: '#94a3b8', display: 'block', marginBottom: '0.25rem' }}>
+                        Optional Alternative: Resend API Key (https://resend.com) {emailSettings.resendConfigured && <span style={{ color: '#34d399' }}>(Saved ✓)</span>}
+                      </label>
+                      <input
+                        type="password"
+                        value={emailSettings.resendApiKey}
+                        onChange={(e) => setEmailSettings({ ...emailSettings, resendApiKey: e.target.value })}
+                        placeholder={emailSettings.resendConfigured ? 're_•••••••••••• (Configured)' : 'Optional: re_123456789...'}
+                        style={{ width: '100%', maxWidth: '420px', padding: '0.5rem 0.75rem', background: '#0a1628', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px', color: '#ffffff', fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <button
+                        type="submit"
+                        disabled={emailSaving}
+                        style={{
+                          padding: '0.55rem 1.25rem',
+                          background: 'var(--gold, #c9a03c)',
+                          color: '#0a1e42',
+                          fontWeight: 800,
+                          fontSize: '0.85rem',
+                          borderRadius: '6px',
+                          border: 'none',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {emailSaving ? 'Saving...' : 'Save Email Configuration'}
+                      </button>
+                      <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+                        Tip: For permanent Vercel serverless deployments, also set <code>SMTP_USER</code> and <code>SMTP_PASS</code> in your Vercel Project Environment Variables.
+                      </span>
+                    </div>
+                  </form>
+
+                  {/* Diagnostic Test Email Card */}
+                  <div
+                    style={{
+                      background: 'rgba(15, 23, 42, 0.65)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '12px',
+                      padding: '1.25rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.85rem',
+                    }}
+                  >
+                    <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: '#f8fafc' }}>
+                      2. Send Live Diagnostic Test Booking Email
+                    </h4>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#94a3b8' }}>
+                      Test sending both the <strong>Shop Owner Booking Alert</strong> (to {(emailSettings.recipients || []).join(', ')}) and the <strong>Customer Confirmation Receipt</strong>.
+                    </p>
+
+                    <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                      <input
+                        type="email"
+                        value={testCustomerEmail}
+                        onChange={(e) => setTestCustomerEmail(e.target.value)}
+                        placeholder="Enter test customer email (e.g. your personal email)"
+                        style={{ flex: '1 1 240px', maxWidth: '360px', padding: '0.5rem 0.75rem', background: '#0a1628', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px', color: '#ffffff', fontSize: '0.85rem' }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleTestEmail}
+                        disabled={emailTesting}
+                        style={{
+                          padding: '0.5rem 1.1rem',
+                          background: '#10b981',
+                          color: '#0a1e42',
+                          fontWeight: 800,
+                          fontSize: '0.84rem',
+                          borderRadius: '6px',
+                          border: 'none',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                        }}
+                      >
+                        <Send style={{ width: '14px', height: '14px' }} />
+                        <span>{emailTesting ? 'Sending Test Emails...' : 'Send Test Emails Now'}</span>
+                      </button>
+                    </div>
+
+                    {emailTestResult && (
+                      <div
+                        style={{
+                          padding: '0.75rem 1rem',
+                          borderRadius: '8px',
+                          background: emailTestResult.success ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                          border: emailTestResult.success ? '1px solid #10b981' : '1px solid #ef4444',
+                          color: emailTestResult.success ? '#34d399' : '#fca5a5',
+                          fontSize: '0.8rem',
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {emailTestResult.success ? (
+                          <div>
+                            <strong>✅ Success!</strong> Both Owner Alert ({(emailTestResult.results?.recipients || []).join(', ')}) and Customer Confirmation ({emailTestResult.results?.customerRecipient}) were delivered!
+                          </div>
+                        ) : (
+                          <div>
+                            <strong>⚠️ Delivery Failed:</strong> {emailTestResult.results?.configurationWarning || emailTestResult.error || 'Check your Gmail App Password or SMTP credentials above.'}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 5: FAILED / ABANDONED LEADS */}
               {activeTab === 'failed' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {data.failedAttempts.length === 0 ? (

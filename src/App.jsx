@@ -1,19 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { CartProvider, useCart } from './context/CartContext';
+import { RouterProvider, useRouter } from './context/RouterContext';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import QuoteBuilder from './components/QuoteBuilder';
-import WhyShop from './components/WhyShop';
-import Credentials from './components/Credentials';
-import Gallery from './components/Gallery';
-import CoatingSection from './components/CoatingSection';
-import ProcessFlow from './components/ProcessFlow';
-import CarfaxRecord from './components/CarfaxRecord';
-import FleetsSection from './components/FleetsSection';
-import BoatsSection from './components/BoatsSection';
-import HowItWorks from './components/HowItWorks';
-import ReviewsSection from './components/ReviewsSection';
-import LocationHours from './components/LocationHours';
 import Footer from './components/Footer';
 import WhatsAppChat from './components/WhatsAppChat';
 import FloatingMobileCart from './components/FloatingMobileCart';
@@ -21,8 +9,43 @@ import CartDrawer from './components/CartDrawer';
 import CheckoutModal from './components/CheckoutModal';
 import AdminPortalModal from './components/AdminPortalModal';
 
+// Code-split Lazy-loaded Multi-Page Views
+const HomePage = lazy(() => import('./pages/HomePage'));
+const ServicesPage = lazy(() => import('./pages/ServicesPage'));
+const CeramicCoatingPage = lazy(() => import('./pages/CeramicCoatingPage'));
+const FleetMarinePage = lazy(() => import('./pages/FleetMarinePage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ReviewsPage = lazy(() => import('./pages/ReviewsPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+
+function PageLoadingSpinner() {
+  return (
+    <div style={{ minHeight: '65vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: 'var(--gold-primary)' }}>
+      <div 
+        style={{ 
+          width: '40px', 
+          height: '40px', 
+          border: '3px solid rgba(201, 160, 60, 0.2)', 
+          borderTopColor: 'var(--gold)', 
+          borderRadius: '50%', 
+          animation: 'spin 0.8s linear infinite' 
+        }} 
+      />
+      <span style={{ fontFamily: 'var(--mono)', fontSize: '0.85rem', color: 'var(--muted-color)', letterSpacing: '0.05em' }}>
+        Loading K-Town Auto Spa...
+      </span>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 function MainApp() {
   const { cart, addToCart, proceedToCheckout, setIsCartOpen } = useCart();
+  const { currentRoute, navigate } = useRouter();
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('ktown_theme') || 'dark';
@@ -74,20 +97,25 @@ function MainApp() {
     }
   };
 
-  const handleSelectPackage = (pkgName, vehicleType = 'c-sedan', price = null) => {
-    let basePrice = price;
-    if (!basePrice) {
-      if (pkgName === 'Full Detail') basePrice = 200;
-      else if (pkgName === 'Hand Car Wash') basePrice = 30;
-      else if (pkgName === 'Interior Refresh') basePrice = 70;
-      else if (pkgName === 'Interior Complete') basePrice = 175;
-      else basePrice = 100;
+  // Render the active page component
+  const renderCurrentPage = () => {
+    switch (currentRoute) {
+      case 'services':
+        return <ServicesPage onOpenBooking={() => handleOpenBooking()} />;
+      case 'ceramic-coating':
+        return <CeramicCoatingPage onOpenBooking={() => handleOpenBooking()} />;
+      case 'fleets-marine':
+        return <FleetMarinePage onOpenBooking={() => handleOpenBooking()} />;
+      case 'about':
+        return <AboutPage onOpenBooking={() => handleOpenBooking()} />;
+      case 'reviews':
+        return <ReviewsPage onOpenBooking={() => handleOpenBooking()} />;
+      case 'contact':
+        return <ContactPage onOpenBooking={() => handleOpenBooking()} />;
+      case 'home':
+      default:
+        return <HomePage onOpenBooking={() => handleOpenBooking()} />;
     }
-    addToCart({
-      title: pkgName,
-      vehicleType,
-      basePrice,
-    }, true);
   };
 
   return (
@@ -100,48 +128,14 @@ function MainApp() {
         onToggleTheme={toggleTheme} 
       />
       
+      {/* Dynamic Multi-Page Router Outlet with Suspense */}
       <main id="main" className="site-main-content">
-        {/* Hero with CARFAX Canada Callout & Booking CTAs */}
-        <Hero onOpenBooking={() => handleOpenBooking()} />
-
-        {/* 2026 Unified Interactive Quote Builder & Complete Service Catalog */}
-        <QuoteBuilder onProceedToBooking={() => handleOpenBooking()} />
-
-        {/* Why a Shop, Not a Driveway */}
-        <WhyShop />
-
-        {/* Credentials & Authorized Brand Partner Tiles */}
-        <Credentials />
-
-        {/* Paint Protection, Ceramic Coating & Straight Answers */}
-        <CoatingSection onOpenBooking={() => handleOpenBooking()} />
-
-        {/* The 5-Step System X Process */}
-        <ProcessFlow />
-
-        {/* Why CARFAX Matters & Verified Report Mockup */}
-        <CarfaxRecord />
-
-        {/* Fleet & Commercial Programs */}
-        <FleetsSection onOpenBooking={() => handleOpenBooking()} />
-
-        {/* Our Work - Real Agency Vehicles Detailed in Our Bays */}
-        <Gallery />
-
-        {/* Boats & Marine Slip-Side Detailing */}
-        <BoatsSection />
-
-        {/* How It Works - 3-Step Walkthrough */}
-        <HowItWorks />
-
-        {/* Real Customer Reviews - The Handwritten Clipboard */}
-        <ReviewsSection />
-
-        {/* Shop Hours, Building Location & Reservation Portal */}
-        <LocationHours onOpenBooking={() => handleOpenBooking()} />
+        <Suspense fallback={<PageLoadingSpinner />}>
+          {renderCurrentPage()}
+        </Suspense>
       </main>
 
-      {/* Footer with Contact Links & Copyright */}
+      {/* Global Footer */}
       <Footer onOpenBooking={() => handleOpenBooking()} />
 
       {/* Floating Interactive WhatsApp Chat Widget */}
@@ -173,8 +167,10 @@ function MainApp() {
 
 export default function App() {
   return (
-    <CartProvider>
-      <MainApp />
-    </CartProvider>
+    <RouterProvider>
+      <CartProvider>
+        <MainApp />
+      </CartProvider>
+    </RouterProvider>
   );
 }

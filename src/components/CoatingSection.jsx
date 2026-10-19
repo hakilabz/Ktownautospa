@@ -1,16 +1,21 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useRouter } from '../context/RouterContext';
 
 export default function CoatingSection() {
   const { addToCart } = useCart();
+  const { navigate } = useRouter();
 
   const navigateToQuoteTab = (tab) => {
-    window.dispatchEvent(new CustomEvent('select-quote-tab', { detail: { tab } }));
-    const el = document.getElementById('packages');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigate('/services');
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('select-quote-tab', { detail: { tab } }));
+      const el = document.getElementById('packages');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   return (
@@ -68,9 +73,9 @@ export default function CoatingSection() {
 
             <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => navigateToQuoteTab('polish')}>
               <div>
-                <b style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--water-dk)' }}>from $350</b>
+                <b style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--water-dk)' }}>from $399</b>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-color)', marginLeft: '0.4rem' }}>
-                  1-step
+                  1-stage
                 </span>
               </div>
               <button 
@@ -92,7 +97,7 @@ export default function CoatingSection() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
                 <span className="card-badge">Entry Ceramic</span>
-                <span style={{ fontFamily: 'var(--mono)', fontSize: '0.74rem', color: 'var(--gold-primary)', fontWeight: 700, textTransform: 'uppercase' }}>1, 3 &amp; 7 Year</span>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: '0.74rem', color: 'var(--gold-primary)', fontWeight: 700, textTransform: 'uppercase' }}>1 &amp; 2 Year</span>
               </div>
 
               <div style={{
@@ -110,7 +115,7 @@ export default function CoatingSection() {
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', letterSpacing: '0.12em', color: 'var(--gold-lt)', textTransform: 'uppercase', display: 'block' }}>
                   Nano-Brite Ceramic
                 </span>
-                <span style={{ fontSize: '0.75rem', color: '#A9C4E2' }}>1, 3 &amp; 7 Year Protection</span>
+                <span style={{ fontSize: '0.75rem', color: '#A9C4E2' }}>Pro (1-Year) &middot; Ultra (2-Year)</span>
               </div>
 
               <h3 style={{ fontFamily: 'var(--display)', fontWeight: 800, textTransform: 'uppercase', fontSize: '1.75rem', lineHeight: 1, margin: '0 0 0.65rem', color: 'var(--heading-color)' }}>
@@ -120,7 +125,7 @@ export default function CoatingSection() {
                 Our budget-friendly ceramic coating. Genuine ceramic protection, brilliant hydrophobics, and water beading at a lower entry price. An ideal sensible option for daily commuters or vehicles on a shorter lease ownership cycle.
               </p>
               <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--water-dk)', margin: '0 0 1rem' }}>
-                About 1 day · Entry-level ceramic protection
+                About 1 day · Includes 1-Stage Polish &amp; Exterior Detail
               </p>
             </div>
 
@@ -128,7 +133,7 @@ export default function CoatingSection() {
               <div>
                 <b style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--water-dk)' }}>from $449</b>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-color)', marginLeft: '0.4rem' }}>
-                  1, 3 or 7 yr
+                  1 or 2 yr
                 </span>
               </div>
               <button 
@@ -174,7 +179,7 @@ export default function CoatingSection() {
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', letterSpacing: '0.12em', color: 'var(--gold-lt)', textTransform: 'uppercase', display: 'block' }}>
                   System X Premium Ceramic
                 </span>
-                <span style={{ fontSize: '0.75rem', color: '#A9C4E2' }}>Lifetime · Max G+ · Pro+ · Crystal+</span>
+                <span style={{ fontSize: '0.75rem', color: '#A9C4E2' }}>Crystal SS (2yr) &middot; Pro (6yr) &middot; Max (10yr) &middot; Max G+ (Lifetime)</span>
               </div>
 
               <h3 style={{ fontFamily: 'var(--display)', fontWeight: 800, textTransform: 'uppercase', fontSize: '1.75rem', lineHeight: 1, margin: '0 0 0.65rem', color: 'var(--heading-color)' }}>
@@ -187,13 +192,13 @@ export default function CoatingSection() {
                 Packages include paint, glass, wheels, and complete interior leather/textile protection. <strong>Every install includes warranty registration logged on your vehicle’s CARFAX Canada report.</strong>
               </p>
               <p style={{ fontFamily: 'var(--mono)', fontSize: '0.84rem', color: 'var(--water-dk)', margin: '0 0 1rem' }}>
-                Crystal+ (2yr) · Pro+ (6yr) · Max G+ (10yr) · Diamond SS (Lifetime)
+                Crystal SS (2yr) &middot; Pro (6yr) &middot; Max (10yr) &middot; Max G+ (Lifetime)
               </p>
             </div>
 
             <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px dashed var(--surface-border)', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => navigateToQuoteTab('coat')}>
               <div>
-                <b style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--water-dk)' }}>from $949</b>
+                <b style={{ fontFamily: 'var(--display)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--water-dk)' }}>from $749</b>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-color)', marginLeft: '0.4rem' }}>
                   includes CARFAX
                 </span>

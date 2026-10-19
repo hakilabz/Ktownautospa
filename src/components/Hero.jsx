@@ -1,10 +1,13 @@
 import React from 'react';
 import { Phone, Calendar, ArrowRight, MessageCircle } from 'lucide-react';
+import { useRouter } from '../context/RouterContext';
 
 export default function Hero({ onOpenBooking }) {
+  const { navigate } = useRouter();
+
   return (
     <section id="hero" className="hero-bg-section">
-      {/* Full-Bleed Background Image Layer (Resized & Positioned per Screen Size) */}
+      {/* Full-Bleed Background Image Layer */}
       <div className="hero-bg-media" aria-hidden="true">
         <img
           src="/hero-car.jpg"
@@ -36,9 +39,7 @@ export default function Hero({ onOpenBooking }) {
 
           {/* Lede Subtitle */}
           <p className="hero-main-lede">
-            Hand car wash from $30, full detailing from $200, ceramic coating from $449. 
-            Authorized System X &amp; Nano-Brite installer, Auto-Brite certified. 
-            36 Joseph St, Kingston.
+            Scratch-free hand wash from $30, complete detailing from $180, authorized System X ceramic coating from $449. Heated indoor studio at 36 Joseph St, Kingston.
           </p>
 
           {/* Primary Action Buttons */}
@@ -48,10 +49,14 @@ export default function Hero({ onOpenBooking }) {
               <span>Call 647-915-3530</span>
             </a>
 
-            <a href="#packages" className="btn btn--cream">
+            <button 
+              type="button" 
+              onClick={() => navigate('/services')} 
+              className="btn btn--cream"
+            >
               <span>View Packages &amp; Rates</span>
               <ArrowRight style={{ width: '0.95rem', height: '0.95rem', flexShrink: 0 }} />
-            </a>
+            </button>
 
             <button type="button" onClick={onOpenBooking} className="btn btn--navy">
               <Calendar style={{ width: '1rem', height: '1rem', flexShrink: 0 }} />
@@ -60,7 +65,12 @@ export default function Hero({ onOpenBooking }) {
           </div>
 
           {/* Signature CARFAX Highlight Box */}
-          <div className="hero-carfax-box">
+          <div 
+            className="hero-carfax-box"
+            onClick={() => navigate('/ceramic-coating')}
+            style={{ cursor: 'pointer' }}
+            title="Click to learn about our CARFAX Canada registered coatings"
+          >
             <div className="hero-carfax-logo-tile">
               <span style={{ color: '#FFFFFF', fontWeight: 900, fontSize: '1.05rem', letterSpacing: '0.05em', display: 'block', lineHeight: 1 }}>
                 CARFAX

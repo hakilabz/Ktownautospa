@@ -1,5 +1,5 @@
 # ==============================================================================
-# Ktown Auto Spa - robots.txt
+# Ktown Auto Spa - robots.txt (SEO & AI Answer Engine Optimized)
 # Hand Car Wash, Auto Detailing & System X Ceramic Coating in Kingston, ON
 # https://ktownautospa.ca
 # ==============================================================================
@@ -7,6 +7,10 @@
 # 1. Global Rule for All Web Crawlers & Search Engines
 User-agent: *
 Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /rates.html
+Allow: /sitemap.xml
 Disallow: /api/
 Disallow: /data/
 Disallow: /admin
@@ -22,13 +26,22 @@ Allow: /
 User-agent: Googlebot-Mobile
 Allow: /
 
+User-agent: GoogleOther
+Allow: /
+
 User-agent: Bingbot
 Allow: /
 
 User-agent: Applebot
 Allow: /
 
+User-agent: Applebot-Extended
+Allow: /
+
 User-agent: DuckDuckBot
+Allow: /
+
+User-agent: DuckAssistBot
 Allow: /
 
 User-agent: YandexBot
@@ -37,8 +50,8 @@ Allow: /
 User-agent: Slurp
 Allow: /
 
-# 3. AI Search Engines, LLMs & Retrieval Crawlers (Explicitly Allowed)
-# OpenAI (ChatGPT, SearchGPT, GPT-4o)
+# 3. AI Answer Engines, LLMs & Retrieval Crawlers (Explicitly Allowed for AEO)
+# OpenAI (ChatGPT Search, OAI-SearchBot, GPTBot)
 User-agent: GPTBot
 Allow: /
 
@@ -48,7 +61,7 @@ Allow: /
 User-agent: OAI-SearchBot
 Allow: /
 
-# Anthropic (Claude 3.5 Sonnet, Claude 3 Opus)
+# Anthropic (Claude, Claude-Web)
 User-agent: ClaudeBot
 Allow: /
 
@@ -62,6 +75,9 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Perplexity-User
+Allow: /
+
 # Google Gemini / Vertex AI
 User-agent: Google-Extended
 Allow: /
@@ -73,17 +89,17 @@ Allow: /
 User-agent: FacebookBot
 Allow: /
 
-# Common Crawl & Open AI Repositories
-User-agent: CCBot
+# You.com & Cohere & Common Crawl
+User-agent: YouBot
 Allow: /
 
-# Cohere AI
 User-agent: cohere-ai
 Allow: /
 
-# ByteDance
-User-agent: Bytespider
+User-agent: CCBot
 Allow: /
 
-# 4. XML Sitemap Location
+# 4. Sitemaps & AI Context Files
 Sitemap: https://ktownautospa.ca/sitemap.xml
+# LLMs Context: https://ktownautospa.ca/llms.txt
+# LLMs Full Guide: https://ktownautospa.ca/llms-full.txt

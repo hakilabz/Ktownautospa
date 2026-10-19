@@ -4,7 +4,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Stripe from 'stripe';
 import { RATE_CARD, VEHICLES, calculateOrderTotals } from '../rates.js';
-import { sendBookingNotifications, getNotificationRecipients } from '../mailer.js';
+import {
+  sendBookingNotifications,
+  sendStatusUpdateNotification,
+  sendTestNotificationEmail,
+  getNotificationRecipients,
+  getEffectiveEmailSettings,
+  saveStoredEmailConfig,
+} from '../mailer.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -104,11 +111,13 @@ function saveCoupons(list) {
 
 // 1. Health check & configuration status
 router.get('/health', (req, res) => {
+  const emailSettings = getEffectiveEmailSettings();
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     stripeReady: isStripeConfigured,
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || process.env.VITE_STRIPE_PUBLISHABLE_KEY || null,
+    emailReady: emailSettings.smtpConfigured || emailSettings.resendConfigured,
     notificationRecipients: getNotificationRecipients(),
   });
 });
@@ -578,9 +587,13 @@ router.get('/confirm-stripe-session', async (req, res) => {
 
     // Send email notifications if not already sent for this paid booking
     let notificationResults = null;
-    if (!isAlreadyPaid) {
+    if (!isAlreadyPaid && !resv.notificationsSent) {
       try {
         notificationResults = await sendBookingNotifications(resv);
+        if (notificationResults?.smtp) {
+          resv.notificationsSent = true;
+          saveReservation(resv);
+        }
         console.log(`[Stripe Checkout Confirmed] Notifications dispatched for ${resv.id}:`, notificationResults);
       } catch (notifyErr) {
         console.error('[Stripe Checkout Confirmed] Notification dispatch note:', notifyErr.message);
@@ -675,10 +688,14 @@ router.post('/reservations', async (req, res) => {
       recordCouponUsage(couponCode);
     }
 
-    // Dispatch dual notifications to ktownautomobilespa@gmail.com and gud4notin@hotmail.com
+    // Dispatch notifications to owners (ktownautomobilespa@gmail.com, gud4notin@hotmail.com) AND customer
     let notificationResults = null;
     try {
       notificationResults = await sendBookingNotifications(newReservation);
+      if (notificationResults?.smtp) {
+        newReservation.notificationsSent = true;
+        saveReservation(newReservation);
+      }
       console.log(`[Reservation] Dispatched notification for ${id}:`, notificationResults);
     } catch (dispatchErr) {
       console.error('[Reservation] Notification dispatch error (non-fatal):', dispatchErr);
@@ -776,6 +793,8 @@ router.get('/admin/reservations', async (req, res) => {
   const etransferPendingCount = pendingReservations.filter(r => r.payment?.method === 'etransfer' || r.payment?.status === 'pending_etransfer').length;
   const cashPendingCount = pendingReservations.filter(r => r.payment?.method === 'cash' || r.payment?.status === 'pending_cash' || r.payment?.method === 'pay_at_dropoff').length;
 
+  const emailSettings = getEffectiveEmailSettings();
+
   res.json({
     stats: {
       totalBookings: confirmed.length,
@@ -790,6 +809,7 @@ router.get('/admin/reservations', async (req, res) => {
       cashPaidCount,
       etransferPendingCount,
       cashPendingCount,
+      emailReady: emailSettings.smtpConfigured || emailSettings.resendConfigured,
     },
     confirmed,
     failedAttempts: failed,
@@ -850,7 +870,114 @@ router.patch('/admin/reservations/:id', async (req, res) => {
   }
 
   saveReservation(resv);
-  res.json({ success: true, reservation: resv });
+
+  // Dispatch status update email to customer and owners
+  let emailUpdateResult = null;
+  try {
+    emailUpdateResult = await sendStatusUpdateNotification(resv, action);
+  } catch (err) {
+    console.warn('[Admin Action] Status update email note:', err.message);
+  }
+
+  res.json({ success: true, reservation: resv, emailUpdateResult });
+});
+
+// 5d. Resend Booking Confirmation Email (Admin)
+router.post('/admin/reservations/:id/resend-email', async (req, res) => {
+  if (!isAuthorizedAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid Owner PIN.' });
+  }
+
+  const list = getReservations();
+  const resv = list.find(r => r.id === req.params.id);
+  if (!resv) {
+    return res.status(404).json({ error: 'Reservation not found.' });
+  }
+
+  try {
+    const notifications = await sendBookingNotifications(resv);
+    if (notifications?.smtp) {
+      resv.notificationsSent = true;
+      saveReservation(resv);
+    }
+    res.json({ success: true, notifications });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Failed to resend notifications' });
+  }
+});
+
+// 5e. Get Email Settings (Admin)
+router.get('/admin/email-settings', (req, res) => {
+  if (!isAuthorizedAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid Owner PIN.' });
+  }
+
+  const settings = getEffectiveEmailSettings();
+  res.json({
+    smtpHost: settings.smtpHost,
+    smtpPort: settings.smtpPort,
+    smtpUser: settings.smtpUser,
+    smtpConfigured: settings.smtpConfigured,
+    smtpPassMasked: settings.smtpConfigured ? '•••••••••••••••• (Configured)' : '',
+    resendConfigured: settings.resendConfigured,
+    resendFrom: settings.resendFrom,
+    recipients: settings.recipients,
+    emailReady: settings.smtpConfigured || settings.resendConfigured,
+  });
+});
+
+// 5f. Update Email Settings (Admin)
+router.post('/admin/email-settings', (req, res) => {
+  if (!isAuthorizedAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid Owner PIN.' });
+  }
+
+  const { smtpHost, smtpPort, smtpUser, smtpPass, resendApiKey, resendFrom, shopNotificationEmails } = req.body;
+  const update = {};
+
+  if (smtpHost !== undefined) update.smtpHost = String(smtpHost).trim();
+  if (smtpPort !== undefined) update.smtpPort = Number(smtpPort) || 465;
+  if (smtpUser !== undefined) update.smtpUser = String(smtpUser).trim();
+  if (smtpPass !== undefined && smtpPass.trim() !== '') {
+    update.smtpPass = String(smtpPass).replace(/\s+/g, '');
+  }
+  if (resendApiKey !== undefined && resendApiKey.trim() !== '') {
+    update.resendApiKey = String(resendApiKey).trim();
+  }
+  if (resendFrom !== undefined) update.resendFrom = String(resendFrom).trim();
+  if (shopNotificationEmails !== undefined) update.shopNotificationEmails = String(shopNotificationEmails).trim();
+
+  saveStoredEmailConfig(update);
+  const settings = getEffectiveEmailSettings();
+
+  res.json({
+    success: true,
+    smtpHost: settings.smtpHost,
+    smtpPort: settings.smtpPort,
+    smtpUser: settings.smtpUser,
+    smtpConfigured: settings.smtpConfigured,
+    resendConfigured: settings.resendConfigured,
+    recipients: settings.recipients,
+    emailReady: settings.smtpConfigured || settings.resendConfigured,
+  });
+});
+
+// 5g. Send Test Email (Admin)
+router.post('/admin/test-email', async (req, res) => {
+  if (!isAuthorizedAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid Owner PIN.' });
+  }
+
+  try {
+    const testCustomerEmail = req.body?.testCustomerEmail || '';
+    const results = await sendTestNotificationEmail(testCustomerEmail);
+    res.json({
+      success: Boolean(results.smtp),
+      results,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Test email dispatch failed' });
+  }
 });
 
 // 6. Stripe Webhook handler
@@ -877,10 +1004,24 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       const list = getReservations();
       const resv = list.find(r => r.id === reservationId);
       if (resv) {
+        const wasPaid = resv.payment?.status === 'paid';
         resv.payment.status = 'paid';
         resv.payment.stripePaymentIntentId = paymentIntent.id;
+        resv.status = 'confirmed';
         saveReservation(resv);
         console.log(`Reservation ${reservationId} marked paid via Stripe webhook.`);
+
+        if (!wasPaid && !resv.notificationsSent) {
+          try {
+            const notifyRes = await sendBookingNotifications(resv);
+            if (notifyRes?.smtp) {
+              resv.notificationsSent = true;
+              saveReservation(resv);
+            }
+          } catch (err) {
+            console.warn('[Webhook] Notification error:', err.message);
+          }
+        }
       }
     }
   } else if (event.type === 'payment_intent.payment_failed') {
@@ -903,10 +1044,24 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       const list = getReservations();
       const resv = list.find(r => r.id === reservationId);
       if (resv) {
+        const wasPaid = resv.payment?.status === 'paid';
         resv.payment.status = 'paid';
         resv.payment.stripeCheckoutSessionId = session.id;
+        resv.status = 'confirmed';
         saveReservation(resv);
         console.log(`Reservation ${reservationId} marked paid via Stripe Checkout webhook.`);
+
+        if (!wasPaid && !resv.notificationsSent) {
+          try {
+            const notifyRes = await sendBookingNotifications(resv);
+            if (notifyRes?.smtp) {
+              resv.notificationsSent = true;
+              saveReservation(resv);
+            }
+          } catch (err) {
+            console.warn('[Webhook] Checkout session notification error:', err.message);
+          }
+        }
       }
     }
   } else if (event.type === 'checkout.session.expired') {
